@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>FLARE.UI</RootNamespace>
+    <AssemblyName>FLARE</AssemblyName>
+    <NoWarn>CA1416</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <ApplicationIcon>Logo\flare_icon.ico</ApplicationIcon>
+    <Version>0.6.0</Version>
+    <Authors>Daniel Naslund (@deezel)</Authors>
+    <BuildDate>$([System.DateTime]::Now.ToString("yyyy-MM-dd"))</BuildDate>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildDate</_Parameter1>
+      <_Parameter2>$(BuildDate)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FLARE.Core\FLARE.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Logo\flare_filled_logo.png" />
+    <Resource Include="Logo\flare_icon.ico" />
+  </ItemGroup>
+
+  <UsingTask TaskName="GenerateBundle" AssemblyFile="$(MicrosoftNETBuildTasksAssembly)" />
+  <Target Name="BundleAppOnlyForFrameworkDependent"
+          DependsOnTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' != '' and '$(SelfContained)' != 'true'">
+    <ItemGroup>
+      <_BundleFiles Include="$(PublishDir)$(AssemblyName)$(_NativeExecutableExtension)">
+        <RelativePath>$(AssemblyName)$(_NativeExecutableExtension)</RelativePath>
+      </_BundleFiles>
+
+      <_BundlePayloadFiles Include="$(PublishDir)*.dll" />
+      <_BundlePayloadFiles Include="$(PublishDir)*.json" />
+      <_BundlePayloadFiles Update="@(_BundlePayloadFiles)">
+        <RelativePath>%(Filename)%(Extension)</RelativePath>
+      </_BundlePayloadFiles>
+
+      <_BundleFiles Include="@(_BundlePayloadFiles)" />
+    </ItemGroup>
+
+    <GenerateBundle FilesToBundle="@(_BundleFiles)"
+                    AppHostName="$(AssemblyName)$(_NativeExecutableExtension)"
+                    IncludeSymbols="false"
+                    EnableCompressionInSingleFile="false"
+                    IncludeNativeLibraries="false"
+                    IncludeAllContent="false"
+                    TargetFrameworkVersion="$(_TargetFrameworkVersionWithoutV)"
+                    RuntimeIdentifier="$(RuntimeIdentifier)"
+                    OutputDir="$(PublishDir)"
+                    ShowDiagnosticOutput="false"
+                    EnableMacOSCodeSign="false" />
+
+    <Delete Files="@(_BundlePayloadFiles)" />
+  </Target>
+
+</Project>

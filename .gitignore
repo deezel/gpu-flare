@@ -1,0 +1,26 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+
+## IDE
+.vs/
+.vscode/
+.claude/
+*.swp
+*~
+
+## OS
+Thumbs.db
+.DS_Store
+
+## Local artifacts
+publish/
+logs/
+reports/
+FLARE.UI/Logo/flare_icon.png
+publish.ps1
+docs/

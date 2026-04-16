@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>FLARE.Core</RootNamespace>
+    <NoWarn>CA1416</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.6" />
+    <PackageReference Include="Vortice.Vulkan" Version="3.2.1" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="FLARE.Tests" />
+  </ItemGroup>
+
+</Project>

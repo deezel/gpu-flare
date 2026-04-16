@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="FLARE.Core/FLARE.Core.csproj" />
+  <Project Path="FLARE.Tests/FLARE.Tests.csproj" />
+  <Project Path="FLARE.UI/FLARE.UI.csproj" />
+</Solution>
