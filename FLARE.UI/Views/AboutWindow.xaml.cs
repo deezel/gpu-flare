@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -33,14 +32,7 @@ public partial class AboutWindow : Window
         TitleBarHelper.SetDarkTitleBar(this);
 
         var asm = Assembly.GetExecutingAssembly();
-        var infoVer = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0";
-        int plus = infoVer.IndexOf('+');
-        var ver = plus >= 0 ? infoVer[..plus] : infoVer;
-        var hash = plus >= 0 ? infoVer[(plus + 1)..] : "";
-        var buildDate = asm.GetCustomAttributes<AssemblyMetadataAttribute>()
-            .FirstOrDefault(a => a.Key == "BuildDate")?.Value ?? "";
-        var verText = string.IsNullOrEmpty(hash) || hash == "dev" ? $"Version {ver}" : $"Version {ver} ({hash})";
-        VersionText.Text = $"{verText}  ·  {buildDate}";
+        VersionText.Text = BuildBanner.GetAboutVersionLine(asm);
         RuntimeText.Text = $".NET {RuntimeInformation.FrameworkDescription.Replace(".NET ", "")} / {RuntimeInformation.RuntimeIdentifier}";
 
         var mesh = BuildMesh(out _positions);
@@ -78,7 +70,6 @@ public partial class AboutWindow : Window
                 positions.Add(new Point3D(0, 0, 0));
 
             // UVs corrected so logo reads left-to-right, right-side-up on every face
-            // Padding so logo doesn't bleed to edges
             const float pad = 0.05f;
             float pu = pad + u * (1f - 2f * pad);         // padded U
             float rpu = pad + (1f - u) * (1f - 2f * pad); // padded U reversed
@@ -98,13 +89,9 @@ public partial class AboutWindow : Window
         {
             int l = i * 8;
             int r = (i + 1) * 8;
-            // Front
             AddQuad(indices, l + 0, r + 0, r + 1, l + 1);
-            // Back
             AddQuad(indices, r + 2, l + 2, l + 3, r + 3);
-            // Top
             AddQuad(indices, l + 4, r + 4, r + 5, l + 5);
-            // Bottom
             AddQuad(indices, r + 6, l + 6, l + 7, r + 7);
         }
 

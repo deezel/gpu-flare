@@ -16,12 +16,30 @@
     <SolidColorBrush x:Key="ButtonAccentBrush" Color="#3E3E42"/>
     <SolidColorBrush x:Key="ButtonAccentHoverBrush" Color="#4A4A50"/>
 
+    <!-- Flare accents (Run button, inputs, section labels, checkboxes) -->
+    <SolidColorBrush x:Key="FlareAccent" Color="#3E3E42"/>
+    <SolidColorBrush x:Key="FlareAccentHover" Color="#4A4A50"/>
+    <SolidColorBrush x:Key="FlareAccentPressed" Color="#2D2D30"/>
+    <SolidColorBrush x:Key="FlareAccentText" Color="#D4D4D4"/>
+    <SolidColorBrush x:Key="FlareAccentBright" Color="#D4D4D4"/>
+
+    <SolidColorBrush x:Key="FlareStrongText" Color="#D4D4D4"/>
+    <SolidColorBrush x:Key="FlareBodyText" Color="#C0C0C0"/>
+    <SolidColorBrush x:Key="FlareMutedText" Color="#999999"/>
+    <SolidColorBrush x:Key="FlareLabelText" Color="#8E8E93"/>
+
+    <SolidColorBrush x:Key="FlareHairline" Color="#929299"/>
+    <SolidColorBrush x:Key="FlareInputBg" Color="#252526"/>
+    <SolidColorBrush x:Key="FlareInputBorder" Color="#3F3F46"/>
+
     <!-- Window Style -->
     <Style TargetType="Window">
         <Setter Property="Background" Value="{StaticResource DarkBackgroundBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource DarkForegroundBrush}"/>
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontSize" Value="12"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
     </Style>
 
     <!-- Caption Button Style (title bar) -->
@@ -174,8 +192,167 @@
 
     <!-- CheckBox Style -->
     <Style TargetType="CheckBox">
-        <Setter Property="Foreground" Value="{DynamicResource DarkForegroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource FlareBodyText}"/>
         <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <StackPanel Orientation="Horizontal">
+                        <Border x:Name="Box"
+                                Width="13" Height="13"
+                                BorderBrush="{DynamicResource FlareInputBorder}"
+                                BorderThickness="1"
+                                Background="{DynamicResource FlareInputBg}"
+                                VerticalAlignment="Center"
+                                SnapsToDevicePixels="True">
+                            <Rectangle x:Name="Fill"
+                                       Width="7" Height="7"
+                                       Fill="{DynamicResource FlareAccentBright}"
+                                       Visibility="Collapsed"/>
+                        </Border>
+                        <ContentPresenter Margin="8,0,0,0"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Fill" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource FlareAccentBright}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource FlareMutedText}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource FlareAccentBright}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Section micro-label -->
+    <Style x:Key="SectionLabel" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource FlareLabelText}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Numeric input (monospace, centered) -->
+    <Style x:Key="SettingInput" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="Cascadia Mono, Consolas"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Background" Value="{DynamicResource FlareInputBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource FlareStrongText}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource FlareInputBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="6,4"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource FlareStrongText}"/>
+        <Setter Property="SelectionBrush" Value="{DynamicResource DarkSelectionBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource FlareAccentBright}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Ghost button (secondary actions: Set path, Clear, Open, Cancel) -->
+    <Style x:Key="GhostButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource FlareBodyText}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource FlareInputBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="12,5"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"
+                                          RecognizesAccessKey="True"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="{DynamicResource FlareMutedText}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource FlareStrongText}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource FlareInputBg}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Primary action button (Run Analysis) -->
+    <Style x:Key="FlareButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource FlareAccent}"/>
+        <Setter Property="Foreground" Value="{DynamicResource FlareAccentText}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource FlareAccent}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="28,10"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="MinWidth" Value="180"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}"
+                                          RecognizesAccessKey="True"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource FlareAccentHover}"/>
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="{DynamicResource FlareAccentHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource FlareAccentPressed}"/>
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="{DynamicResource FlareAccentPressed}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource FlareInputBg}"/>
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="{DynamicResource FlareInputBorder}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource FlareMutedText}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- ToolTip Style -->

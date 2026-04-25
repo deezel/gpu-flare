@@ -18,9 +18,9 @@ Thumbs.db
 .DS_Store
 
 ## Local artifacts
+build/
 publish/
 logs/
 reports/
 FLARE.UI/Logo/flare_icon.png
-publish.ps1
 docs/

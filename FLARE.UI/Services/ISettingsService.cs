@@ -6,4 +6,6 @@ public interface ISettingsService
 {
     AppSettings LoadSettings();
     void SaveSettings(AppSettings settings);
+    string? LastLoadWarning { get; }
+    string? LastSaveWarning { get; }
 }

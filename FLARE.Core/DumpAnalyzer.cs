@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,24 +7,25 @@ namespace FLARE.Core;
 
 public static class DumpAnalyzer
 {
-    static readonly Dictionary<uint, string> BugcheckNames = new()
+    // PAGEDU64 kernel dumps normally carry BugCheckCode at 0x38, followed by
+    // 4 bytes of padding and the four 8-byte bugcheck parameters starting at
+    // 0x40. Some older dump writers have been seen placing the bugcheck at
+    // 0x40 instead, so this parser tries both documented layouts before using
+    // the heuristic scan window as a last resort.
+    private static class KernelDump64Layout
     {
-        { 0x0A,  "IRQL_NOT_LESS_OR_EQUAL" },
-        { 0x1A,  "MEMORY_MANAGEMENT" },
-        { 0x3B,  "SYSTEM_SERVICE_EXCEPTION" },
-        { 0x50,  "PAGE_FAULT_IN_NONPAGED_AREA" },
-        { 0x7E,  "SYSTEM_THREAD_EXCEPTION_NOT_HANDLED" },
-        { 0x7F,  "UNEXPECTED_KERNEL_MODE_TRAP" },
-        { 0xD1,  "DRIVER_IRQL_NOT_LESS_OR_EQUAL" },
-        { 0xEF,  "CRITICAL_PROCESS_DIED" },
-        { 0x10D, "WDF_VIOLATION" },
-        { 0x116, "VIDEO_TDR_FAILURE" },
-        { 0x117, "VIDEO_TDR_TIMEOUT_DETECTED" },
-        { 0x119, "VIDEO_SCHEDULER_INTERNAL_ERROR" },
-        { 0x133, "DPC_WATCHDOG_VIOLATION" },
-        { 0x278, "KERNEL_MODE_HEAP_CORRUPTION" },
-        { 0x307, "KERNEL_STORAGE_SLOT_IN_USE" },
-    };
+        public const int BugcheckCodeOffset = 0x38;
+        public const int AlternateBugcheckCodeOffset = 0x40;
+        public const int HeuristicScanStartOffset = 0x30;
+        public const int HeuristicScanEndOffset = 0x80;
+    }
+
+    private static class KernelDump32Layout
+    {
+        public const int BugcheckCodeOffset = 0x20;
+    }
+
+    private const uint MinimumHeuristicBugcheckCode = 0x0A;
 
     public record DumpInfo(
         string FileName,
@@ -33,7 +33,9 @@ public static class DumpAnalyzer
         uint BugcheckCode,
         string BugcheckName,
         ulong Param1, ulong Param2, ulong Param3, ulong Param4,
-        bool IsGpuRelated
+        bool IsGpuRelated,
+        bool IsUserModeException = false,
+        bool IsHeuristicMatch = false
     );
 
     public static DumpInfo? AnalyzeDump(string path, Action<string>? log = null)
@@ -70,35 +72,13 @@ public static class DumpAnalyzer
             return null;
         }
     }
-
-    // PAGEDU64 kernel dump header layout (Windows 10/11):
-    // Reference: Windows Internals 7th ed., Chapter 15; ReactOS kdtypes.h
-    //
-    // Offset  Size  Field
-    // 0x00    8     Signature ("PAGEDU64" or "PAGEDUMP")
-    // 0x08    4     ValidDump signature
-    // 0x0C    4     MajorVersion
-    // 0x10    4     MinorVersion
-    // 0x14    4     DirectoryTableBase (low)
-    // 0x18    4     DirectoryTableBase (high)
-    // 0x1C    4     PfnDatabase (low)
-    // ...
-    // 0x38    4     BugCheckCode
-    // 0x3C    4     Padding (alignment to 8-byte boundary)
-    // 0x40    8     BugCheckParameter1
-    // 0x48    8     BugCheckParameter2
-    // 0x50    8     BugCheckParameter3
-    // 0x58    8     BugCheckParameter4
-    //
-    // Some dump writers place the bugcheck at 0x40 instead of 0x38 (observed in
-    // older Windows versions). The fallback reads at 0x40, then scans the first
-    // 512 bytes as a last resort.
     static DumpInfo? ParseKernelDump64(string path, FileStream fs, BinaryReader br)
     {
         uint bugcheck = 0;
         ulong p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+        bool heuristic = false;
 
-        fs.Seek(0x38, SeekOrigin.Begin);
+        fs.Seek(KernelDump64Layout.BugcheckCodeOffset, SeekOrigin.Begin);
         bugcheck = br.ReadUInt32();
         uint padding = br.ReadUInt32();
         p1 = br.ReadUInt64();
@@ -106,11 +86,11 @@ public static class DumpAnalyzer
         p3 = br.ReadUInt64();
         p4 = br.ReadUInt64();
 
-        if (!BugcheckNames.ContainsKey(bugcheck) && bugcheck > 0x10000)
+        if (!BugcheckCatalog.IsKnown(bugcheck) && bugcheck > 0x10000)
         {
-            fs.Seek(0x40, SeekOrigin.Begin);
+            fs.Seek(KernelDump64Layout.AlternateBugcheckCodeOffset, SeekOrigin.Begin);
             var bc2 = br.ReadUInt32();
-            if (BugcheckNames.ContainsKey(bc2))
+            if (BugcheckCatalog.IsKnown(bc2))
             {
                 bugcheck = bc2;
                 br.ReadUInt32();
@@ -121,20 +101,23 @@ public static class DumpAnalyzer
             }
         }
 
-        if (!BugcheckNames.ContainsKey(bugcheck) && bugcheck > 0x10000)
+        if (!BugcheckCatalog.IsKnown(bugcheck) && bugcheck > 0x10000)
         {
             fs.Seek(0, SeekOrigin.Begin);
-            var header = br.ReadBytes(512);
-            for (int i = 0; i < header.Length - 36; i += 4)
+            var header = br.ReadBytes(KernelDump64Layout.HeuristicScanEndOffset);
+            for (int i = KernelDump64Layout.HeuristicScanStartOffset; i <= header.Length - 4; i += 4)
             {
                 uint candidate = BitConverter.ToUInt32(header, i);
-                if (BugcheckNames.ContainsKey(candidate) && candidate >= 0x0A)
+                if (BugcheckCatalog.IsKnown(candidate) && candidate >= MinimumHeuristicBugcheckCode)
                 {
                     bugcheck = candidate;
+                    heuristic = true;
                     int paramOff = i + 4;
-                    uint maybepad = BitConverter.ToUInt32(header, paramOff);
-                    if (maybepad == 0 && paramOff + 36 < header.Length)
-                        paramOff += 4;
+                    if (paramOff + 32 <= header.Length)
+                    {
+                        uint maybepad = BitConverter.ToUInt32(header, paramOff);
+                        if (maybepad == 0) paramOff += 4;
+                    }
                     if (paramOff + 32 <= header.Length)
                     {
                         p1 = BitConverter.ToUInt64(header, paramOff);
@@ -148,20 +131,15 @@ public static class DumpAnalyzer
         }
 
         var fileTime = File.GetLastWriteTime(path);
-        string bcName = BugcheckNames.TryGetValue(bugcheck, out var n) ? n : $"0x{bugcheck:X8}";
-        bool isGpu = bugcheck == 0x116 || bugcheck == 0x117 || bugcheck == 0x119;
+        string bcName = BugcheckCatalog.GetName(bugcheck);
+        bool isGpu = BugcheckCatalog.IsGpuRelated(bugcheck);
 
         return new DumpInfo(Path.GetFileName(path), fileTime, bugcheck, bcName,
-            p1, p2, p3, p4, isGpu);
+            p1, p2, p3, p4, isGpu, IsHeuristicMatch: heuristic);
     }
-
-    // 32-bit kernel dump header:
-    // Offset 0x00: "PAGE" signature
-    // Offset 0x20: BugCheckCode (4 bytes)
-    // Offset 0x24: BugCheckParameter1-4 (4 bytes each)
     static DumpInfo? ParseKernelDump32(string path, FileStream fs, BinaryReader br)
     {
-        fs.Seek(0x20, SeekOrigin.Begin);
+        fs.Seek(KernelDump32Layout.BugcheckCodeOffset, SeekOrigin.Begin);
         uint bugcheck = br.ReadUInt32();
         ulong p1 = br.ReadUInt32();
         ulong p2 = br.ReadUInt32();
@@ -169,8 +147,8 @@ public static class DumpAnalyzer
         ulong p4 = br.ReadUInt32();
 
         var fileTime = File.GetLastWriteTime(path);
-        string bcName = BugcheckNames.TryGetValue(bugcheck, out var n) ? n : $"0x{bugcheck:X8}";
-        bool isGpu = bugcheck == 0x116 || bugcheck == 0x117 || bugcheck == 0x119;
+        string bcName = BugcheckCatalog.GetName(bugcheck);
+        bool isGpu = BugcheckCatalog.IsGpuRelated(bugcheck);
 
         return new DumpInfo(Path.GetFileName(path), fileTime, bugcheck, bcName,
             p1, p2, p3, p4, isGpu);
@@ -217,148 +195,32 @@ public static class DumpAnalyzer
             }
         }
 
-        string bcName = BugcheckNames.TryGetValue(bugcheck, out var n) ? n : $"0x{bugcheck:X8}";
-        bool isGpu = bugcheck == 0x116 || bugcheck == 0x117 || bugcheck == 0x119;
+        string bcName = BugcheckCatalog.GetName(bugcheck);
+        bool isGpu = BugcheckCatalog.IsGpuRelated(bugcheck);
+        bool userMode = bugcheck != 0 && !BugcheckCatalog.IsKnown(bugcheck);
 
         return new DumpInfo(Path.GetFileName(path), timestamp, bugcheck, bcName,
-            p1, p2, p3, p4, isGpu);
+            p1, p2, p3, p4, isGpu, IsUserModeException: userMode);
     }
 
-    public static string? FindCdb(Action<string>? log = null)
-    {
-        try
-        {
-            var psi = new System.Diagnostics.ProcessStartInfo("where", "cdb")
-            {
-                RedirectStandardOutput = true, UseShellExecute = false, CreateNoWindow = true
-            };
-            var proc = System.Diagnostics.Process.Start(psi);
-            var output = proc?.StandardOutput.ReadToEnd().Trim();
-            proc?.WaitForExit();
-            if (proc?.ExitCode == 0 && !string.IsNullOrEmpty(output))
-                return output.Split('\n')[0].Trim();
-        }
-        catch (Exception ex)
-        {
-            log?.Invoke($"Warning: 'where cdb' failed: {ex.Message}");
-        }
-
-        string[] searchPaths = [
-            @"C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe",
-            @"C:\Program Files\Windows Kits\10\Debuggers\x64\cdb.exe",
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                @"Microsoft\WindowsApps\cdb.exe"),
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                @"Microsoft\WinDbg\cdb.exe"),
-        ];
-
-        foreach (var p in searchPaths)
-            if (File.Exists(p)) return p;
-
-        try
-        {
-            var appsDir = @"C:\Program Files\WindowsApps";
-            if (Directory.Exists(appsDir))
-            {
-                foreach (var dir in Directory.GetDirectories(appsDir, "*WinDbg*"))
-                {
-                    var cdb = Path.Combine(dir, "amd64", "cdb.exe");
-                    if (File.Exists(cdb)) return cdb;
-                    cdb = Path.Combine(dir, "cdb.exe");
-                    if (File.Exists(cdb)) return cdb;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            log?.Invoke($"Warning: Could not enumerate WindowsApps: {ex.Message}");
-        }
-
-        return null;
-    }
-
-    static string? RunCdbAnalysis(string cdbPath, string dumpPath, Action<string>? log = null, System.Threading.CancellationToken ct = default)
-    {
-        // Combine cancellation token with a 30s per-dump timeout so Cancel
-        // interrupts within milliseconds while still bounding a hung cdb.
-        using var timeoutCts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(30));
-        using var linked = System.Threading.CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
-        try
-        {
-            return ProcessRunner.RunAsync(cdbPath, linked.Token,
-                "-z", $"\"{dumpPath}\"", "-c", "\"!analyze -v; q\"").GetAwaiter().GetResult();
-        }
-        catch (OperationCanceledException) when (ct.IsCancellationRequested)
-        {
-            throw;
-        }
-        catch (OperationCanceledException)
-        {
-            log?.Invoke($"  cdb analysis timed out after 30s: {Path.GetFileName(dumpPath)}");
-            return null;
-        }
-        catch (Exception ex)
-        {
-            log?.Invoke($"  cdb analysis failed: {ex.Message}");
-            return null;
-        }
-    }
-
-    static string? ExtractCdbSummary(string cdbOutput)
+    public static string GenerateDumpReport(string dumpDir, bool forceDeepAnalysis = false, Action<string>? log = null, System.Threading.CancellationToken ct = default, DateTime? cutoff = null, CollectorHealth? health = null)
     {
         var sb = new StringBuilder();
-        var lines = cdbOutput.Split('\n');
-        bool inStack = false;
-        int stackLines = 0;
-
-        foreach (var rawLine in lines)
-        {
-            var line = rawLine.TrimEnd();
-
-            if (line.Contains("BUGCHECK_STR:") || line.Contains("DEFAULT_BUCKET_ID:") ||
-                line.Contains("PROCESS_NAME:") || line.Contains("IMAGE_NAME:") ||
-                line.Contains("MODULE_NAME:") || line.Contains("FAULTING_MODULE:") ||
-                line.Contains("FAILURE_BUCKET_ID:") || line.Contains("DRIVER_VERIFIER_IOMANAGER_VIOLATION"))
-            {
-                sb.AppendLine($"    {line.Trim()}");
-            }
-
-            if (line.Contains("STACK_TEXT:"))
-            {
-                inStack = true;
-                sb.AppendLine("    STACK_TEXT (top frames):");
-                stackLines = 0;
-                continue;
-            }
-
-            if (inStack)
-            {
-                if (string.IsNullOrWhiteSpace(line) || stackLines >= 10)
-                {
-                    inStack = false;
-                    continue;
-                }
-                sb.AppendLine($"      {line.Trim()}");
-                stackLines++;
-            }
-        }
-
-        var result = sb.ToString();
-        return string.IsNullOrWhiteSpace(result) ? null : result;
-    }
-
-    public static string GenerateDumpReport(string dumpDir, bool forceDeepAnalysis = false, Action<string>? log = null, System.Threading.CancellationToken ct = default)
-    {
-        var sb = new StringBuilder();
-        var dumpFiles = Directory.GetFiles(dumpDir, "*.dmp");
+        var allFiles = Directory.GetFiles(dumpDir, "*.dmp");
+        var dumpFiles = cutoff.HasValue
+            ? allFiles.Where(f => File.GetLastWriteTime(f) >= cutoff.Value).ToArray()
+            : allFiles;
 
         if (dumpFiles.Length == 0)
         {
-            sb.AppendLine("  No minidump files found.");
+            if (allFiles.Length > 0 && cutoff.HasValue)
+                sb.AppendLine($"  {allFiles.Length} dump(s) present but all older than cutoff {cutoff.Value:yyyy-MM-dd}; nothing to analyze.");
+            else
+                sb.AppendLine("  No minidump files found.");
             return sb.ToString();
         }
 
-        string? cdbPath = FindCdb(log);
+        string? cdbPath = CdbLocator.FindCdb(log);
         bool deepAnalysis = forceDeepAnalysis && cdbPath != null;
         if (deepAnalysis)
             sb.AppendLine($"  Deep analysis enabled (cdb: {cdbPath})");
@@ -366,12 +228,14 @@ public static class DumpAnalyzer
         {
             sb.AppendLine("  Deep analysis requested but cdb.exe not found.");
             sb.AppendLine("  Install WinDbg: winget install Microsoft.WinDbg");
+            health?.Failure("cdb.exe", "deep analysis requested but cdb.exe was not found under any Microsoft debugger root");
         }
 
         sb.AppendLine($"  Analyzed {dumpFiles.Length} crash dump(s):");
         sb.AppendLine();
 
         int gpuCrashes = 0;
+        int heuristicGpuCrashes = 0;
         foreach (var dmp in dumpFiles.OrderByDescending(f => new FileInfo(f).LastWriteTime))
         {
             ct.ThrowIfCancellationRequested();
@@ -382,40 +246,82 @@ public static class DumpAnalyzer
                 continue;
             }
 
-            if (info.IsGpuRelated) gpuCrashes++;
+            if (info.IsGpuRelated)
+            {
+                gpuCrashes++;
+                if (info.IsHeuristicMatch)
+                    heuristicGpuCrashes++;
+            }
 
             sb.AppendLine($"  {info.FileName}");
             sb.AppendLine($"    Date:       {info.Timestamp:yyyy-MM-dd HH:mm:ss}");
-            sb.AppendLine($"    Bugcheck:   0x{info.BugcheckCode:X8} ({info.BugcheckName})");
-            sb.AppendLine($"    Parameters: 0x{info.Param1:X} 0x{info.Param2:X} 0x{info.Param3:X} 0x{info.Param4:X}");
+            if (info.IsUserModeException)
+            {
+                sb.AppendLine($"    Exception:  0x{info.BugcheckCode:X8} (user-mode dump — not a kernel bugcheck)");
+            }
+            else if (info.IsHeuristicMatch)
+            {
+                sb.AppendLine($"    Bugcheck:   0x{info.BugcheckCode:X8} ({info.BugcheckName}, heuristic match)");
+            }
+            else
+            {
+                sb.AppendLine($"    Bugcheck:   0x{info.BugcheckCode:X8} ({info.BugcheckName})");
+            }
+            if (info.IsHeuristicMatch)
+                sb.AppendLine("    Parameters: (omitted — bugcheck located by heuristic scan, parameter offsets speculative)");
+            else
+                sb.AppendLine($"    Parameters: 0x{info.Param1:X} 0x{info.Param2:X} 0x{info.Param3:X} 0x{info.Param4:X}");
             if (info.IsGpuRelated)
                 sb.AppendLine($"    >>> GPU-RELATED CRASH <<<");
 
             if (deepAnalysis && cdbPath != null)
             {
-                log?.Invoke($"  Analyzing {info.FileName} with cdb...");
-                var cdbOutput = RunCdbAnalysis(cdbPath, dmp, log, ct);
+                var cdbOutput = CdbAnalysisCache.TryLoad(dmp, log);
                 if (cdbOutput != null)
                 {
-                    var summary = ExtractCdbSummary(cdbOutput);
+                    log?.Invoke($"  {info.FileName}: using cached cdb analysis");
+                }
+                else
+                {
+                    log?.Invoke($"  Analyzing {info.FileName} with cdb...");
+                    cdbOutput = CdbRunner.RunCdbAnalysis(cdbPath, dmp, log, ct);
+                    if (cdbOutput != null)
+                    {
+                        CdbAnalysisCache.Store(dmp, cdbOutput, log);
+                        log?.Invoke($"  {info.FileName}: cdb analysis done");
+                    }
+                    else
+                    {
+                        log?.Invoke($"  {info.FileName}: cdb analysis failed");
+                        sb.AppendLine("    WinDbg Analysis: unavailable (cdb produced no usable output or timed out).");
+                        health?.Failure($"cdb analysis: {info.FileName}", "cdb produced no usable output or timed out");
+                    }
+                }
+
+                if (cdbOutput != null)
+                {
+                    var summary = CdbRunner.ExtractCdbSummary(cdbOutput, log, health);
                     if (summary != null)
                     {
                         sb.AppendLine("    --- WinDbg Analysis ---");
                         sb.Append(summary);
                         sb.AppendLine("    -----------------------");
                     }
-                    log?.Invoke($"  {info.FileName}: cdb analysis done");
-                }
-                else
-                {
-                    log?.Invoke($"  {info.FileName}: cdb analysis failed");
+                    else
+                    {
+                        sb.AppendLine("    WinDbg Analysis: no reportable summary could be extracted from cdb output.");
+                        health?.Failure($"cdb summary: {info.FileName}", "cdb ran but FLARE could not extract a reportable summary");
+                    }
                 }
             }
 
             sb.AppendLine();
         }
 
-        sb.AppendLine($"  GPU-related crashes: {gpuCrashes} of {dumpFiles.Length}");
+        var heuristicSuffix = heuristicGpuCrashes > 0
+            ? $" ({heuristicGpuCrashes} via heuristic match)"
+            : "";
+        sb.AppendLine($"  GPU-related crashes: {gpuCrashes} of {dumpFiles.Length}{heuristicSuffix}");
 
         return sb.ToString();
     }

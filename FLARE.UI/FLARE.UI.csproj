@@ -8,23 +8,32 @@
     <RootNamespace>FLARE.UI</RootNamespace>
     <AssemblyName>FLARE</AssemblyName>
     <NoWarn>CA1416</NoWarn>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <ApplicationIcon>Logo\flare_icon.ico</ApplicationIcon>
-    <Version>0.6.0</Version>
+    <Version>0.7.0</Version>
     <Authors>Daniel Naslund (@deezel)</Authors>
-    <BuildDate>$([System.DateTime]::Now.ToString("yyyy-MM-dd"))</BuildDate>
+    <!--
+      Local builds have no SourceRevisionId, which would collapse
+      AssemblyInformationalVersion to a bare version string. Fall back to
+      "dev" so the About dialog can still tell a local build from a tagged
+      release. CI passes a short commit SHA via -p:SourceRevisionId and
+      takes precedence. Intentionally no wall-clock BuildDate — it's
+      non-deterministic and the commit hash already carries the when+what.
+    -->
+    <SourceRevisionId Condition="'$(SourceRevisionId)' == ''">dev</SourceRevisionId>
+    <FlareIsRelease Condition="'$(FlareIsRelease)' == ''">false</FlareIsRelease>
   </PropertyGroup>
 
   <ItemGroup>
-    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-      <_Parameter1>BuildDate</_Parameter1>
-      <_Parameter2>$(BuildDate)</_Parameter2>
-    </AssemblyAttribute>
+    <AssemblyMetadata Include="FlareIsRelease" Value="$(FlareIsRelease)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FLARE.Core\FLARE.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="FLARE.Tests" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +46,25 @@
     <Resource Include="Logo\flare_icon.ico" />
   </ItemGroup>
 
+  <!--
+    Single-file packaging is done via a direct GenerateBundle invocation rather
+    than PublishSingleFile=true. This is deliberate, not accidental:
+
+      - PublishSingleFile with a native dependency (Vortice.Vulkan's loader shim)
+        self-extracts to %TEMP%\.net\<app>\<hash>\ on first run. We want a truly
+        self-contained FLARE.exe that does not drop a cache dir behind the scenes.
+      - PublishSingleFile has historically left *.deps.json / *.runtimeconfig.json
+        sitting alongside the exe under some configuration combinations. The
+        GenerateBundle path below explicitly sweeps those (_BundlePayloadFiles
+        includes *.json, then deletes them after bundling).
+      - WPF + single-file has had friction with pack:// URIs and satellite
+        resource lookup across .NET SDK versions. Hand-building the bundle keeps
+        us on a path we control.
+
+    If PublishSingleFile's story improves enough to replace this, the switch
+    should be tested by building, running, and confirming that no files appear
+    next to FLARE.exe and that %TEMP%\.net does not grow a FLARE cache directory.
+  -->
   <UsingTask TaskName="GenerateBundle" AssemblyFile="$(MicrosoftNETBuildTasksAssembly)" />
   <Target Name="BundleAppOnlyForFrameworkDependent"
           DependsOnTargets="Publish"

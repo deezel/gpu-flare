@@ -3,10 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:FLARE.UI.ViewModels"
         xmlns:converters="clr-namespace:FLARE.UI.Converters"
-        Title="FLARE - Fault Log Analysis &amp; Reboot Examination"
+        xmlns:helpers="clr-namespace:FLARE.UI.Helpers"
         Height="700" Width="900"
-        MinHeight="500" MinWidth="700"
+        MinHeight="500" MinWidth="720"
         WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource DarkBackgroundBrush}"
+        Foreground="{DynamicResource FlareBodyText}"
         Icon="Logo/flare_icon.ico">
     <Window.Resources>
         <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
@@ -19,10 +21,31 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Settings -->
-        <Border Grid.Row="0" Background="{DynamicResource AccentBrush}"
-                Padding="20,15">
-            <Grid>
+        <Border Grid.Row="0" Background="{DynamicResource AccentBrush}">
+        <StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="22,16,22,14">
+                <Ellipse Width="8" Height="8"
+                         Fill="{DynamicResource FlareAccentBright}"
+                         VerticalAlignment="Center" Margin="0,1,10,0"/>
+                <TextBlock Text="FLARE"
+                           FontSize="15" FontWeight="Light"
+                           Foreground="{DynamicResource FlareStrongText}"
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="fault log analysis &amp; reboot examination"
+                           FontSize="11"
+                           Foreground="{DynamicResource FlareMutedText}"
+                           VerticalAlignment="Center" Margin="12,2,0,0"/>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="{DynamicResource FlareHairline}"
+                       HorizontalAlignment="Stretch" Margin="22,0,22,0"/>
+
+            <Grid Margin="22,14,22,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="128"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -30,112 +53,159 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Report Output Path -->
-                <Grid Grid.Row="0" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="130"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="Report Output:"/>
-                    <TextBox Grid.Column="1" Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="0,0,10,0"/>
-                    <Button Grid.Column="2" Content="Browse..." Command="{Binding BrowseOutputCommand}"
-                            Padding="15,5" MinWidth="80"/>
-                </Grid>
-
-                <!-- Numeric Settings Row -->
-                <Grid Grid.Row="1" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="130"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="Max Days:"/>
-                    <TextBox Grid.Column="1" Text="{Binding MaxDays, UpdateSourceTrigger=PropertyChanged}"
-                             Width="80" Margin="0,0,20,0"/>
-                    <Label Grid.Column="2" Content="Max Events:"/>
-                    <TextBox Grid.Column="3" Text="{Binding MaxEvents, UpdateSourceTrigger=PropertyChanged}"
-                             Width="80"/>
-                    <CheckBox Grid.Column="5" Content="Newest first"
-                              IsChecked="{Binding SortDescending}"
-                              VerticalAlignment="Center"
-                              ToolTip="Order all date-based report sections with the newest entry first. Uncheck for chronological (oldest first)."/>
-                </Grid>
-
-                <!-- Deep Analyze -->
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
-                    <CheckBox Content="Deep analysis (WinDbg)"
-                              IsChecked="{Binding DeepAnalyze}"
-                              IsEnabled="{Binding CdbFound}"
-                              VerticalAlignment="Center"
-                              Opacity="{Binding CdbFound, Converter={StaticResource BoolToOpacityConverter}}"
-                              ToolTip="Runs cdb.exe !analyze -v on each dump file. Up to 30 seconds per dump — with many dumps this can take several minutes. Safe to cancel mid-run."/>
-                    <TextBlock Text="{Binding CdbStatusText}" Foreground="#999999"
-                               FontSize="11" Margin="12,0,0,0" VerticalAlignment="Center"/>
-                    <TextBlock Text="(slow: ~30s per dump)" Foreground="#707070"
-                               FontSize="10" Margin="8,0,0,0" VerticalAlignment="Center"
-                               Visibility="{Binding CdbFound, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="SCOPE"
+                           Style="{StaticResource SectionLabel}" Margin="0,8,0,8"/>
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,4,0,4">
+                    <TextBlock Text="Max Days" FontSize="11"
+                               Foreground="{DynamicResource FlareBodyText}"
+                               VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Text="{Binding MaxDays, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource SettingInput}"
+                             helpers:SelectAllOnFocus.Enabled="True"
+                             Width="70"
+                             ToolTip="How many days back from now to scan the Windows System and Application event logs."/>
+                    <TextBlock Text="Max Events" FontSize="11"
+                               Foreground="{DynamicResource FlareBodyText}"
+                               VerticalAlignment="Center" Margin="24,0,8,0"/>
+                    <TextBox Text="{Binding MaxEvents, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource SettingInput}"
+                             helpers:SelectAllOnFocus.Enabled="True"
+                             Width="78"
+                             ToolTip="Upper bound on nvlddmkm event-log records pulled in a single run."/>
                 </StackPanel>
 
-                <!-- Run Button -->
-                <Grid Grid.Row="3">
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="OPTIONS"
+                           Style="{StaticResource SectionLabel}" Margin="0,8,0,8"/>
+                <WrapPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,4,0,4">
+                    <CheckBox Content="Newest first"
+                              IsChecked="{Binding SortDescending}"
+                              VerticalAlignment="Center" Margin="0,4,28,4"
+                              ToolTip="Order all date-based report sections with the newest entry first. Uncheck for chronological (oldest first)."/>
+                    <CheckBox Content="Redact identifiers"
+                              IsChecked="{Binding RedactIdentifiers}"
+                              VerticalAlignment="Center" Margin="0,4,28,4"
+                              ToolTip="Replace UUID and computer name with [redacted] in the report .txt and visible run log, and rewrite Windows user-profile paths to %USERPROFILE% in cdb stack traces. Minidumps and cdb caches live under %LOCALAPPDATA%\FLARE\DO_NOT_SHARE and are never part of the report file."/>
+                </WrapPanel>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="CRASH DUMPS"
+                           Style="{StaticResource SectionLabel}" Margin="0,8,0,8"/>
+                <Grid Grid.Row="2" Grid.Column="1" Margin="0,4,0,4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Content="Run Analysis" Command="{Binding RunCommand}"
-                            Style="{StaticResource AccentButton}"
-                            Padding="20,8" FontSize="14" FontWeight="Bold" MinWidth="150"/>
-                    <Button Grid.Column="1" Content="Cancel" Command="{Binding CancelCommand}"
-                            Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            Padding="10,8" FontSize="12" MinWidth="80" Margin="10,0,0,0"
-                            VerticalAlignment="Center"/>
-                    <ProgressBar Grid.Column="2" IsIndeterminate="{Binding IsRunning}"
-                                 Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                 Width="120" Height="4" Margin="15,0,0,0" VerticalAlignment="Center"
-                                 Foreground="{DynamicResource ButtonAccentBrush}"/>
-                    <TextBlock Text="{Binding StatusText}" Grid.Column="3" Foreground="#999999"
-                               FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <CheckBox Grid.Column="0" Content="Analyze crash dumps"
+                              IsChecked="{Binding DeepAnalyze}"
+                              VerticalAlignment="Center"
+                              ToolTip="Copies system minidumps and parses bugcheck information. If cdb.exe is detected, FLARE also adds WinDbg !analyze -v details."/>
+                    <TextBlock Grid.Column="1" Text="{Binding CdbStatusText}"
+                               FontSize="11"
+                               Foreground="{DynamicResource FlareMutedText}"
+                               VerticalAlignment="Center"
+                               Margin="16,0,16,0"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip="{Binding CdbStatusTooltip}"/>
+                </Grid>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="OUTPUT"
+                           Style="{StaticResource SectionLabel}" Margin="0,8,0,8"/>
+                <Grid Grid.Row="3" Grid.Column="1" Margin="0,4,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding OutputPathDisplay, Mode=OneWay}"
+                               FontFamily="Cascadia Mono, Consolas"
+                               FontSize="11"
+                               Foreground="{DynamicResource FlareBodyText}"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip="{Binding OutputPathDisplay}"/>
+                    <Button Grid.Column="1" Content="Open ↗"
+                            Command="{Binding OpenOutputFolderCommand}"
+                            Style="{StaticResource GhostButton}"
+                            VerticalAlignment="Center" MinWidth="72"
+                            ToolTip="Open the reports folder in Explorer. After a run, highlights the saved report file."/>
                 </Grid>
             </Grid>
+
+            <Rectangle Height="1" Fill="{DynamicResource FlareHairline}"
+                       HorizontalAlignment="Stretch" Margin="22,0,22,0"/>
+
+            <Grid Margin="22,14,22,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="RUN ANALYSIS"
+                        Command="{Binding RunCommand}"
+                        Style="{StaticResource FlareButton}"/>
+                <Button Grid.Column="1" Content="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource GhostButton}"
+                        Padding="14,8"
+                        Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Margin="10,0,0,0" VerticalAlignment="Center"/>
+                <ProgressBar Grid.Column="2" IsIndeterminate="{Binding IsRunning}"
+                             Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}"
+                             Width="120" Height="3" Margin="16,0,0,0"
+                             VerticalAlignment="Center"
+                             Background="{DynamicResource DarkControlBackgroundBrush}"
+                             BorderThickness="0"
+                             Foreground="{DynamicResource FlareAccentBright}"/>
+                <TextBlock Text="{Binding StatusText}" Grid.Column="3"
+                           FontSize="11"
+                           Foreground="{DynamicResource FlareMutedText}"
+                           VerticalAlignment="Center" HorizontalAlignment="Right"
+                           Margin="12,0,0,0"
+                           TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </StackPanel>
         </Border>
 
-        <!-- Log Output -->
-        <TextBox Grid.Row="1"
-                 Text="{Binding LogOutput, Mode=OneWay}"
-                 IsReadOnly="True"
-                 IsReadOnlyCaretVisible="True"
-                 IsTabStop="True"
-                 Focusable="True"
-                 VerticalScrollBarVisibility="Auto"
-                 HorizontalScrollBarVisibility="Auto"
-                 FontFamily="Consolas" FontSize="12"
-                 Background="#282830" BorderThickness="0" Padding="15,10"
-                 TextWrapping="NoWrap"
-                 x:Name="LogTextBox"/>
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource FlareHairline}"
+                BorderThickness="0,1,0,1">
+            <TextBox x:Name="LogTextBox"
+                     Text="{Binding LogOutput, Mode=OneWay}"
+                     IsReadOnly="True"
+                     IsReadOnlyCaretVisible="True"
+                      IsTabStop="True"
+                      Focusable="True"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                     FontFamily="Cascadia Mono, Consolas"
+                     FontSize="12"
+                     Background="{DynamicResource DarkBackgroundBrush}"
+                     Foreground="{DynamicResource FlareBodyText}"
+                     BorderThickness="0"
+                     Padding="22,14"
+                      TextWrapping="Wrap"/>
+        </Border>
 
-        <!-- Status Bar -->
-        <Border Grid.Row="2" Background="{DynamicResource AccentBrush}"
-                Padding="10,4">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding BottomStatusText}" Foreground="#999999" FontSize="11"/>
-                <TextBlock Grid.Column="1" Text="{Binding ElevationText}" Foreground="#999999" FontSize="11"
-                           Margin="0,0,16,0"/>
-                <TextBlock Grid.Column="2" Text="About" Foreground="#BBBBBB" FontSize="11"
-                           Cursor="Hand" MouseLeftButtonUp="AboutClick"
-                           TextDecorations="Underline"/>
-            </Grid>
+        <Border Grid.Row="2" Background="{DynamicResource AccentBrush}">
+        <Grid Margin="22,8,22,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding BottomStatusText}"
+                       FontSize="11"
+                       Foreground="{DynamicResource FlareMutedText}"
+                       TextTrimming="CharacterEllipsis"/>
+            <TextBlock Grid.Column="1" Text="{Binding ElevationText}"
+                       FontSize="11"
+                       Foreground="{DynamicResource FlareMutedText}"
+                       Margin="0,0,16,0"/>
+            <TextBlock Grid.Column="2" FontSize="11">
+                <Hyperlink Click="AboutClick"
+                           Foreground="{DynamicResource FlareMutedText}"
+                           TextDecorations="Underline">about</Hyperlink>
+            </TextBlock>
+        </Grid>
         </Border>
     </Grid>
 </Window>

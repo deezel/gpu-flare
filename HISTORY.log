@@ -1,0 +1,89 @@
+v0.7.0: elevation split, DO_NOT_SHARE layout, cdb deep analysis, scope &
+collector health reporting, UI-wide redaction, build-kind labels
+
+Elevation split: unelevated parent spawns UAC helper only for minidump copy
+(ElevatedDumpCopy). Staging path validated against %LOCALAPPDATA%\FLARE with
+trailing-separator boundary, reparse-point re-check before each File.Copy,
+and registry-sourced source path constrained under %SystemRoot%.
+
+Storage layout: FlareStorage centralizes paths. Raw minidumps and cdb
+transcripts live under DO_NOT_SHARE/; the user-visible Reports/ folder holds
+only the generated .txt. Transient elevated-helper staging lives under
+DO_NOT_SHARE/Staging/. One-shot migration from 0.6.x layouts on first run.
+
+cdb integration: CdbLocator restricts resolution to Microsoft-managed
+debugger roots (no PATH fallback, no user override). CdbRunner drives
+!analyze -v with summary extraction. CdbAnalysisCache keys per-dump on
+size+mtime+version, atomic write via temp+Replace, trailer sentinel rejects
+crash-truncated bodies.
+
+Redaction: ReportRedaction module scrubs UUID, computer name, and Windows
+user paths (including %APPDATA%/%LOCALAPPDATA%/%TEMP%/%TMP%/OneDrive roots);
+on by default. Applied to the report .txt, the visible run log, the bottom
+status bar, the OUTPUT path row and tooltip, the cdb status tooltip, and
+the unhandled-exception popup. UI-side egress goes through a single
+MainViewModel.Display helper mirroring FlareRunner.RedactLogMessage; the
+persistent surfaces re-render live when the toggle flips. Raw cdb
+transcripts under DO_NOT_SHARE/ are not scrubbed.
+
+Report scope & collector health: SCOPE block at the top of every report
+discloses requested window, System/Application Event Log retention floors,
+per-collector cap hits, and collector notices (canary/skipped/failure).
+Multi-GPU SM-localization conclusions are suppressed when more than one
+NVIDIA adapter is present. Concentration verdicts in ReportAnalysis pair
+permissive heuristics with calibrated prose so weak signals read as
+anecdotal rather than categorical.
+
+Collectors: SystemInfo (board/BIOS/CPU/RAM). GpuInfo gains PCIe current/max
+gen+width with LOWER AT SAMPLE annotation, BAR1/ReBAR detection, multi-GPU
+detection. BugcheckCatalog covers MDMP, PAGEDUMP, PAGEDU64. Kernel-Power 41
+bugcheck extraction. NVIDIA setupapi.dev.log parser. NvidiaDriverVersion
+converts Windows 4-part to marketing form.
+
+Format-drift canaries: setupapi (scheme mismatch), cdb (!analyze banner
+without expected tags), nvlddmkm (events read but none classified). Each
+canary surfaces in the SCOPE block of the saved report.
+
+Robustness: regex match timeouts across event-log parsing, fatal.log with
+1 MB rotation, corrupt settings.json quarantined to .corrupt, settings
+writes debounced and atomic, cancellation threaded through every collector.
+
+Build-kind label: FlareIsRelease MSBuild flag, set only on tag builds by
+CI and build-exe.ps1, embeds an AssemblyMetadata attribute. BuildBanner
+turns it plus the InformationalVersion into a title-bar prefix
+([DEV BUILD] / [SNAPSHOT] / clean) and a single-line About entry
+(release / snapshot (hash) / local dev build / non-release build) so the
+running binary's provenance is unambiguous on screen.
+
+UI: MainWindow.xaml drops the Output Path text input row (folder is fixed
+to %LOCALAPPDATA%\FLARE\Reports). UseLayoutRounding and SnapsToDevicePixels
+default true on every Window via the shared style so 1-DIP hairlines render
+at full brush color regardless of DPI scale. AboutWindow gains hairline
+edges matching MainWindow's pattern.
+
+Structure: ReportInput record replaces 10-arg Generate. ReadEvents<T>
+helper collapses EventLogReader loops with optional scan-cap. ReportAnalysis
+owns the localization heuristic. FlareDependencies test seam lets the
+pipeline run without live Windows APIs.
+
+Application crash correlation distinguishes distinct crashes from pair
+count. Report section numbering is dynamic (no gaps when optional sections
+absent).
+
+CI: SHA-pinned actions, SHA256SUMS.txt for zip and exe, packaged-binary
+smoke tests (startup and helper refusal). Tag builds pass FlareIsRelease=true
+through to the assembly. Release job now checks out the repo and uses
+HISTORY.log as the GitHub Release body, replacing the prior
+tag-annotation-as-body convention.
+
+392 xUnit tests covering parsers, pipeline, redaction (incl. UI surface
+pins), cache invalidation, trusted-root checks, helper refusal codes,
+canaries, build-kind label format.
+
+Docs: ARCHITECTURE.md, CONTRIBUTING.md, README updated for DO_NOT_SHARE
+layout, redaction surface scope, build-kind labels, and the unsigned-binary
+stance. README error-summary line dropped the obsolete "probability
+calculations" claim in favor of "SM coordinate concentration analysis"
+matching the calibrated-prose verdicts in ReportAnalysis. README dump-format
+note expanded from "PAGEDU64 (not MDMP)" to the three signatures
+DumpAnalyzer actually parses (PAGEDU64/PAGEDUMP, MDMP, PAGE).

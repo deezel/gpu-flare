@@ -7,23 +7,40 @@ namespace FLARE.Core;
 
 public static class ProcessRunner
 {
-    public static string Run(string exe, params string[] args) => RunInternal(exe, null, args);
+    // Per-child-process budget: applied once per nvidia-smi invocation and once
+    // per cdb !analyze -v (DumpAnalyzer spawns cdb separately per dump). On
+    // fast hardware a full batch runs in ~15s total; the 30s per-dump ceiling
+    // leaves slower machines plenty of headroom for normal kernel minidumps.
+    // A single dump hitting the ceiling would need to be pathologically
+    // large. Deliberate, measured on real hardware; not a guess. Do not raise
+    // on the theory that cdb "might" need longer.
+    internal static readonly TimeSpan DefaultSyncTimeout = TimeSpan.FromSeconds(30);
 
-    public static string RunWithLog(string exe, Action<string>? log, params string[] args) => RunInternal(exe, log, args);
+    public static string Run(string exe, params string[] args) =>
+        RunInternal(exe, null, CancellationToken.None, args);
 
-    static string RunInternal(string exe, Action<string>? log, string[] args)
+    public static string RunWithLog(string exe, Action<string>? log, params string[] args) =>
+        RunInternal(exe, log, CancellationToken.None, args);
+
+    public static string RunWithLog(string exe, Action<string>? log, CancellationToken ct, params string[] args) =>
+        RunInternal(exe, log, ct, args);
+
+    static string RunInternal(string exe, Action<string>? log, CancellationToken ct, string[] args)
     {
+        using var timeoutCts = new CancellationTokenSource(DefaultSyncTimeout);
+        using var linked = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
+
         try
         {
             var psi = new ProcessStartInfo
             {
                 FileName = exe,
-                Arguments = string.Join(" ", args),
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
+            foreach (var a in args) psi.ArgumentList.Add(a);
             using var proc = Process.Start(psi);
             if (proc == null)
             {
@@ -31,17 +48,40 @@ public static class ProcessRunner
                 return "";
             }
 
-            // Read stderr on a separate thread to prevent deadlock when both
-            // stdout and stderr buffers fill simultaneously.
+            // Register kill-on-cancel BEFORE the blocking reads so Cancel interrupts ReadToEnd.
+            using var reg = linked.Token.Register(() =>
+            {
+                try { proc.Kill(entireProcessTree: true); } catch { }
+            });
+
             string stderr = "";
             var stderrTask = Task.Run(() => stderr = proc.StandardError.ReadToEnd());
             string output = proc.StandardOutput.ReadToEnd();
             stderrTask.Wait();
+            // Bounded: if Kill-on-cancel silently failed after pipes drained, hanging here
+            // would freeze the UI Cancel button.
+            if (!proc.WaitForExit(5000))
+            {
+                try { proc.Kill(entireProcessTree: true); } catch { }
+                log?.Invoke($"Warning: {exe} did not exit within 5s after stdout closed; killed.");
+            }
 
-            proc.WaitForExit(30000);
+            // User cancel must propagate; watchdog timeout logs and returns empty.
+            if (ct.IsCancellationRequested)
+                ct.ThrowIfCancellationRequested();
+            if (timeoutCts.IsCancellationRequested)
+            {
+                log?.Invoke($"Warning: {exe} timed out after {DefaultSyncTimeout.TotalSeconds:F0}s and was killed.");
+                return "";
+            }
+
             if (proc.ExitCode != 0 && !string.IsNullOrWhiteSpace(stderr))
                 log?.Invoke($"Warning: {exe} exit {proc.ExitCode}: {stderr.Trim()}");
             return output.Trim();
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -50,34 +90,4 @@ public static class ProcessRunner
         }
     }
 
-    public static async Task<string> RunAsync(string exe, CancellationToken ct, params string[] args)
-    {
-        var psi = new ProcessStartInfo
-        {
-            FileName = exe,
-            Arguments = string.Join(" ", args),
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-        using var proc = Process.Start(psi) ?? throw new InvalidOperationException($"Failed to start {exe}");
-
-        // Kill the process when cancellation is requested
-        await using var reg = ct.Register(() =>
-        {
-            try { proc.Kill(entireProcessTree: true); } catch { }
-        });
-
-        var stderrTask = proc.StandardError.ReadToEndAsync(ct);
-        var output = await proc.StandardOutput.ReadToEndAsync(ct);
-        await stderrTask;
-
-        await proc.WaitForExitAsync(ct);
-        // The kill registration can race: streams close cleanly and WaitForExitAsync
-        // returns immediately if the process is already dead, so neither throws OCE
-        // even when the token was cancelled. Check explicitly.
-        ct.ThrowIfCancellationRequested();
-        return output.Trim();
-    }
 }

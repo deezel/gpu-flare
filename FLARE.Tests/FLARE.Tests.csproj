@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <!-- The UI project is a WPF assembly. Referencing it from this test project
+         requires the WPF SDK to be pulled in so PresentationCore / WindowsBase
+         resolve at build time. UI-layer tests (SettingsService, ViewModels) live
+         alongside the Core tests so we don't add a second test assembly. -->
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,10 +21,18 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <!-- UseWPF=true switches in the WindowsDesktop implicit-using set, which
+         drops System.IO / System.Threading from the default list. Re-add them
+         so existing tests (File, Directory, Path, CancellationTokenSource, ...)
+         keep compiling without per-file using directives. -->
+    <Using Include="System.IO" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FLARE.Core\FLARE.Core.csproj" />
+    <ProjectReference Include="..\FLARE.UI\FLARE.UI.csproj" />
   </ItemGroup>
 
 </Project>
