@@ -19,8 +19,9 @@ FLARE gathers and correlates data from multiple sources:
 4. **System crash events** — BSODs (WER ID 1001) and unexpected reboots (Kernel-Power ID 41)
 5. **Application crash correlation** — pulls application crashes (Event ID 1000) and hangs (Event ID 1002) from the Application log, then correlates them by timestamp with GPU errors to identify which applications were affected
 6. **Kernel minidump analysis** — parses PAGEDU64/MDMP crash dumps to extract bugcheck codes and parameters, identifies GPU-related crashes (VIDEO_TDR_FAILURE, VIDEO_TDR_TIMEOUT_DETECTED, VIDEO_SCHEDULER_INTERNAL_ERROR)
-7. **Driver install history** — reads Kernel-PnP, DeviceSetupManager, and `setupapi.dev.log` to reconstruct the driver install timeline, annotated onto the error frequency chart so you can see whether a driver change coincided with an error surge
-8. **Report generation** — error summary with SM coordinate concentration analysis, weekly error frequency chart with driver annotations, full error timeline, application crash correlation, crash events
+7. **Live kernel watchdog dumps** — scans `C:\Windows\LiveKernelReports` for non-BSOD kernel dumps (typically `WATCHDOG`, `WATCHDOG4400`, `WATCHDOG4401` subdirectories). These capture GPU engine timeouts (`0x141 VIDEO_ENGINE_TIMEOUT_DETECTED`), display-driver live dumps (`0x1B0`, `0x1B8`), TDR timeouts (`0x117`), and similar live-dump bugcheck codes that occur when Windows attempts driver recovery without a full BSOD — often the only diagnostic artifact when an application hang has no matching `nvlddmkm` event or WER crash.
+8. **Driver install history** — reads Kernel-PnP, DeviceSetupManager, and `setupapi.dev.log` to reconstruct the driver install timeline, annotated onto the error frequency chart so you can see whether a driver change coincided with an error surge
+9. **Report generation** — Markdown reports with error summary, SM coordinate concentration analysis, weekly error frequency chart with driver annotations, full error timeline, application crash correlation, crash events, and (when crash dump analysis is enabled) crash dump + live kernel dump sections. Full cdb stack traces are routed to a companion `_dumps.md` file with collapsible per-dump blocks so the main report stays compact for forum-pasting.
 
 ## Requirements
 
@@ -33,7 +34,7 @@ FLARE gathers and correlates data from multiple sources:
 
 Grab the latest build from the [GitHub Releases page](../../releases). Single `FLARE.exe`, no installer. Requires the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0). Per-commit CI builds are also available from [GitHub Actions artifacts](../../actions), but those expire after 90 days — use Releases for anything you want to keep.
 
-The title bar tells you which kind of build you're running: a clean `FLARE 0.7.0 - …` is a tagged release; `[SNAPSHOT] FLARE 0.7.0+<hash> - …` is a per-commit CI artifact; `[DEV BUILD] FLARE 0.7.0+dev - …` is a local `dotnet build`. The About dialog repeats this information.
+The title bar tells you which kind of build you're running: a clean `FLARE 0.7.1 - …` is a tagged release; `[SNAPSHOT] FLARE 0.7.1-alpha.0.<N>+<hash> - …` is a per-commit CI artifact (the `-alpha.0.<N>` suffix is MinVer's commit height past the most recent `v*` tag); `[DEV BUILD] FLARE 0.7.1-alpha.0.<N>+dev - …` is a local `dotnet build`. The About dialog repeats this information.
 
 **Unsigned binary — and it's going to stay that way.** FLARE releases are not code-signed and will not be. Windows SmartScreen may warn on first run. This is a permanent, deliberate project decision; please don't file issues or review comments asking for it to change.
 
@@ -82,7 +83,7 @@ FLARE can optionally use **cdb.exe** for detailed crash dump analysis. cdb is th
 - Bugcheck classification strings
 - Process context at the time of crash
 
-The crash dump analysis checkbox copies system minidumps and runs FLARE's built-in dump parser. If cdb.exe is detected, FLARE also runs `!analyze -v` on those dumps; when the checkbox is off, FLARE does not copy or analyze minidumps. FLARE itself stays unelevated; only the crash-dump copy helper prompts for elevation when needed. cdb.exe is run by the unelevated parent process when available.
+The crash dump analysis checkbox copies both system minidumps and live kernel watchdog dumps from `C:\Windows\LiveKernelReports`, then runs FLARE's built-in dump parser on each. If cdb.exe is detected, FLARE also runs `!analyze -v` on every dump from either source; when the checkbox is off, FLARE does not copy or analyze any dumps. Both sources are read in a single elevated round-trip — one UAC prompt covers both. FLARE itself stays unelevated; only the crash-dump copy helper prompts for elevation when needed. cdb.exe is run by the unelevated parent process when available.
 
 FLARE auto-detects cdb.exe under Microsoft debugger locations — Windows Kits (`Program Files\Windows Kits\10\Debuggers`), WinDbg app packages (`Program Files\WindowsApps\*WinDbg*`), and per-user WinDbg aliases under `LocalAppData\Microsoft\{WindowsApps,WinDbg}`. PATH is intentionally not used, and there is no configured cdb path override.
 
@@ -98,17 +99,25 @@ Alternatively, install the [Windows SDK](https://developer.microsoft.com/en-us/w
 
 ## Output
 
-Reports are saved to `%LOCALAPPDATA%\FLARE\Reports\`. The **Open** button in the UI jumps there in Explorer and, after a run, highlights the saved report. The report folder contains only the generated `.txt` — no dumps, no caches — so it's safe to zip, share, or sync as-is. If you want a specific report somewhere else, copy the `.txt` after the run.
+Reports are saved to `%LOCALAPPDATA%\FLARE\Reports\` as paired Markdown files: a main `flare_report_<ts>.md` (the report itself — scoped for forum-pasting, PR comments, GitHub issues) and, when crash dump analysis is enabled and cdb is available, a companion `flare_report_<ts>_dumps.md` carrying full stack traces, one fenced block per dump under a `### filename.dmp` heading. The main report keeps the structured fields per dump (`MODULE_NAME`, `FAILURE_BUCKET_ID`, etc.) and links to the corresponding stack-trace block in the dumps file. The **Open** button in the UI jumps to the folder and highlights the main file. The report folder contains only the generated `.md` files — no dumps, no caches — so it's safe to zip, share, or sync as-is. If you want a specific report somewhere else, copy the `.md` files after the run.
+
+A sample run is checked in under [examples/](examples/) — [`flare_report_20260516_104327.md`](examples/flare_report_20260516_104327.md) and its companion [`flare_report_20260516_104327_dumps.md`](examples/flare_report_20260516_104327_dumps.md) — covering a window with several real TDR storms, so you can see the shape FLARE produces under genuine fault load before running it yourself.
+
+The in-document anchor links (the Contents TOC, the per-dump cross-references between the main report and the `_dumps.md` companion) are aimed at local Markdown viewers and editor previews, which follow the usual CommonMark slugger. If you paste a report into a GitHub PR, issue, or Gist, those internal anchors may not navigate cleanly — GitHub's anchor scheme is stricter and not what FLARE targets. The prose itself is the share surface; treat the in-document links as a local-reading aid.
 
 Upgrading from 0.6.x? On first launch, FLARE auto-migrates `%LOCALAPPDATA%\FLARE\CdbCache\` and the default `%LOCALAPPDATA%\FLARE\Reports\minidumps\` into the new `DO_NOT_SHARE\` layout. If you had pointed 0.6.x at a custom report folder, your old `<custom>\minidumps\` stays there — move its contents into `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\Minidumps\` yourself (or delete it).
 
-When crash dump analysis is enabled, dumps are copied from the system minidump directory (`HKLM\SYSTEM\CurrentControlSet\Control\CrashControl\MinidumpDir`, or `%SystemRoot%\Minidump` if unset) into `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\Minidumps\`, outside the report folder. The cdb `!analyze -v` transcript cache lives alongside it under `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\CdbCache\`. The folder is named for what it is: raw kernel-memory fragments and stack traces with local paths that aren't meant to travel with the report.
+When crash dump analysis is enabled, system minidumps are copied from the configured location (`HKLM\SYSTEM\CurrentControlSet\Control\CrashControl\MinidumpDir`, or `%SystemRoot%\Minidump` if unset) into `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\Minidumps\`, and live kernel watchdog dumps are copied from `C:\Windows\LiveKernelReports` into `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\LiveKernelDumps\<category>\` (preserving the source subdirectory names — `WATCHDOG`, `WATCHDOG4400`, `WATCHDOG4401`, etc.). Both live outside the report folder. The cdb `!analyze -v` transcript cache lives alongside it under `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\CdbCache\`. The folder is named for what it is: raw kernel-memory fragments and stack traces with local paths that aren't meant to travel with the report.
+
+Each run only copies dumps that fall inside the current Max Days window; older dumps copied by a previous, wider-window run stay where they landed and aren't auto-deleted (so widening the window later doesn't lose dumps Windows has since cleared from its own folders). The cache can grow over time — especially with large LiveKernel watchdog dumps. To clean it up, use the **Open** button in the UI (it jumps to the reports folder), step up into `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\`, and delete what you don't need.
+
+When a LiveKernel `.dmp` is deleted but its cdb `!analyze -v` transcript is still in `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\CdbCache\`, the preserved analysis surfaces in the report under a separate **Cached analyses (source dump no longer present)** subsection within the live-kernel section, labeled `(source removed)`. Delete the matching `.cdb.txt` file under `CdbCache\` to drop the entry from future reports.
 
 ### Redaction
 
 Redirected user folders are handled through the actual environment roots too: paths rooted at `%APPDATA%`, `%LOCALAPPDATA%`, `%TEMP%`, `%TMP%`, or OneDrive environment variables are rewritten to those markers instead of leaking the concrete directory.
 
-**Redact identifiers** is on by default, so the saved `.txt` report can be pasted into a forum thread or support ticket without first scrubbing it by hand. Redaction replaces the GPU UUID and the computer name with `[redacted]` and rewrites Windows user-profile paths to `%USERPROFILE%` in cdb stack traces. Process names, driver/module names, and stack frames are always preserved — without them the report has no diagnostic value.
+**Redact identifiers** is on by default, so the saved `.md` report can be pasted into a forum thread or support ticket without first scrubbing it by hand. Redaction replaces the GPU UUID and the computer name with `[redacted]` and rewrites Windows user-profile paths to `%USERPROFILE%` in cdb stack traces. Process names, driver/module names, and stack frames are always preserved — without them the report has no diagnostic value.
 
 When redaction is enabled, every user-visible string FLARE writes goes through the same scrubbing — the visible run log, the bottom status bar, the OUTPUT path row and tooltip, the cdb status tooltip, and the unhandled-exception popup. Toggling redaction live re-renders the persistent surfaces (OUTPUT path, cdb tooltip); status-bar messages already shown stay as written, the next status update reflects the new setting. Raw cdb transcripts cached under `DO_NOT_SHARE\CdbCache\` are not redacted; they stay local and redaction runs when report text is rendered.
 

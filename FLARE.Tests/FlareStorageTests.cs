@@ -181,4 +181,13 @@ public class FlareStorageTests : IDisposable
         Assert.True(File.Exists(Path.Combine(_doNotShareRoot, "CdbCache", "a.txt")));
         Assert.True(File.Exists(Path.Combine(_doNotShareRoot, "Minidumps", "Mini01.dmp")));
     }
+
+    [Fact]
+    public void LiveKernelDumpsDir_LivesUnderDoNotShareRoot()
+    {
+        var dir = FlareStorage.LiveKernelDumpsDir();
+
+        Assert.StartsWith(FlareStorage.DoNotShareRoot(), dir, StringComparison.OrdinalIgnoreCase);
+        Assert.EndsWith("LiveKernelDumps", dir, StringComparison.Ordinal);
+    }
 }

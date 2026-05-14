@@ -161,6 +161,19 @@ public class CdbAnalysisCacheTests : IDisposable
     }
 
     [Fact]
+    public void EnumerateValid_ReturnsMtimeAsLocalTime_NotUtc()
+    {
+        var dump = CreateFakeDump();
+        CdbAnalysisCache.Store(dump, "transcript", cacheRoot: _cacheDir);
+
+        var entries = CdbAnalysisCache.EnumerateValid(_cacheDir).ToList();
+
+        var entry = Assert.Single(entries);
+        Assert.Equal(DateTimeKind.Local, entry.DumpMtime.Kind);
+        Assert.Equal(new FileInfo(dump).LastWriteTime, entry.DumpMtime);
+    }
+
+    [Fact]
     public void CacheFilePath_LivesUnderCacheRootAndKeepsDumpName()
     {
         // Pin the cache location contract: raw cdb transcripts (which include

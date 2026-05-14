@@ -178,4 +178,92 @@ public class SettingsServiceTests : IDisposable
             try { Directory.Delete(dirAsFilePath, recursive: true); } catch { }
         }
     }
+
+    [Fact]
+    public void SaveAndLoad_RoundTripsMaxLiveKernelDumps()
+    {
+        var service = new SettingsService(_tempPath);
+        service.SaveSettings(new AppSettings { MaxLiveKernelDumps = 123 });
+
+        var reloaded = service.LoadSettings();
+
+        Assert.Equal(123, reloaded.MaxLiveKernelDumps);
+    }
+
+    [Fact]
+    public void LoadSettings_NoFile_DefaultsMaxLiveKernelDumpsTo50()
+    {
+        var missingPath = Path.Combine(
+            Path.GetTempPath(),
+            $"flare_settings_missing_lkdumps_{Guid.NewGuid():N}.json");
+        Assert.False(File.Exists(missingPath));
+        var service = new SettingsService(missingPath);
+
+        var settings = service.LoadSettings();
+
+        Assert.Equal(50, settings.MaxLiveKernelDumps);
+    }
+
+    [Fact]
+    public void SaveAndLoad_RoundTripsSinceDate()
+    {
+        var settingsPath = Path.Combine(
+            Path.GetTempPath(),
+            $"sincedate_roundtrip_{Guid.NewGuid():N}.json");
+        try
+        {
+            var service = new SettingsService(settingsPath);
+            var anchored = new DateTime(2026, 5, 10);
+            service.SaveSettings(new AppSettings { SinceDate = anchored, MaxDays = 30 });
+
+            var reloaded = service.LoadSettings();
+
+            Assert.Equal(anchored, reloaded.SinceDate);
+        }
+        finally
+        {
+            try { File.Delete(settingsPath); } catch { }
+        }
+    }
+
+    [Fact]
+    public void LoadSettings_NoSinceDate_FillsFromMaxDays()
+    {
+        var settingsPath = Path.Combine(
+            Path.GetTempPath(),
+            $"sincedate_migrate_{Guid.NewGuid():N}.json");
+        try
+        {
+            File.WriteAllText(settingsPath, "{\"MaxDays\": 30, \"MaxEvents\": 5000}");
+            var service = new SettingsService(settingsPath);
+
+            var loaded = service.LoadSettings();
+
+            Assert.Equal(DateTime.Today - TimeSpan.FromDays(30), loaded.SinceDate);
+        }
+        finally
+        {
+            try { File.Delete(settingsPath); } catch { }
+        }
+    }
+
+    [Fact]
+    public void LoadSettings_NoFile_DefaultsSinceDateTo365DaysAgo()
+    {
+        var settingsPath = Path.Combine(
+            Path.GetTempPath(),
+            $"sincedate_default_{Guid.NewGuid():N}.json");
+        try
+        {
+            var service = new SettingsService(settingsPath);
+
+            var loaded = service.LoadSettings();
+
+            Assert.Equal(DateTime.Today - TimeSpan.FromDays(365), loaded.SinceDate);
+        }
+        finally
+        {
+            try { File.Delete(settingsPath); } catch { }
+        }
+    }
 }

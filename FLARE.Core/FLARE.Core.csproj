@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.6" />
-    <PackageReference Include="Vortice.Vulkan" Version="3.2.1" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.8" />
+    <PackageReference Include="Vortice.Vulkan" Version="3.2.2" />
   </ItemGroup>
 
 

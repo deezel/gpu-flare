@@ -875,4 +875,59 @@ public class NormalizeEventPropertiesTests
         Assert.Equal("TDR (Timeout Detection and Recovery)", result.ErrorType);
         Assert.Null(result.Gpc);
     }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(4)]
+    [InlineData(30)]
+    [InlineData(365)]
+    public void MaxDaysToMidnightCutoff_AnchorsAt00_00OfNDaysAgo(int maxDays)
+    {
+        var cutoff = EventLogParser.MaxDaysToMidnightCutoff(maxDays);
+
+        Assert.Equal(DateTime.Today.AddDays(-maxDays), cutoff);
+        Assert.Equal(TimeSpan.Zero, cutoff.TimeOfDay);
+    }
+
+    [Fact]
+    public void MaxDaysToMidnightMs_AtLeastMaxDaysTimes24h_IncludesFullCutoffDay()
+    {
+        int maxDays = 4;
+
+        var msCutoff = EventLogParser.MaxDaysToMidnightMs(maxDays);
+
+        Assert.True(
+            msCutoff >= (long)TimeSpan.FromDays(maxDays).TotalMilliseconds,
+            $"msCutoff ({msCutoff}) must be >= maxDays*24h ({(long)TimeSpan.FromDays(maxDays).TotalMilliseconds}) to cover the full morning of (Today - maxDays).");
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(4)]
+    [InlineData(30)]
+    public void MaxDaysToMidnightMs_IncludesEarlyMorningOfCutoffDay_RegardlessOfRunTime(int maxDays)
+    {
+        var msCutoff = EventLogParser.MaxDaysToMidnightMs(maxDays);
+        var earlyMorningOfCutoffDay = DateTime.Today.AddDays(-maxDays).AddHours(3);
+        var timediff = (long)(DateTime.Now - earlyMorningOfCutoffDay).TotalMilliseconds;
+
+        Assert.True(
+            timediff <= msCutoff,
+            $"event at {earlyMorningOfCutoffDay:O} (timediff={timediff}ms) must be inside the window (msCutoff={msCutoff}ms) regardless of current time of day.");
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(4)]
+    [InlineData(30)]
+    public void MaxDaysToMidnightMs_ExcludesLastMinuteBeforeCutoffDay(int maxDays)
+    {
+        var msCutoff = EventLogParser.MaxDaysToMidnightMs(maxDays);
+        var lastMinuteBefore = DateTime.Today.AddDays(-maxDays).AddMinutes(-1);
+        var timediff = (long)(DateTime.Now - lastMinuteBefore).TotalMilliseconds;
+
+        Assert.True(
+            timediff > msCutoff,
+            $"event at {lastMinuteBefore:O} (timediff={timediff}ms) must be outside the window (msCutoff={msCutoff}ms).");
+    }
 }

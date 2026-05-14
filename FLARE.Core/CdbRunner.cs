@@ -15,7 +15,7 @@ internal static class CdbRunner
 
     public static string? RunCdbAnalysis(string cdbPath, string dumpPath, Action<string>? log = null, CancellationToken ct = default)
     {
-        var output = ProcessRunner.RunWithLog(cdbPath, log, ct,
+        var output = ProcessRunner.RunWithLog(cdbPath, log, ct, ProcessRunner.CdbSyncTimeout,
             "-z", dumpPath, "-c", "!analyze -v; q");
         return string.IsNullOrWhiteSpace(output) ? null : output;
     }

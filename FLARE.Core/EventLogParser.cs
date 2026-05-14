@@ -28,6 +28,8 @@ public static partial class EventLogParser
 {
     public const int MaxDaysLimit = 3650;
     public const int MaxEventsLimit = 100_000;
+    // App crashes are tight time-of-event signals; a 30s window catches process-affected-by-GPU-fault
+    // without dragging in unrelated crash bursts.
     internal const double AppCrashCorrelationWindowSeconds = 30;
 
     public const int BsodCap = 200;
@@ -42,6 +44,14 @@ public static partial class EventLogParser
 
     // 500ms guard against backtrack-hangs from a malformed nvlddmkm payload.
     internal static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(500);
+
+    // Anchor MaxDays at 00:00 of (Today - maxDays), not at "now - maxDays * 24h",
+    // so re-running later in the same day doesn't slide events out of the window.
+    internal static DateTime MaxDaysToMidnightCutoff(int maxDays) =>
+        DateTime.Today.AddDays(-maxDays);
+
+    internal static long MaxDaysToMidnightMs(int maxDays) =>
+        (long)(DateTime.Now - MaxDaysToMidnightCutoff(maxDays)).TotalMilliseconds;
 
     [GeneratedRegex(@"GPC\s*(\d+),\s*TPC\s*(\d+),\s*SM\s*(\d+)", RegexOptions.None, matchTimeoutMilliseconds: 500)]
     private static partial Regex GpuCoordsRegex();
@@ -273,7 +283,7 @@ public static partial class EventLogParser
         if (health != null && health.SystemEventLog == null)
             health.SystemEventLog = InspectSystemEventLogRetention(log, health, ct);
 
-        long msCutoff = (long)TimeSpan.FromDays(maxDays).TotalMilliseconds;
+        long msCutoff = MaxDaysToMidnightMs(maxDays);
         var xpath = $"*[System[Provider[@Name='nvlddmkm'] and (EventID=13 or EventID=14 or EventID=153) and TimeCreated[timediff(@SystemTime) <= {msCutoff}]]]";
 
         var errors = ReadEvents<NvlddmkmError>(
@@ -386,7 +396,7 @@ public static partial class EventLogParser
         if (health != null && health.ApplicationEventLog == null)
             health.ApplicationEventLog = InspectApplicationEventLogRetention(log, health, ct);
 
-        long msCutoff = (long)TimeSpan.FromDays(maxDays).TotalMilliseconds;
+        long msCutoff = MaxDaysToMidnightMs(maxDays);
         var events = new List<AppCrashEvent>();
 
         // App-crash scope is defined by MaxDays; a high cap protects memory on pathological
@@ -495,8 +505,8 @@ public static partial class EventLogParser
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxDays);
         if (maxDays > MaxDaysLimit) maxDays = MaxDaysLimit;
 
-        long msCutoff = (long)TimeSpan.FromDays(maxDays).TotalMilliseconds;
-        var cutoff = DateTime.Now - TimeSpan.FromDays(maxDays);
+        var cutoff = MaxDaysToMidnightCutoff(maxDays);
+        long msCutoff = MaxDaysToMidnightMs(maxDays);
         var events = new List<DriverInstallEvent>();
 
         // Driver-install scope is defined by MaxDays. Keep the event-log queries
@@ -847,7 +857,7 @@ public static partial class EventLogParser
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxDays);
         if (maxDays > MaxDaysLimit) maxDays = MaxDaysLimit;
 
-        long msCutoff = (long)TimeSpan.FromDays(maxDays).TotalMilliseconds;
+        long msCutoff = MaxDaysToMidnightMs(maxDays);
         var events = new List<SystemCrashEvent>();
 
         events.AddRange(ReadEvents<SystemCrashEvent>(

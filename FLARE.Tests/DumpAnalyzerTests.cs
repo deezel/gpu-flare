@@ -458,4 +458,100 @@ public class DumpAnalyzerTests : IDisposable
         Assert.Contains("VIDEO_TDR_FAILURE", result);
         Assert.DoesNotContain("user-mode dump", result);
     }
+
+    [Fact]
+    public void GetName_0x141_ReturnsVideoEngineTimeoutDetected()
+    {
+        Assert.Equal("VIDEO_ENGINE_TIMEOUT_DETECTED", BugcheckCatalog.GetName(0x141));
+    }
+
+    [Fact]
+    public void GetName_0x113_ReturnsVideoDxgkrnlFatalError()
+    {
+        Assert.Equal("VIDEO_DXGKRNL_FATAL_ERROR", BugcheckCatalog.GetName(0x113));
+    }
+
+    [Fact]
+    public void IsGpuRelated_0x141_True()
+    {
+        Assert.True(BugcheckCatalog.IsGpuRelated(0x141));
+    }
+
+    [Fact]
+    public void IsGpuRelated_0x113_True()
+    {
+        Assert.True(BugcheckCatalog.IsGpuRelated(0x113));
+    }
+
+    [Fact]
+    public void IsLiveDumpCode_0x141_True()
+    {
+        Assert.True(BugcheckCatalog.IsLiveDumpCode(0x141));
+    }
+
+    [Fact]
+    public void IsLiveDumpCode_0x117_True()
+    {
+        Assert.True(BugcheckCatalog.IsLiveDumpCode(0x117));
+    }
+
+    [Fact]
+    public void IsLiveDumpCode_0x116_False()
+    {
+        Assert.False(BugcheckCatalog.IsLiveDumpCode(0x116));
+    }
+
+    [Fact]
+    public void IsKnown_0x141_True()
+    {
+        Assert.True(BugcheckCatalog.IsKnown(0x141));
+    }
+
+    [Fact]
+    public void GetName_0x1B0_ReturnsDisplayDriverLiveDump()
+    {
+        Assert.Equal("DISPLAY_DRIVER_LIVE_DUMP", BugcheckCatalog.GetName(0x1B0));
+    }
+
+    [Fact]
+    public void GetName_0x1B8_ReturnsDisplayDiagBlackScreenDetected()
+    {
+        Assert.Equal("DISPLAY_DIAG_BLACK_SCREEN_DETECTED", BugcheckCatalog.GetName(0x1B8));
+    }
+
+    [Fact]
+    public void IsGpuRelated_0x1B0_True()
+    {
+        Assert.True(BugcheckCatalog.IsGpuRelated(0x1B0));
+    }
+
+    [Fact]
+    public void IsGpuRelated_0x1B8_True()
+    {
+        Assert.True(BugcheckCatalog.IsGpuRelated(0x1B8));
+    }
+
+    [Fact]
+    public void IsLiveDumpCode_0x1B0_True()
+    {
+        Assert.True(BugcheckCatalog.IsLiveDumpCode(0x1B0));
+    }
+
+    [Fact]
+    public void IsLiveDumpCode_0x1B8_True()
+    {
+        Assert.True(BugcheckCatalog.IsLiveDumpCode(0x1B8));
+    }
+
+    [Fact]
+    public void IsKnown_0x1B0_True()
+    {
+        Assert.True(BugcheckCatalog.IsKnown(0x1B0));
+    }
+
+    [Fact]
+    public void IsKnown_0x1B8_True()
+    {
+        Assert.True(BugcheckCatalog.IsKnown(0x1B8));
+    }
 }

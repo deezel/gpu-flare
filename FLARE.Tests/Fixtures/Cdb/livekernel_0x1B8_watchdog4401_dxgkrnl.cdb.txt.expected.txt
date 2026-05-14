@@ -1,0 +1,16 @@
+    PROCESS_NAME:  dwm.exe
+    STACK_TEXT (top frames):
+      ffff9486`62971690 fffff807`20d17128     : ffffa706`40d2b4f0 ffffa705`eccef030 ffffa705`eccef030 00000000`0000000a : watchdog!WdpDbgCaptureTriageDump+0xe6
+      ffff9486`62971700 fffff807`20d13b48     : ffff9684`4d556a00 00000000`000001b8 00000000`0000000a ffff9486`62971830 : watchdog!WdDbgReportRecreate+0x108
+      ffff9486`62971760 fffff807`20ed70f4     : ffff9684`4d556a98 ffff9486`62971840 ffffa705`eccef030 00000000`00000000 : watchdog!WdDbgReportCreate+0x58
+      ffff9486`629717d0 fffff807`20eeb592     : ffff9684`4d555de0 ffffa706`0156f000 00000000`00000000 ffff9486`62971c00 : dxgkrnl!DxgCreateLiveDumpWithDriverBlob+0x154
+      ffff9486`62971860 fffff807`20eec2c8     : ffff9684`4d555000 ffff9684`4d555000 00000000`00000001 00000000`000036b3 : dxgkrnl!DISPLAYDIAGNOSTICADAPTERDATA::CreateMiniportBlackboxLiveDump+0xca
+      ffff9486`629718e0 fffff807`20eeceb8     : ffff9684`00000080 ffff9684`4d555000 00000000`00000000 ffff9684`a4fedfc4 : dxgkrnl!DISPLAYSTATECHECKER::LogAllDisplayDiagInfo+0xec
+      ffff9486`62971940 fffff807`24ded4e0     : 00000000`00000004 ffff9684`a4fedfc0 00000000`00000001 ffff9486`62971b01 : dxgkrnl!DxgkCheckDisplayState+0x118
+      ffff9486`629719c0 fffff807`24dcff23     : ffff9684`a4fedfc0 ffff9486`00000000 ffffa706`00010224 00000000`00000000 : win32kbase!DrvDxgkCheckDisplayState+0xb8
+      ffff9486`62971a20 fffff807`24d45f5b     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : win32kbase!xxxDisplayDiagBlackScreenDetected+0x1c3
+      ffff9486`62971b60 fffff807`24d458c9     : ffff9486`62971cb0 ffff9486`62971cc8 ffff9684`a4fedfc0 ffffa705`dc717ee0 : win32kbase!DrvProcessWin32kEscape+0x683
+      (top 10 frames shown; cdb stack was longer)
+    MODULE_NAME: dxgkrnl
+    IMAGE_NAME:  dxgkrnl.sys
+    FAILURE_BUCKET_ID:  LKD_0x1B8_dxgkrnl!DxgCreateLiveDumpWithDriverBlob

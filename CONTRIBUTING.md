@@ -54,5 +54,6 @@ A softer fourth tier — report-formatting assertions — pins exact phrasing in
 ## Releases
 
 - CI builds on every push/PR against `main`.
-- Pushing a tag `v*` triggers the release workflow — it passes the tag version into the app assembly, packages `FLARE-<version>-win-x64.zip`, and publishes a GitHub Release using `HISTORY.log` as the body. Update `HISTORY.log` for the new version before tagging.
+- Version is derived from the most recent `v*` tag by MinVer at build time; there is no `<Version>` element in the csproj and no manual version bump per release.
+- Pushing a tag `v*` triggers the release workflow — MinVer reads the tag, the workflow packages `FLARE-<version>-win-x64.zip`, and publishes a GitHub Release using `HISTORY.log` as the body. Update `HISTORY.log` for the new version before tagging.
 - Binaries are **not code-signed** and will not be. See the README "Unsigned binary" section for the reasoning; this is a settled decision, not a roadmap item. First-run SmartScreen warnings are expected. PRs, issues, or review comments proposing code-signing will be closed with a pointer back to the README.

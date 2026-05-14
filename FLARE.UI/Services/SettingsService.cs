@@ -33,30 +33,39 @@ public class SettingsService : ISettingsService
     public AppSettings LoadSettings()
     {
         LastLoadWarning = null;
-        if (!File.Exists(_settingsPath)) return new AppSettings();
+        AppSettings settings = new AppSettings();
 
-        try
+        if (File.Exists(_settingsPath))
         {
-            var json = File.ReadAllText(_settingsPath);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            try
+            {
+                var json = File.ReadAllText(_settingsPath);
+                settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            }
+            catch (JsonException ex)
+            {
+                // Preserve the bad file under .corrupt so a disk glitch or partial write
+                // doesn't silently discard the user's settings choices on the
+                // next debounced save. One rolling copy is enough for triage.
+                var quarantined = QuarantineCorruptFile();
+                LastLoadWarning = quarantined != null
+                    ? $"Settings file was unreadable ({ex.Message}); reset to defaults. Previous file preserved at {quarantined}."
+                    : $"Settings file was unreadable ({ex.Message}); reset to defaults.";
+                Trace.TraceWarning("FLARE: corrupt settings at {0}: {1}", _settingsPath, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LastLoadWarning = $"Could not read settings file ({ex.Message}); using defaults for this run.";
+                Trace.TraceWarning("FLARE: failed to load settings from {0}: {1}", _settingsPath, ex.Message);
+            }
         }
-        catch (JsonException ex)
+
+        if (settings.SinceDate == null)
         {
-            // Preserve the bad file under .corrupt so a disk glitch or partial write
-            // doesn't silently discard the user's settings choices on the
-            // next debounced save. One rolling copy is enough for triage.
-            var quarantined = QuarantineCorruptFile();
-            LastLoadWarning = quarantined != null
-                ? $"Settings file was unreadable ({ex.Message}); reset to defaults. Previous file preserved at {quarantined}."
-                : $"Settings file was unreadable ({ex.Message}); reset to defaults.";
-            Trace.TraceWarning("FLARE: corrupt settings at {0}: {1}", _settingsPath, ex.Message);
+            settings.SinceDate = DateTime.Today - TimeSpan.FromDays(Math.Max(1, settings.MaxDays));
         }
-        catch (Exception ex)
-        {
-            LastLoadWarning = $"Could not read settings file ({ex.Message}); using defaults for this run.";
-            Trace.TraceWarning("FLARE: failed to load settings from {0}: {1}", _settingsPath, ex.Message);
-        }
-        return new AppSettings();
+
+        return settings;
     }
 
     private string? QuarantineCorruptFile()

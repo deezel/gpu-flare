@@ -43,10 +43,18 @@ public partial class MainViewModel : ObservableObject
     public string CdbStatusTooltip => Display(_cdbStatusTooltipRaw);
 
     [ObservableProperty]
-    private int _maxDays = 365;
+    private int _maxDays = FlareOptions.DefaultMaxDays;
 
     [ObservableProperty]
-    private int _maxEvents = 5000;
+    private DateTime _sinceDate = DateTime.Today - TimeSpan.FromDays(FlareOptions.DefaultMaxDays);
+
+    private bool _suppressBindingCascade;
+
+    [ObservableProperty]
+    private int _maxEvents = FlareOptions.DefaultMaxEvents;
+
+    [ObservableProperty]
+    private int _maxLiveKernelDumps = FlareOptions.DefaultMaxLiveKernelDumps;
 
     [ObservableProperty]
     private bool _deepAnalyze;
@@ -106,10 +114,18 @@ public partial class MainViewModel : ObservableObject
         _suppressSettingsSideEffects = true;
         try
         {
-            if (settings.MaxDays > 0)
-                MaxDays = settings.MaxDays;
+            if (settings.SinceDate is DateTime since)
+            {
+                SinceDate = since;
+            }
+            else if (settings.MaxDays > 0)
+            {
+                SinceDate = DateTime.Today - TimeSpan.FromDays(settings.MaxDays);
+            }
             if (settings.MaxEvents > 0)
                 MaxEvents = settings.MaxEvents;
+            if (settings.MaxLiveKernelDumps > 0)
+                MaxLiveKernelDumps = settings.MaxLiveKernelDumps;
             SortDescending = settings.SortDescending;
             RedactIdentifiers = settings.RedactIdentifiers;
         }
@@ -127,7 +143,9 @@ public partial class MainViewModel : ObservableObject
     {
         var settings = _settingsService.LoadSettings();
         settings.MaxDays = MaxDays;
+        settings.SinceDate = SinceDate;
         settings.MaxEvents = MaxEvents;
+        settings.MaxLiveKernelDumps = MaxLiveKernelDumps;
         settings.SortDescending = SortDescending;
         settings.RedactIdentifiers = RedactIdentifiers;
         _settingsService.SaveSettings(settings);
@@ -204,8 +222,51 @@ public partial class MainViewModel : ObservableObject
     private string Display(string text) =>
         RedactIdentifiers ? ReportRedaction.RedactAll(text, Environment.MachineName) : text;
 
-    partial void OnMaxDaysChanged(int value) => QueueSaveSettings();
+    partial void OnSinceDateChanged(DateTime value)
+    {
+        if (_suppressBindingCascade) return;
+        _suppressBindingCascade = true;
+        try
+        {
+            var clamped = ClampSinceDate(value);
+            if (clamped != value) SinceDate = clamped;
+            MaxDays = Math.Max(1, (int)Math.Round((DateTime.Today - clamped.Date).TotalDays));
+            QueueSaveSettings();
+        }
+        finally
+        {
+            _suppressBindingCascade = false;
+        }
+    }
+
+    partial void OnMaxDaysChanged(int value)
+    {
+        if (_suppressBindingCascade) return;
+        _suppressBindingCascade = true;
+        try
+        {
+            var clampedDays = Math.Clamp(value, 1, EventLogParser.MaxDaysLimit);
+            if (clampedDays != value) MaxDays = clampedDays;
+            SinceDate = DateTime.Today - TimeSpan.FromDays(clampedDays);
+            QueueSaveSettings();
+        }
+        finally
+        {
+            _suppressBindingCascade = false;
+        }
+    }
+
+    private static DateTime ClampSinceDate(DateTime input)
+    {
+        var date = input.Date;
+        var oldest = DateTime.Today - TimeSpan.FromDays(EventLogParser.MaxDaysLimit);
+        if (date > DateTime.Today) return DateTime.Today;
+        if (date < oldest) return oldest;
+        return date;
+    }
+
     partial void OnMaxEventsChanged(int value) => QueueSaveSettings();
+    partial void OnMaxLiveKernelDumpsChanged(int value) => QueueSaveSettings();
     partial void OnSortDescendingChanged(bool value) => QueueSaveSettings();
     partial void OnRedactIdentifiersChanged(bool value)
     {
@@ -274,10 +335,13 @@ public partial class MainViewModel : ObservableObject
             inputNote = $"Input capped to Max Days={effectiveMaxDays}, Max Events={effectiveMaxEvents}.";
         }
 
+        var effectiveDays = Math.Max(1, (int)Math.Round((DateTime.Today - SinceDate.Date).TotalDays));
+
         options = new FlareOptions
         {
-            MaxDays = effectiveMaxDays,
+            MaxDays = effectiveDays,
             MaxEvents = effectiveMaxEvents,
+            MaxLiveKernelDumps = MaxLiveKernelDumps,
             DeepAnalyze = DeepAnalyze,
             SortDescending = SortDescending,
             RedactIdentifiers = RedactIdentifiers,

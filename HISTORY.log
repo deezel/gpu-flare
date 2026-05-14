@@ -1,3 +1,32 @@
+v0.7.1: LiveKernel dumps, Markdown reports, since-date, MinVer
+
+- LiveKernel watchdog dumps: scans C:\Windows\LiveKernelReports for
+  non-BSOD kernel dumps (0x117 / 0x141 / 0x1B0 / 0x1B8). Elevated copy
+  reads system minidumps and LiveKernel dumps in one UAC round-trip.
+  BugcheckCatalog gains 0x113, 0x141, 0x1B0, 0x1B8 with live-dump flag.
+  Max LiveKernel input clamped to [1, 1000]; effective cap surfaces in
+  SCOPE.
+- Reports are Markdown: report.md + paired report_dumps.md with full
+  cdb stack traces. TOC, ## headers, tables, fenced code. Frequency
+  chart buckets by ISO 8601 weeks (Monday start) and labels rows with
+  ISO year-week.
+- Since-date input: bidirectionally bound to Max Days, persisted in
+  AppSettings. All MaxDays cutoffs anchored at midnight.
+- Orphan cdb cache surfacing: cached transcripts for rotated-out
+  LiveKernel dumps now picked up. Both scan cap and orphan cap surface
+  in SCOPE via CollectionTruncation flags.
+- Helper hardening: reparse-point defense extends to per-run and
+  per-dump subdirectories. LiveKernel copy runs independently of
+  minidump dir existence.
+- Fixture corpus: redacted real-world cdb transcripts (0x113, 0x116,
+  0x133, 0x141, 0x1B8) with expected ExtractCdbSummary output.
+- CdbLocator prefers cdbx64.exe in the WindowsApps fallback scan.
+- MinVer: version derived from the most recent v* tag. Release builds
+  read clean; per-commit artifacts read [SNAPSHOT] with commit-height
+  suffix.
+
+----
+
 v0.7.0: elevation split, DO_NOT_SHARE layout, cdb deep analysis, scope &
 collector health reporting, UI-wide redaction, build-kind labels
 

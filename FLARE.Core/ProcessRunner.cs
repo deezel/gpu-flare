@@ -7,27 +7,27 @@ namespace FLARE.Core;
 
 public static class ProcessRunner
 {
-    // Per-child-process budget: applied once per nvidia-smi invocation and once
-    // per cdb !analyze -v (DumpAnalyzer spawns cdb separately per dump). On
-    // fast hardware a full batch runs in ~15s total; the 30s per-dump ceiling
-    // leaves slower machines plenty of headroom for normal kernel minidumps.
-    // A single dump hitting the ceiling would need to be pathologically
-    // large. Deliberate, measured on real hardware; not a guess. Do not raise
-    // on the theory that cdb "might" need longer.
     internal static readonly TimeSpan DefaultSyncTimeout = TimeSpan.FromSeconds(30);
 
+    // LiveKernel watchdog dumps are 100x a minidump's size and cdb's first run also
+    // downloads symbols from the public MS server; 30s is too tight for that path.
+    internal static readonly TimeSpan CdbSyncTimeout = TimeSpan.FromSeconds(120);
+
     public static string Run(string exe, params string[] args) =>
-        RunInternal(exe, null, CancellationToken.None, args);
+        RunInternal(exe, null, CancellationToken.None, DefaultSyncTimeout, args);
 
     public static string RunWithLog(string exe, Action<string>? log, params string[] args) =>
-        RunInternal(exe, log, CancellationToken.None, args);
+        RunInternal(exe, log, CancellationToken.None, DefaultSyncTimeout, args);
 
     public static string RunWithLog(string exe, Action<string>? log, CancellationToken ct, params string[] args) =>
-        RunInternal(exe, log, ct, args);
+        RunInternal(exe, log, ct, DefaultSyncTimeout, args);
 
-    static string RunInternal(string exe, Action<string>? log, CancellationToken ct, string[] args)
+    public static string RunWithLog(string exe, Action<string>? log, CancellationToken ct, TimeSpan timeout, params string[] args) =>
+        RunInternal(exe, log, ct, timeout, args);
+
+    static string RunInternal(string exe, Action<string>? log, CancellationToken ct, TimeSpan timeout, string[] args)
     {
-        using var timeoutCts = new CancellationTokenSource(DefaultSyncTimeout);
+        using var timeoutCts = new CancellationTokenSource(timeout);
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
 
         try
@@ -71,7 +71,7 @@ public static class ProcessRunner
                 ct.ThrowIfCancellationRequested();
             if (timeoutCts.IsCancellationRequested)
             {
-                log?.Invoke($"Warning: {exe} timed out after {DefaultSyncTimeout.TotalSeconds:F0}s and was killed.");
+                log?.Invoke($"Warning: {exe} timed out after {timeout.TotalSeconds:F0}s and was killed.");
                 return "";
             }
 
