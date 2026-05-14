@@ -1,0 +1,13 @@
+    PROCESS_NAME:  System
+    STACK_TEXT (top frames):
+      fffff806`303a0c08 fffff806`9d8c248c     : 00000000`00000133 00000000`00000001 00000000`00001e00 fffff806`9e5c43b0 : nt!KeBugCheckEx
+      fffff806`303a0c10 fffff806`9d8c19bb     : 00000000`00000000 00000000`00002338 00000000`00000000 fffff806`2d2f8180 : nt!KeAccumulateTicks+0x59c
+      fffff806`303a0c80 fffff806`9d90f7ce     : 00000000`00000000 00000000`53faa430 fffff806`2d2f8180 ffff8b82`00000000 : nt!KiUpdateRunTime+0x9b
+      fffff806`303a0e40 fffff806`9d9101cc     : fffff806`9e410d30 fffff806`9e410de0 fffff806`9e58eb28 fffff806`00000000 : nt!KeClockInterruptNotify+0x3ee
+      fffff806`303a0f40 fffff806`9dca41fe     : 00000000`00611c02 fffff806`9e410d30 00000000`00000000 00000000`00000000 : nt!KiCallInterruptServiceRoutine+0x32c
+      fffff806`303a0fb0 fffff806`9dca4a0c     : ffff8b82`b95f1000 fffff806`736d9d3c ffff8b82`b95f1db8 00000000`00616664 : nt!KiInterruptSubDispatchNoLockNoEtw+0x4e
+      fffff806`3038f8d0 fffff806`734b34d3     : 00000000`00000000 00000000`00611c30 00000000`00000000 00000000`00000000 : nt!KiInterruptDispatchNoLockNoEtw+0x3c
+      fffff806`3038fa60 00000000`00000000     : 00000000`00611c30 00000000`00000000 00000000`00000000 ffff8b82`b95f1000 : nvlddmkm+0xe34d3
+    MODULE_NAME: nvlddmkm
+    IMAGE_NAME:  nvlddmkm.sys
+    FAILURE_BUCKET_ID:  0x133_ISR_nvlddmkm!unknown_function

@@ -6,9 +6,10 @@ namespace FLARE.Core;
 
 public static class CdbLocator
 {
-    // Store/winget WinDbg registers architecture-tagged aliases instead of plain cdb.exe.
-    // Order = preference (x64 first on 64-bit hosts).
-    internal static readonly string[] CdbFileNames = ["cdb.exe", "cdbx64.exe", "cdbarm64.exe", "cdbx86.exe"];
+    // FLARE is win-x64 (see RuntimeIdentifier in FLARE.UI.csproj), so the LocalAppData
+    // fallback scan prefers the explicit x64-tagged Store/winget WinDbg alias, then the
+    // bare name, then other archs.
+    internal static readonly string[] CdbFileNames = ["cdbx64.exe", "cdb.exe", "cdbarm64.exe", "cdbx86.exe"];
 
     // No PATH fallback: resolution is restricted to Microsoft-managed debugger roots so
     // a shadowed cdb.exe on PATH can't be preferred over a missing trusted install.

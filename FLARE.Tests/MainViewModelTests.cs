@@ -21,6 +21,8 @@ public class MainViewModelTests
             MaxEvents = Stored.MaxEvents,
             SortDescending = Stored.SortDescending,
             RedactIdentifiers = Stored.RedactIdentifiers,
+            MaxLiveKernelDumps = Stored.MaxLiveKernelDumps,
+            SinceDate = Stored.SinceDate,
         };
 
         public void SaveSettings(AppSettings settings)
@@ -186,7 +188,7 @@ public class MainViewModelTests
     public async Task Run_WithInvalidNumericInputs_DoesNotStartPipeline()
     {
         var vm = NewVm();
-        vm.MaxDays = 0;
+        vm.MaxEvents = 0;
 
         await vm.RunCommand.ExecuteAsync(null);
 
@@ -565,5 +567,115 @@ public class MainViewModelTests
         vm.FlushPendingSave();
 
         Assert.Equal("Ready", vm.BottomStatusText);
+    }
+
+    [Fact]
+    public void MaxLiveKernelDumps_SeededFromSettings()
+    {
+        var settings = new FakeSettingsService
+        {
+            Stored = new AppSettings { MaxLiveKernelDumps = 200 }
+        };
+        var vm = NewVm(settings: settings);
+
+        Assert.Equal(200, vm.MaxLiveKernelDumps);
+    }
+
+    [Fact]
+    public void MaxLiveKernelDumps_DefaultsTo50WhenSettingsHaveNoValue()
+    {
+        var settings = new FakeSettingsService();
+        var vm = NewVm(settings: settings);
+
+        Assert.Equal(50, vm.MaxLiveKernelDumps);
+    }
+
+    [Fact]
+    public void SinceDate_Setter_UpdatesMaxDays()
+    {
+        var settings = new FakeSettingsService { Stored = new AppSettings { SinceDate = DateTime.Today } };
+        var vm = NewVm(settings: settings);
+
+        vm.SinceDate = DateTime.Today - TimeSpan.FromDays(10);
+
+        Assert.Equal(10, vm.MaxDays);
+    }
+
+    [Fact]
+    public void MaxDays_Setter_UpdatesSinceDate()
+    {
+        var settings = new FakeSettingsService { Stored = new AppSettings { SinceDate = DateTime.Today } };
+        var vm = NewVm(settings: settings);
+
+        vm.MaxDays = 30;
+
+        Assert.Equal(DateTime.Today - TimeSpan.FromDays(30), vm.SinceDate);
+    }
+
+    [Fact]
+    public void SinceDate_FutureDate_ClampsToToday()
+    {
+        var settings = new FakeSettingsService { Stored = new AppSettings { SinceDate = DateTime.Today } };
+        var vm = NewVm(settings: settings);
+
+        vm.SinceDate = DateTime.Today.AddDays(5);
+
+        Assert.Equal(DateTime.Today, vm.SinceDate);
+    }
+
+    [Fact]
+    public void SinceDate_AncientDate_ClampsToMaxDaysLimit()
+    {
+        var settings = new FakeSettingsService { Stored = new AppSettings { SinceDate = DateTime.Today } };
+        var vm = NewVm(settings: settings);
+
+        vm.SinceDate = new DateTime(1990, 1, 1);
+
+        Assert.Equal(DateTime.Today - TimeSpan.FromDays(EventLogParser.MaxDaysLimit), vm.SinceDate);
+    }
+
+    [Fact]
+    public void MaxDays_ZeroOrNegative_ClampsToOne()
+    {
+        var settings = new FakeSettingsService { Stored = new AppSettings { SinceDate = DateTime.Today } };
+        var vm = NewVm(settings: settings);
+
+        vm.MaxDays = 0;
+
+        Assert.Equal(1, vm.MaxDays);
+        Assert.Equal(DateTime.Today - TimeSpan.FromDays(1), vm.SinceDate);
+    }
+
+    [Fact]
+    public void SinceDate_SeededFromSettings()
+    {
+        var anchored = DateTime.Today - TimeSpan.FromDays(7);
+        var settings = new FakeSettingsService { Stored = new AppSettings { SinceDate = anchored } };
+        var vm = NewVm(settings: settings);
+
+        Assert.Equal(anchored, vm.SinceDate);
+        Assert.Equal(7, vm.MaxDays);
+    }
+
+    [Fact]
+    public async Task Run_UsesMaxDaysDerivedFromSinceDate()
+    {
+        FlareOptions? capturedOptions = null;
+        var settings = new FakeSettingsService
+        {
+            Stored = new AppSettings { SinceDate = DateTime.Today - TimeSpan.FromDays(45) },
+        };
+        var vm = NewVm(
+            settings: settings,
+            runFlare: (opt, _, _) =>
+            {
+                capturedOptions = opt;
+                return new FlareResult { SavedPath = "report.txt" };
+            });
+
+        await vm.RunCommand.ExecuteAsync(null);
+
+        Assert.NotNull(capturedOptions);
+        Assert.Equal(45, capturedOptions!.MaxDays);
     }
 }

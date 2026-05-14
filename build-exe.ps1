@@ -18,7 +18,6 @@ $outputDir = if ([System.IO.Path]::IsPathRooted($OutputFolder)) {
 
 $gitHash = try { git rev-parse --short HEAD 2>$null } catch { "dev" }
 if (-not $gitHash) { $gitHash = "dev" }
-$gitTag = try { git describe --tags --exact-match 2>$null } catch { "" }
 
 $msbuildProps = @(
     "-p:Configuration=$Config",
@@ -29,10 +28,6 @@ $msbuildProps = @(
     "-p:DebugType=None",
     "-p:SourceRevisionId=$gitHash"
 )
-if ($gitTag -match '^v(.+)$') {
-    $msbuildProps += "-p:Version=$($Matches[1])"
-    $msbuildProps += "-p:FlareIsRelease=true"
-}
 
 Write-Host "Building FLARE executable for $Runtime ($gitHash)..."
 

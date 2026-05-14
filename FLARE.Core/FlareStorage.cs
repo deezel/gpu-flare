@@ -21,6 +21,9 @@ public static class FlareStorage
     public static string CdbCacheDir() =>
         Path.Combine(DoNotShareRoot(), "CdbCache");
 
+    public static string LiveKernelDumpsDir() =>
+        Path.Combine(DoNotShareRoot(), "LiveKernelDumps");
+
     // Transient raw-dump staging for the elevated copy helper. Keep it under
     // DO_NOT_SHARE so crash/cancel leftovers do not escape the user-facing
     // "raw artifacts live here" boundary described in the README/UI.

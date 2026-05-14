@@ -1,0 +1,356 @@
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+   EnableRedirectToChakraJsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.015 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 46
+
+Microsoft (R) Windows Debugger Version 10.0.29547.1002 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+
+Loading Dump File [%USERPROFILE%\AppData\Local\FLARE\DO_NOT_SHARE\Minidumps\040326-18109-01.dmp]
+Mini Kernel Dump File: Only registers and stack trace are available
+
+Symbol search path is: srv*
+Executable search path is: 
+Windows 10 Kernel Version 26100 MP (32 procs) Free x64
+Product: WinNt, suite: TerminalServer SingleUserTS
+Kernel base = 0xfffff807`d7e00000 PsLoadedModuleList = 0xfffff807`d8cf50c0
+Debug session time: Fri Apr  3 10:28:04.268 2026 (UTC + 2:00)
+System Uptime: 0 days 0:12:01.116
+Loading Kernel Symbols
+...............................................................
+................................................................
+................................................................
+......................................................
+Loading User Symbols
+PEB is paged out (Peb.Ldr = 000000e6`bd766018).  Type ".hh dbgerr001" for details
+Loading unloaded module list
+.............
+For analysis of this file, run !analyze -v
+16: kd> cdb: Reading initial command '!analyze -v; q'
+Loading Kernel Symbols
+...............................................................
+................................................................
+................................................................
+......................................................
+Loading User Symbols
+PEB is paged out (Peb.Ldr = 000000e6`bd766018).  Type ".hh dbgerr001" for details
+Loading unloaded module list
+.............
+*******************************************************************************
+*                                                                             *
+*                        Bugcheck Analysis                                    *
+*                                                                             *
+*******************************************************************************
+
+VIDEO_DXGKRNL_FATAL_ERROR (113)
+The dxgkrnl has detected that a violation has occurred. This resulted
+in a condition that dxgkrnl can no longer progress.  By crashing, dxgkrnl
+is attempting to get enough information into the minidump such that somebody
+can pinpoint the crash cause. Any other values after parameter 1 must be
+individually examined according to the subtype.
+Arguments:
+Arg1: 000000000000002b, The subtype of the BugCheck:
+Arg2: ffff96097b853800
+Arg3: ffffc28fac436000
+Arg4: 0000000000000000
+
+Debugging Details:
+------------------
+
+
+KEY_VALUES_STRING: 1
+
+    Key  : Analysis.CPU.mSec
+    Value: 875
+
+    Key  : Analysis.Elapsed.mSec
+    Value: 1346
+
+    Key  : Analysis.IO.Other.Mb
+    Value: 0
+
+    Key  : Analysis.IO.Read.Mb
+    Value: 1
+
+    Key  : Analysis.IO.Write.Mb
+    Value: 0
+
+    Key  : Analysis.Init.CPU.mSec
+    Value: 281
+
+    Key  : Analysis.Init.Elapsed.mSec
+    Value: 897
+
+    Key  : Analysis.Memory.CommitPeak.Mb
+    Value: 91
+
+    Key  : Analysis.Version.DbgEng
+    Value: 10.0.29547.1002
+
+    Key  : Analysis.Version.Description
+    Value: 10.2602.27.2 amd64fre
+
+    Key  : Analysis.Version.Ext
+    Value: 1.2602.27.2
+
+    Key  : Bugcheck.Code.LegacyAPI
+    Value: 0x113
+
+    Key  : Bugcheck.Code.TargetModel
+    Value: 0x113
+
+    Key  : DirectX.FatalError.Code
+    Value: 0x2b
+
+    Key  : DirectX.FatalError.Desc
+    Value: CORRUPTED_LIST
+
+    Key  : Dump.Attributes.AsUlong
+    Value: 0x21808
+
+    Key  : Dump.Attributes.DiagDataWrittenToHeader
+    Value: 1
+
+    Key  : Dump.Attributes.ErrorCode
+    Value: 0x0
+
+    Key  : Dump.Attributes.KernelGeneratedTriageDump
+    Value: 1
+
+    Key  : Dump.Attributes.LastLine
+    Value: Dump completed successfully.
+
+    Key  : Dump.Attributes.ProgressPercentage
+    Value: 0
+
+    Key  : Failure.Bucket
+    Value: 0x113_2B_dxgkrnl!DXGDEVICE::DestroyAllDeviceState
+
+    Key  : Failure.Hash
+    Value: {f86e2aa1-b3d9-2720-0764-350120287324}
+
+    Key  : Hypervisor.Enlightenments.ValueHex
+    Value: 0x7497cf94
+
+    Key  : Hypervisor.Flags.AnyHypervisorPresent
+    Value: 1
+
+    Key  : Hypervisor.Flags.ApicEnlightened
+    Value: 1
+
+    Key  : Hypervisor.Flags.ApicVirtualizationAvailable
+    Value: 0
+
+    Key  : Hypervisor.Flags.AsyncMemoryHint
+    Value: 0
+
+    Key  : Hypervisor.Flags.CoreSchedulerRequested
+    Value: 0
+
+    Key  : Hypervisor.Flags.CpuManager
+    Value: 1
+
+    Key  : Hypervisor.Flags.DeprecateAutoEoi
+    Value: 0
+
+    Key  : Hypervisor.Flags.DynamicCpuDisabled
+    Value: 1
+
+    Key  : Hypervisor.Flags.Epf
+    Value: 0
+
+    Key  : Hypervisor.Flags.ExtendedProcessorMasks
+    Value: 1
+
+    Key  : Hypervisor.Flags.HardwareMbecAvailable
+    Value: 1
+
+    Key  : Hypervisor.Flags.MaxBankNumber
+    Value: 0
+
+    Key  : Hypervisor.Flags.MemoryZeroingControl
+    Value: 0
+
+    Key  : Hypervisor.Flags.NoExtendedRangeFlush
+    Value: 0
+
+    Key  : Hypervisor.Flags.NoNonArchCoreSharing
+    Value: 1
+
+    Key  : Hypervisor.Flags.Phase0InitDone
+    Value: 1
+
+    Key  : Hypervisor.Flags.PowerSchedulerQos
+    Value: 0
+
+    Key  : Hypervisor.Flags.RootScheduler
+    Value: 0
+
+    Key  : Hypervisor.Flags.SynicAvailable
+    Value: 1
+
+    Key  : Hypervisor.Flags.UseQpcBias
+    Value: 0
+
+    Key  : Hypervisor.Flags.Value
+    Value: 38408431
+
+    Key  : Hypervisor.Flags.ValueHex
+    Value: 0x24a10ef
+
+    Key  : Hypervisor.Flags.VpAssistPage
+    Value: 1
+
+    Key  : Hypervisor.Flags.VsmAvailable
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.AccessStats
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.CrashdumpEnlightened
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.CreateVirtualProcessor
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.DisableHyperthreading
+    Value: 0
+
+    Key  : Hypervisor.RootFlags.HostTimelineSync
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.HypervisorDebuggingEnabled
+    Value: 0
+
+    Key  : Hypervisor.RootFlags.IsHyperV
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.LivedumpEnlightened
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.MapDeviceInterrupt
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.MceEnlightened
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.Nested
+    Value: 0
+
+    Key  : Hypervisor.RootFlags.StartLogicalProcessor
+    Value: 1
+
+    Key  : Hypervisor.RootFlags.Value
+    Value: 1015
+
+    Key  : Hypervisor.RootFlags.ValueHex
+    Value: 0x3f7
+
+    Key  : WER.System.BIOSRevision
+    Value: 18.5.0.0
+
+
+BUGCHECK_CODE:  113
+
+BUGCHECK_P1: 2b
+
+BUGCHECK_P2: ffff96097b853800
+
+BUGCHECK_P3: ffffc28fac436000
+
+BUGCHECK_P4: 0
+
+FILE_IN_CAB:  040326-18109-01.dmp
+
+TAG_NOT_DEFINED_202b:  *** Unknown TAG in analysis list 202b
+
+
+DUMP_FILE_ATTRIBUTES: 0x21808
+  Kernel Generated Triage Dump
+
+FAULTING_THREAD:  ffffc28fc8d05080
+
+BLACKBOXBSD: 1 (!blackboxbsd)
+
+
+BLACKBOXNTFS: 1 (!blackboxntfs)
+
+
+BLACKBOXPNP: 1 (!blackboxpnp)
+
+
+BLACKBOXWINLOGON: 1 (!blackboxwinlogon) (!blackboxwinlogonnotify)
+
+
+CUSTOMER_CRASH_COUNT:  1
+
+PROCESS_NAME:  msedgewebview2
+
+STACK_TEXT:  
+ffffbf04`706c6fd8 fffff807`69d31316     : 00000000`00000113 00000000`0000002b ffff9609`7b853800 ffffc28f`ac436000 : nt!KeBugCheckEx
+ffffbf04`706c6fe0 fffff807`6a107eb4     : ffff9609`7b853a01 ffff9609`7b8539f0 ffffbf04`706c71a0 ffff9609`7b853800 : watchdog!WdLogSingleEntry5+0x156
+ffffbf04`706c7070 fffff807`6a1058e0     : ffff9609`7b853800 ffff9609`7476ed70 ffff9609`7b853800 ffffc28f`c8d059c0 : dxgkrnl!DXGDEVICE::DestroyAllDeviceState+0x250
+ffffbf04`706c70e0 fffff807`6a10564b     : ffff9609`7b853800 ffffbf04`706c71f9 ffff9609`7b853800 fffff807`00010022 : dxgkrnl!ADAPTER_RENDER::DestroyDevice+0x244
+ffffbf04`706c7160 fffff807`6a00be76     : ffff9609`7b853800 ffffc28f`ac436000 ffff9609`7b853800 ffff9609`74ed16e8 : dxgkrnl!ADAPTER_RENDER::DestroyDeviceNoCoreAccess+0xb3
+ffffbf04`706c7260 fffff807`6a0fd6b9     : ffff9609`7b853800 ffffbf04`706c74e0 00000000`00ffffff ffffbf04`706c74e0 : dxgkrnl!ADAPTER_RENDER::DestroyDeviceNoLocks+0x8e
+ffffbf04`706c7290 fffff807`6a0fd1fb     : 00007ffa`17100000 ffffc28f`c8d05080 000000e6`bdffc690 00000000`00000020 : dxgkrnl!DxgkDestroyDeviceImpl+0x4b1
+ffffbf04`706c7430 fffff807`d84be358     : ffffc28f`c8d05080 000000e6`bdffb880 ffffc28f`c8d05080 000000e6`bdffc690 : dxgkrnl!DxgkDestroyDevice+0xb
+ffffbf04`706c7460 00007ffa`1acf4d34     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KiSystemServiceCopyEnd+0x28
+000000e6`bdff9c58 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : 0x00007ffa`1acf4d34
+
+
+SYMBOL_NAME:  dxgkrnl!DXGDEVICE::DestroyAllDeviceState+250
+
+MODULE_NAME: dxgkrnl
+
+IMAGE_NAME:  dxgkrnl.sys
+
+IMAGE_VERSION:  10.0.26100.7920
+
+STACK_COMMAND: .process /r /p 0xffffc28fc8747080; .thread /r /p 0xffffc28fc8d05080 ; kb
+
+BUCKET_ID_FUNC_OFFSET:  250
+
+FAILURE_BUCKET_ID:  0x113_2B_dxgkrnl!DXGDEVICE::DestroyAllDeviceState
+
+OSPLATFORM_TYPE:  x64
+
+OSNAME:  Windows 10
+
+FAILURE_ID_HASH:  {f86e2aa1-b3d9-2720-0764-350120287324}
+
+Followup:     MachineOwner
+---------
+
+quit:
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Kernel.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Usb4Kd.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\winrt.natvis'
+# end v1

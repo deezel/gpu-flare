@@ -1,0 +1,204 @@
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+   EnableRedirectToChakraJsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.016 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 46
+
+Microsoft (R) Windows Debugger Version 10.0.29547.1002 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+
+Loading Dump File [%USERPROFILE%\AppData\Local\FLARE\DO_NOT_SHARE\LiveKernelDumps\WATCHDOG4401\WATCHDOG4401-20250521-2202.dmp]
+Mini Kernel Dump File: Only registers and stack trace are available
+
+Symbol search path is: srv*
+Executable search path is: 
+Windows 10 Kernel Version 26100 MP (32 procs) Free x64
+Product: WinNt, suite: TerminalServer SingleUserTS
+Kernel base = 0xfffff807`8ee00000 PsLoadedModuleList = 0xfffff807`8fcf4af0
+Debug session time: Wed May 21 22:02:38.249 2025 (UTC + 2:00)
+System Uptime: 5 days 17:24:29.931
+Loading Kernel Symbols
+...............................................................
+................................................................
+................................................................
+.........................................
+Loading User Symbols
+PEB is paged out (Peb.Ldr = 000000f8`6a1d9018).  Type ".hh dbgerr001" for details
+Mini Kernel Dump does not contain unloaded driver list
+For analysis of this file, run !analyze -v
+12: kd> cdb: Reading initial command '!analyze -v; q'
+Loading Kernel Symbols
+...............................................................
+................................................................
+................................................................
+.........................................
+Loading User Symbols
+PEB is paged out (Peb.Ldr = 000000f8`6a1d9018).  Type ".hh dbgerr001" for details
+Mini Kernel Dump does not contain unloaded driver list
+*******************************************************************************
+*                                                                             *
+*                        Bugcheck Analysis                                    *
+*                                                                             *
+*******************************************************************************
+
+VIDEO_MINIPORT_BLACK_SCREEN_LIVEDUMP (1b8)
+User initiated miniport black screen live dump.
+(This code can never be used for a real BugCheck; it is used to identify live dumps.)
+User initiated miniport live dump for black screen scenarios.
+Arguments:
+Arg1: 000000000000000a, Source which triggered the miniport black screen live dump.
+Arg2: 0000000000000000, Reserved.
+Arg3: 0000000000000000, Reserved.
+Arg4: 0000000000000000, Reserved.
+
+Debugging Details:
+------------------
+
+Mini Kernel Dump does not contain unloaded driver list
+Mini Kernel Dump does not contain unloaded driver list
+
+KEY_VALUES_STRING: 1
+
+    Key  : Analysis.CPU.mSec
+    Value: 828
+
+    Key  : Analysis.Elapsed.mSec
+    Value: 816
+
+    Key  : Analysis.IO.Other.Mb
+    Value: 0
+
+    Key  : Analysis.IO.Read.Mb
+    Value: 1
+
+    Key  : Analysis.IO.Write.Mb
+    Value: 0
+
+    Key  : Analysis.Init.CPU.mSec
+    Value: 250
+
+    Key  : Analysis.Init.Elapsed.mSec
+    Value: 815
+
+    Key  : Analysis.Memory.CommitPeak.Mb
+    Value: 100
+
+    Key  : Analysis.Version.DbgEng
+    Value: 10.0.29547.1002
+
+    Key  : Analysis.Version.Description
+    Value: 10.2602.27.2 amd64fre
+
+    Key  : Analysis.Version.Ext
+    Value: 1.2602.27.2
+
+    Key  : Bugcheck.Code.LegacyAPI
+    Value: 0x1b8
+
+    Key  : Bugcheck.Code.TargetModel
+    Value: 0x1b8
+
+    Key  : Dump.Attributes.AsUlong
+    Value: 0x18
+
+    Key  : Dump.Attributes.KernelGeneratedTriageDump
+    Value: 1
+
+    Key  : Failure.Bucket
+    Value: LKD_0x1B8_dxgkrnl!DxgCreateLiveDumpWithDriverBlob
+
+    Key  : Failure.Hash
+    Value: {78f57550-3f55-6bdf-3ac0-93b04d3448ae}
+
+
+BUGCHECK_CODE:  1b8
+
+BUGCHECK_P1: a
+
+BUGCHECK_P2: 0
+
+BUGCHECK_P3: 0
+
+BUGCHECK_P4: 0
+
+FILE_IN_CAB:  WATCHDOG4401-20250521-2202.dmp
+
+DUMP_FILE_ATTRIBUTES: 0x18
+  Kernel Generated Triage Dump
+  Live Generated Dump
+
+FAULTING_THREAD:  ffffa70600d290c0
+
+PROCESS_NAME:  dwm.exe
+
+STACK_TEXT:  
+ffff9486`62971690 fffff807`20d17128     : ffffa706`40d2b4f0 ffffa705`eccef030 ffffa705`eccef030 00000000`0000000a : watchdog!WdpDbgCaptureTriageDump+0xe6
+ffff9486`62971700 fffff807`20d13b48     : ffff9684`4d556a00 00000000`000001b8 00000000`0000000a ffff9486`62971830 : watchdog!WdDbgReportRecreate+0x108
+ffff9486`62971760 fffff807`20ed70f4     : ffff9684`4d556a98 ffff9486`62971840 ffffa705`eccef030 00000000`00000000 : watchdog!WdDbgReportCreate+0x58
+ffff9486`629717d0 fffff807`20eeb592     : ffff9684`4d555de0 ffffa706`0156f000 00000000`00000000 ffff9486`62971c00 : dxgkrnl!DxgCreateLiveDumpWithDriverBlob+0x154
+ffff9486`62971860 fffff807`20eec2c8     : ffff9684`4d555000 ffff9684`4d555000 00000000`00000001 00000000`000036b3 : dxgkrnl!DISPLAYDIAGNOSTICADAPTERDATA::CreateMiniportBlackboxLiveDump+0xca
+ffff9486`629718e0 fffff807`20eeceb8     : ffff9684`00000080 ffff9684`4d555000 00000000`00000000 ffff9684`a4fedfc4 : dxgkrnl!DISPLAYSTATECHECKER::LogAllDisplayDiagInfo+0xec
+ffff9486`62971940 fffff807`24ded4e0     : 00000000`00000004 ffff9684`a4fedfc0 00000000`00000001 ffff9486`62971b01 : dxgkrnl!DxgkCheckDisplayState+0x118
+ffff9486`629719c0 fffff807`24dcff23     : ffff9684`a4fedfc0 ffff9486`00000000 ffffa706`00010224 00000000`00000000 : win32kbase!DrvDxgkCheckDisplayState+0xb8
+ffff9486`62971a20 fffff807`24d45f5b     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : win32kbase!xxxDisplayDiagBlackScreenDetected+0x1c3
+ffff9486`62971b60 fffff807`24d458c9     : ffff9486`62971cb0 ffff9486`62971cc8 ffff9684`a4fedfc0 ffffa705`dc717ee0 : win32kbase!DrvProcessWin32kEscape+0x683
+ffff9486`62971c00 fffff807`21157825     : ffffffff`ffffffff 000000f8`6ad6ad28 ffffffff`ffffffff 00000000`00000001 : win32kbase!DxgkEngProcessWin32kEscape+0x9
+ffff9486`62971c30 fffff807`8f4b8658     : ffffa706`00d290c0 ffffa706`00d290c0 000000f8`6ad6ad28 00000000`00000072 : dxgkrnl!DxgkEscape+0x235
+ffff9486`62972460 00007fff`b99f4ed4     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KiSystemServiceCopyEnd+0x28
+000000f8`6ad6ab68 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : 0x00007fff`b99f4ed4
+
+
+SYMBOL_NAME:  dxgkrnl!DxgCreateLiveDumpWithDriverBlob+154
+
+MODULE_NAME: dxgkrnl
+
+IMAGE_NAME:  dxgkrnl.sys
+
+IMAGE_VERSION:  10.0.26100.4061
+
+STACK_COMMAND: .process /r /p 0xffffa705fdc450c0; .thread /r /p 0xffffa70600d290c0 ; kb
+
+BUCKET_ID_FUNC_OFFSET:  154
+
+FAILURE_BUCKET_ID:  LKD_0x1B8_dxgkrnl!DxgCreateLiveDumpWithDriverBlob
+
+OSPLATFORM_TYPE:  x64
+
+OSNAME:  Windows 10
+
+FAILURE_ID_HASH:  {78f57550-3f55-6bdf-3ac0-93b04d3448ae}
+
+Followup:     MachineOwner
+---------
+
+quit:
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Kernel.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Usb4Kd.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\winrt.natvis'
+# end v1

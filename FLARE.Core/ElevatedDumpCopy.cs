@@ -40,24 +40,36 @@ public static class ElevatedDumpCopy
             if (HasReparsePointInExistingPath(fullStaging, rootFull))
                 return ExitStagingReparsePoint;
 
-            var src = MinidumpLocator.GetSystemDumpDir();
-            if (!Directory.Exists(src)) return ExitOk;
-
             Directory.CreateDirectory(fullStaging);
             if (HasReparsePointInExistingPath(fullStaging, rootFull))
                 return ExitStagingReparsePoint;
 
             int failed = 0;
-            foreach (var dmp in Directory.GetFiles(src, "*.dmp"))
+            var src = MinidumpLocator.GetSystemDumpDir();
+            if (Directory.Exists(src))
             {
-                if (HasReparsePointInExistingPath(fullStaging, rootFull))
+                var minidumpsDir = Path.Combine(fullStaging, "minidumps");
+                Directory.CreateDirectory(minidumpsDir);
+                if (HasReparsePointInExistingPath(minidumpsDir, rootFull))
                     return ExitStagingReparsePoint;
-                if (cutoff.HasValue && File.GetLastWriteTime(dmp) < cutoff.Value)
-                    continue;
-                var dest = Path.Combine(fullStaging, Path.GetFileName(dmp));
-                try { File.Copy(dmp, dest, overwrite: false); }
-                catch { failed++; }
+                foreach (var dmp in Directory.GetFiles(src, "*.dmp"))
+                {
+                    if (HasReparsePointInExistingPath(minidumpsDir, rootFull))
+                        return ExitStagingReparsePoint;
+                    if (cutoff.HasValue && File.GetLastWriteTime(dmp) < cutoff.Value)
+                        continue;
+                    var dest = Path.Combine(minidumpsDir, Path.GetFileName(dmp));
+                    try { File.Copy(dmp, dest, overwrite: false); }
+                    catch { failed++; }
+                }
             }
+
+            var lkSource = Path.Combine(MinidumpLocator.ResolveWindowsDirectory(), "LiveKernelReports");
+            var lkStaging = Path.Combine(fullStaging, "livekernel");
+            if (HasReparsePointInExistingPath(fullStaging, rootFull))
+                return ExitStagingReparsePoint;
+            failed += CopyLiveKernelSubtree(lkSource, lkStaging, rootFull, cutoff);
+
             if (failed > 0)
                 TryWriteCopyFailureSentinel(fullStaging, failed);
             return ExitOk;
@@ -68,9 +80,18 @@ public static class ElevatedDumpCopy
         }
     }
 
-    public static List<string> CopyViaElevatedHelper(string destDir, DateTime? cutoff = null, Action<string>? log = null, CancellationToken ct = default, CollectorHealth? health = null)
+    public sealed record StagedDumps(List<string> Minidumps, List<string> LiveKernelDumps);
+
+    public static StagedDumps CopyDumpsViaElevatedHelper(
+        string minidumpDestDir,
+        string liveKernelDestDir,
+        DateTime? cutoff = null,
+        Action<string>? log = null,
+        CancellationToken ct = default,
+        CollectorHealth? health = null)
     {
         var copied = new List<string>();
+        var copiedLk = new List<string>();
         var staging = Path.Combine(GetStagingRoot(), $"staging-{Guid.NewGuid():N}");
 
         try
@@ -88,18 +109,18 @@ public static class ElevatedDumpCopy
                 {
                     log?.Invoke($"  In-process minidump copy failed (code {rc}).");
                     health?.Failure("minidump copy", $"in-process helper returned exit code {rc}");
-                    return copied;
+                    return new StagedDumps(copied, copiedLk);
                 }
             }
             else if (!IsHostedByFlareExe())
             {
                 log?.Invoke("  Minidump copy skipped (not running under FLARE.exe).");
                 health?.Skipped("minidump copy", "not running under FLARE.exe; elevated helper was not launched");
-                return copied;
+                return new StagedDumps(copied, copiedLk);
             }
             else if (!SpawnElevatedHelper(staging, cutoff, log, ct, health))
             {
-                return copied;
+                return new StagedDumps(copied, copiedLk);
             }
 
             ct.ThrowIfCancellationRequested();
@@ -108,22 +129,27 @@ public static class ElevatedDumpCopy
             {
                 log?.Invoke("  Minidump copy skipped (staging path contains a reparse point).");
                 health?.Failure("minidump copy", "staging path contained a reparse point after helper returned");
-                return copied;
+                return new StagedDumps(copied, copiedLk);
             }
-
-            Directory.CreateDirectory(destDir);
-            if (!Directory.Exists(staging)) return copied;
 
             ReadCopyFailureSentinel(staging, log, health);
 
-            foreach (var src in Directory.GetFiles(staging, "*.dmp"))
+            var stagingMd = Path.Combine(staging, "minidumps");
+            if (Directory.Exists(stagingMd))
             {
-                ct.ThrowIfCancellationRequested();
-                var finalPath = ChooseDestination(destDir, src);
-                if (finalPath == null) { File.Delete(src); continue; }
-                File.Move(src, finalPath);
-                copied.Add(finalPath);
+                Directory.CreateDirectory(minidumpDestDir);
+                foreach (var src in Directory.GetFiles(stagingMd, "*.dmp"))
+                {
+                    ct.ThrowIfCancellationRequested();
+                    var finalPath = ChooseDestination(minidumpDestDir, src);
+                    if (finalPath == null) { File.Delete(src); continue; }
+                    File.Move(src, finalPath);
+                    copied.Add(finalPath);
+                }
             }
+
+            var stagingLk = Path.Combine(staging, "livekernel");
+            copiedLk = MoveLiveKernelToDestination(stagingLk, liveKernelDestDir);
         }
         catch (OperationCanceledException)
         {
@@ -139,8 +165,16 @@ public static class ElevatedDumpCopy
             TryDeleteStaging(staging);
         }
 
-        return copied;
+        return new StagedDumps(copied, copiedLk);
     }
+
+    public static List<string> CopyViaElevatedHelper(
+        string destDir,
+        DateTime? cutoff = null,
+        Action<string>? log = null,
+        CancellationToken ct = default,
+        CollectorHealth? health = null) =>
+        CopyDumpsViaElevatedHelper(destDir, FlareStorage.LiveKernelDumpsDir(), cutoff, log, ct, health).Minidumps;
 
     internal static bool TryWriteCopyFailureSentinel(string stagingDir, int failed)
     {
@@ -159,6 +193,57 @@ public static class ElevatedDumpCopy
         }
     }
 
+    internal static int CopyLiveKernelSubtree(string sourceRoot, string stagingLk, string rootFull, DateTime? cutoff = null)
+    {
+        if (!Directory.Exists(sourceRoot)) return 0;
+
+        int failed = 0;
+        foreach (var src in Directory.EnumerateFiles(sourceRoot, "*.dmp", SearchOption.AllDirectories))
+        {
+            if (cutoff.HasValue && File.GetLastWriteTime(src) < cutoff.Value)
+                continue;
+            var rel = Path.GetRelativePath(sourceRoot, src);
+            var dest = Path.Combine(stagingLk, rel);
+            try
+            {
+                var destDir = Path.GetDirectoryName(dest)!;
+                Directory.CreateDirectory(destDir);
+                if (HasReparsePointInExistingPath(destDir, rootFull))
+                {
+                    failed++;
+                    continue;
+                }
+                File.Copy(src, dest, overwrite: false);
+            }
+            catch
+            {
+                failed++;
+            }
+        }
+        return failed;
+    }
+
+    internal static List<string> MoveLiveKernelToDestination(string stagingLk, string destRoot)
+    {
+        var moved = new List<string>();
+        if (!Directory.Exists(stagingLk)) return moved;
+
+        Directory.CreateDirectory(destRoot);
+        foreach (var src in Directory.EnumerateFiles(stagingLk, "*.dmp", SearchOption.AllDirectories))
+        {
+            var rel = Path.GetRelativePath(stagingLk, src);
+            var dest = Path.Combine(destRoot, rel);
+            var destDir = Path.GetDirectoryName(dest)!;
+            Directory.CreateDirectory(destDir);
+
+            var final = ChooseDestination(destDir, src);
+            if (final == null) { File.Delete(src); continue; }
+            File.Move(src, final);
+            moved.Add(final);
+        }
+        return moved;
+    }
+
     internal static void ReadCopyFailureSentinel(string staging, Action<string>? log, CollectorHealth? health)
     {
         var sentinel = Path.Combine(staging, CopyFailureSentinelName);
@@ -168,8 +253,8 @@ public static class ElevatedDumpCopy
             var raw = File.ReadAllText(sentinel).Trim();
             if (int.TryParse(raw, NumberStyles.None, CultureInfo.InvariantCulture, out var n) && n > 0)
             {
-                log?.Invoke($"  {n} dump(s) in system minidump folder could not be copied.");
-                health?.Failure("minidump copy", $"{n} dump(s) in system minidump folder could not be copied");
+                log?.Invoke($"  {n} dump(s) could not be copied (minidump and/or LiveKernel sources).");
+                health?.Failure("minidump copy", $"{n} dump(s) could not be copied across minidump and LiveKernel sources");
             }
         }
         catch { }

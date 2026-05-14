@@ -19,43 +19,32 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
         with:
           dotnet-version: '10.0.x'
 
-      - name: Set version info
+      - name: Resolve version info
         run: |
           $hash = git rev-parse --short HEAD
           echo "SOURCE_REVISION_ID=$hash" >> $env:GITHUB_ENV
           if ($env:GITHUB_REF -match '^refs/tags/v(.+)$') {
-            echo "FLARE_RELEASE_VERSION=$($Matches[1])" >> $env:GITHUB_ENV
             echo "FLARE_PACKAGE_VERSION=$($Matches[1])" >> $env:GITHUB_ENV
           } else {
-            echo "FLARE_RELEASE_VERSION=" >> $env:GITHUB_ENV
             echo "FLARE_PACKAGE_VERSION=$hash" >> $env:GITHUB_ENV
           }
 
       - name: Build
-        run: |
-          $versionArgs = @()
-          if ($env:FLARE_RELEASE_VERSION) {
-            $versionArgs += "-p:Version=$env:FLARE_RELEASE_VERSION"
-            $versionArgs += "-p:FlareIsRelease=true"
-          }
-          dotnet build FLARE.slnx -c Release -p:SourceRevisionId=$env:SOURCE_REVISION_ID @versionArgs
+        run: dotnet build FLARE.slnx -c Release -p:SourceRevisionId=$env:SOURCE_REVISION_ID
 
       - name: Test
         run: dotnet test FLARE.slnx -c Release --no-build
 
       - name: Publish
         run: |
-          $versionArgs = @()
-          if ($env:FLARE_RELEASE_VERSION) {
-            $versionArgs += "-p:Version=$env:FLARE_RELEASE_VERSION"
-            $versionArgs += "-p:FlareIsRelease=true"
-          }
           dotnet msbuild FLARE.UI/FLARE.UI.csproj -restore -t:BundleAppOnlyForFrameworkDependent `
             -p:Configuration=Release `
             -p:RuntimeIdentifier=win-x64 `
@@ -63,8 +52,7 @@ jobs:
             -p:SelfContained=false `
             -p:DebugSymbols=false `
             -p:DebugType=None `
-            -p:SourceRevisionId=$env:SOURCE_REVISION_ID `
-            @versionArgs
+            -p:SourceRevisionId=$env:SOURCE_REVISION_ID
 
       - name: Smoke test packaged app startup
         run: |

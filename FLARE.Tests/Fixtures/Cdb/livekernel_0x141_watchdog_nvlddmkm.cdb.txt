@@ -1,0 +1,224 @@
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+   EnableRedirectToChakraJsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.015 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.000 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 46
+
+Microsoft (R) Windows Debugger Version 10.0.29547.1002 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+
+Loading Dump File [%USERPROFILE%\AppData\Local\FLARE\DO_NOT_SHARE\LiveKernelDumps\WATCHDOG\WATCHDOG-20250521-2202.dmp]
+Mini Kernel Dump File: Only registers and stack trace are available
+
+Symbol search path is: srv*
+Executable search path is: 
+Windows 10 Kernel Version 26100 MP (32 procs) Free x64
+Product: WinNt, suite: TerminalServer SingleUserTS
+Kernel base = 0xfffff807`8ee00000 PsLoadedModuleList = 0xfffff807`8fcf4af0
+Debug session time: Wed May 21 22:02:37.150 2025 (UTC + 2:00)
+System Uptime: 5 days 17:24:28.832
+Loading Kernel Symbols
+...............................................................
+................................................................
+................................................................
+.........................................
+Loading User Symbols
+
+Mini Kernel Dump does not contain unloaded driver list
+For analysis of this file, run !analyze -v
+5: kd> cdb: Reading initial command '!analyze -v; q'
+Loading Kernel Symbols
+...............................................................
+................................................................
+................................................................
+.........................................
+Loading User Symbols
+
+Mini Kernel Dump does not contain unloaded driver list
+*******************************************************************************
+*                                                                             *
+*                        Bugcheck Analysis                                    *
+*                                                                             *
+*******************************************************************************
+
+VIDEO_ENGINE_TIMEOUT_DETECTED (141)
+One of the display engines failed to respond in timely fashion.
+(This code can never be used for a real BugCheck; it is used to identify live dumps.)
+Arguments:
+Arg1: ffffa70647d06060, Optional pointer to internal TDR recovery context (TDR_RECOVERY_CONTEXT).
+Arg2: fffff807676b6740, The pointer into responsible device driver module (e.g. owner tag).
+Arg3: 0000000000000000, The secondary driver specific bucketing key.
+Arg4: ffffa7062a5bf140, Optional internal context dependent data.
+
+Debugging Details:
+------------------
+
+Mini Kernel Dump does not contain unloaded driver list
+Mini Kernel Dump does not contain unloaded driver list
+Unable to load image nvlddmkm.sys, Win32 error 0n2
+*** WARNING: Unable to verify timestamp for nvlddmkm.sys
+
+KEY_VALUES_STRING: 1
+
+    Key  : Analysis.CPU.mSec
+    Value: 1015
+
+    Key  : Analysis.Elapsed.mSec
+    Value: 1042
+
+    Key  : Analysis.IO.Other.Mb
+    Value: 0
+
+    Key  : Analysis.IO.Read.Mb
+    Value: 1
+
+    Key  : Analysis.IO.Write.Mb
+    Value: 0
+
+    Key  : Analysis.Init.CPU.mSec
+    Value: 265
+
+    Key  : Analysis.Init.Elapsed.mSec
+    Value: 835
+
+    Key  : Analysis.Memory.CommitPeak.Mb
+    Value: 97
+
+    Key  : Analysis.Version.DbgEng
+    Value: 10.0.29547.1002
+
+    Key  : Analysis.Version.Description
+    Value: 10.2602.27.2 amd64fre
+
+    Key  : Analysis.Version.Ext
+    Value: 1.2602.27.2
+
+    Key  : Bugcheck.Code.LegacyAPI
+    Value: 0x141
+
+    Key  : Bugcheck.Code.TargetModel
+    Value: 0x141
+
+    Key  : Dump.Attributes.AsUlong
+    Value: 0x18
+
+    Key  : Dump.Attributes.KernelGeneratedTriageDump
+    Value: 1
+
+    Key  : Failure.Bucket
+    Value: LKD_0x141_IMAGE_nvlddmkm.sys
+
+    Key  : Failure.Exception.IP.Address
+    Value: 0xfffff807676b6740
+
+    Key  : Failure.Exception.IP.Module
+    Value: nvlddmkm
+
+    Key  : Failure.Exception.IP.Offset
+    Value: 0x1986740
+
+    Key  : Failure.Hash
+    Value: {341dd0b3-9ebd-47a8-9de8-23f4b00fabbc}
+
+    Key  : Faulting.IP.Type
+    Value: Paged
+
+
+BUGCHECK_CODE:  141
+
+BUGCHECK_P1: ffffa70647d06060
+
+BUGCHECK_P2: fffff807676b6740
+
+BUGCHECK_P3: 0
+
+BUGCHECK_P4: ffffa7062a5bf140
+
+FILE_IN_CAB:  WATCHDOG-20250521-2202.dmp
+
+DUMP_FILE_ATTRIBUTES: 0x18
+  Kernel Generated Triage Dump
+  Live Generated Dump
+
+FAULTING_THREAD:  ffffa70615d06140
+
+TAG_NOT_DEFINED_202b:  *** Unknown TAG in analysis list 202b
+
+
+VIDEO_TDR_CONTEXT: dt dxgkrnl!_TDR_RECOVERY_CONTEXT ffffa70647d06060
+Symbol dxgkrnl!_TDR_RECOVERY_CONTEXT not found.
+
+PROCESS_OBJECT: ffffa7062a5bf140
+
+PROCESS_NAME:  System
+
+IP_IN_PAGED_CODE: 
+nvlddmkm+1986740
+fffff807`676b6740 ??              ???
+
+STACK_TEXT:  
+ffff9486`795268f0 fffff807`8f504f99     : ffffa706`47d06060 00000000`00000000 00000000`00000000 00000000`00000000 : nt!DbgkpWerCaptureLiveTriageDump+0x8e
+ffff9486`79526e20 fffff807`8f8b926a     : 00000000`00000000 00000000`00000000 fffff807`8f8d8a50 00000000`c0000099 : nt!DbgkpWerProcessPolicyResult+0x21
+ffff9486`79526e50 fffff807`8f8b9069     : 00000000`00000003 ffff9486`79527030 ffffa706`47d06060 ffffa706`183a6920 : nt!DbgkWerCaptureLiveKernelDump2+0x1ea
+ffff9486`79526eb0 fffff807`210bd239     : ffff9684`a21cd910 ffff9684`a21cd910 ffff9684`a676921a ffffa706`294f1000 : nt!DbgkWerCaptureLiveKernelDump+0x69
+ffff9486`79526f30 fffff807`25564d08     : ffffa706`4dfd7000 ffffa706`4dfd7000 ffffa706`4dfd7000 00000000`00000001 : dxgkrnl!TdrCollectDbgInfoStage1+0xd69
+ffff9486`795270f0 fffff807`255b7117     : ffffa706`4dfd7001 ffffa706`4dfd76f8 00000000`00000000 ffffa705`00000002 : dxgmms2!VidSchiResetHwEngine+0x210
+ffff9486`795272e0 fffff807`255e3766     : ffff9486`00000000 ffffa705`f91cc000 ffff9486`79527479 00000000`00000000 : dxgmms2!VidSchiResetEngines+0xcb
+ffff9486`79527330 fffff807`25539a74     : ffffa705`f91cc000 00000000`00000002 ffff9486`79527479 00000000`01e312ae : dxgmms2!VidSchiCheckHwProgress+0x316
+ffff9486`795273c0 fffff807`255e4122     : ffffa705`f91cc000 ffff9486`79527530 ffffa706`4eb30010 ffffa705`f91cc000 : dxgmms2!VidSchiScheduleCommandToRun+0x64
+ffff9486`795274e0 fffff807`255b72cc     : ffffa705`f91cc500 ffffa705`f91cc000 fffff807`255b71f0 00000000`00000000 : dxgmms2!VidSchiRun_PriorityTable+0x42
+ffff9486`79527530 fffff807`8f2a2d1a     : ffffa706`15d06140 fffff807`00000001 983b65f4`49a4b8b8 fffff807`1d516180 : dxgmms2!VidSchiWorkerThread+0xdc
+ffff9486`79527570 fffff807`8f4a61b4     : fffff807`1d516180 ffffa706`15d06140 fffff807`8f2a2cc0 f0706362`fa88b111 : nt!PspSystemThreadStartup+0x5a
+ffff9486`795275c0 00000000`00000000     : ffff9486`79528000 ffff9486`79521000 00000000`00000000 00000000`00000000 : nt!KiStartSystemThread+0x34
+
+
+SYMBOL_NAME:  nvlddmkm+1986740
+
+MODULE_NAME: nvlddmkm
+
+IMAGE_NAME:  nvlddmkm.sys
+
+STACK_COMMAND: .process /r /p 0xffffa705dc563040; .thread /r /p 0xffffa70615d06140 ; kb
+
+FAILURE_BUCKET_ID:  LKD_0x141_IMAGE_nvlddmkm.sys
+
+OSPLATFORM_TYPE:  x64
+
+OSNAME:  Windows 10
+
+FAILURE_ID_HASH:  {341dd0b3-9ebd-47a8-9de8-23f4b00fabbc}
+
+Followup:     MachineOwner
+---------
+
+quit:
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Kernel.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Usb4Kd.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files\WindowsApps\Microsoft.WinDbg_1.2603.20001.0_x64__8wekyb3d8bbwe\amd64\Visualizers\winrt.natvis'
+# end v1

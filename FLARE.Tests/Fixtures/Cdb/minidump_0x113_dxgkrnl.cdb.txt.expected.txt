@@ -1,0 +1,15 @@
+    PROCESS_NAME:  msedgewebview2
+    STACK_TEXT (top frames):
+      ffffbf04`706c6fd8 fffff807`69d31316     : 00000000`00000113 00000000`0000002b ffff9609`7b853800 ffffc28f`ac436000 : nt!KeBugCheckEx
+      ffffbf04`706c6fe0 fffff807`6a107eb4     : ffff9609`7b853a01 ffff9609`7b8539f0 ffffbf04`706c71a0 ffff9609`7b853800 : watchdog!WdLogSingleEntry5+0x156
+      ffffbf04`706c7070 fffff807`6a1058e0     : ffff9609`7b853800 ffff9609`7476ed70 ffff9609`7b853800 ffffc28f`c8d059c0 : dxgkrnl!DXGDEVICE::DestroyAllDeviceState+0x250
+      ffffbf04`706c70e0 fffff807`6a10564b     : ffff9609`7b853800 ffffbf04`706c71f9 ffff9609`7b853800 fffff807`00010022 : dxgkrnl!ADAPTER_RENDER::DestroyDevice+0x244
+      ffffbf04`706c7160 fffff807`6a00be76     : ffff9609`7b853800 ffffc28f`ac436000 ffff9609`7b853800 ffff9609`74ed16e8 : dxgkrnl!ADAPTER_RENDER::DestroyDeviceNoCoreAccess+0xb3
+      ffffbf04`706c7260 fffff807`6a0fd6b9     : ffff9609`7b853800 ffffbf04`706c74e0 00000000`00ffffff ffffbf04`706c74e0 : dxgkrnl!ADAPTER_RENDER::DestroyDeviceNoLocks+0x8e
+      ffffbf04`706c7290 fffff807`6a0fd1fb     : 00007ffa`17100000 ffffc28f`c8d05080 000000e6`bdffc690 00000000`00000020 : dxgkrnl!DxgkDestroyDeviceImpl+0x4b1
+      ffffbf04`706c7430 fffff807`d84be358     : ffffc28f`c8d05080 000000e6`bdffb880 ffffc28f`c8d05080 000000e6`bdffc690 : dxgkrnl!DxgkDestroyDevice+0xb
+      ffffbf04`706c7460 00007ffa`1acf4d34     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KiSystemServiceCopyEnd+0x28
+      000000e6`bdff9c58 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : 0x00007ffa`1acf4d34
+    MODULE_NAME: dxgkrnl
+    IMAGE_NAME:  dxgkrnl.sys
+    FAILURE_BUCKET_ID:  0x113_2B_dxgkrnl!DXGDEVICE::DestroyAllDeviceState

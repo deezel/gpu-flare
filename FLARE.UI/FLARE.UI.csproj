@@ -10,23 +10,40 @@
     <NoWarn>CA1416</NoWarn>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <ApplicationIcon>Logo\flare_icon.ico</ApplicationIcon>
-    <Version>0.7.0</Version>
     <Authors>Daniel Naslund (@deezel)</Authors>
+    <!--
+      Version is derived from the most recent v* git tag by MinVer at
+      build time. No <Version> element here; setting one would override
+      MinVer. MinVer PackageReference is below.
+    -->
+    <MinVerTagPrefix>v</MinVerTagPrefix>
     <!--
       Local builds have no SourceRevisionId, which would collapse
       AssemblyInformationalVersion to a bare version string. Fall back to
       "dev" so the About dialog can still tell a local build from a tagged
-      release. CI passes a short commit SHA via -p:SourceRevisionId and
-      takes precedence. Intentionally no wall-clock BuildDate — it's
-      non-deterministic and the commit hash already carries the when+what.
+      release. build-exe.ps1 and CI pass a short commit SHA via
+      -p:SourceRevisionId and that takes precedence. Intentionally no
+      wall-clock BuildDate, it's non-deterministic and the commit hash
+      already carries the when+what.
     -->
     <SourceRevisionId Condition="'$(SourceRevisionId)' == ''">dev</SourceRevisionId>
-    <FlareIsRelease Condition="'$(FlareIsRelease)' == ''">false</FlareIsRelease>
   </PropertyGroup>
 
-  <ItemGroup>
-    <AssemblyMetadata Include="FlareIsRelease" Value="$(FlareIsRelease)" />
-  </ItemGroup>
+  <!--
+    FlareIsRelease is true exactly when the build sits on a v* tag. MinVer
+    leaves $(MinVerPreRelease) empty in that case and populates it with
+    e.g. "alpha.0.3" off-tag, so we drive the property off that. Resolved
+    after MinVer has run; emitted as assembly metadata for BuildBanner.
+  -->
+  <Target Name="ComputeFlareIsRelease" AfterTargets="MinVer" BeforeTargets="GetAssemblyAttributes">
+    <PropertyGroup>
+      <FlareIsRelease Condition="'$(MinVerPreRelease)' == ''">true</FlareIsRelease>
+      <FlareIsRelease Condition="'$(FlareIsRelease)' == ''">false</FlareIsRelease>
+    </PropertyGroup>
+    <ItemGroup>
+      <AssemblyMetadata Include="FlareIsRelease" Value="$(FlareIsRelease)" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <ProjectReference Include="..\FLARE.Core\FLARE.Core.csproj" />
@@ -37,8 +54,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

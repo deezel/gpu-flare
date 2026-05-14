@@ -1,4 +1,4 @@
-﻿using FLARE.Core;
+using FLARE.Core;
 
 namespace FLARE.Tests;
 
@@ -39,29 +39,6 @@ public class ReportGeneratorTests
         Assert.Equal(winVer, NvidiaDriverVersion.ToNvidiaVersion(winVer));
     }
 
-    [Fact]
-    public void SaveUnique_ExistingTimestampFile_UsesSuffixWithoutOverwriting()
-    {
-        var dir = Path.Combine(Path.GetTempPath(), $"flare_report_unique_{Guid.NewGuid():N}");
-        var timestamp = new DateTime(2026, 4, 20, 12, 34, 56);
-        try
-        {
-            Directory.CreateDirectory(dir);
-            var firstPath = Path.Combine(dir, "flare_report_20260420_123456.txt");
-            File.WriteAllText(firstPath, "existing");
-
-            var savedPath = ReportGenerator.SaveUnique("new report", dir, timestamp);
-
-            Assert.Equal("existing", File.ReadAllText(firstPath));
-            Assert.Equal(Path.Combine(dir, "flare_report_20260420_123456_001.txt"), savedPath);
-            Assert.Equal("new report", File.ReadAllText(savedPath));
-        }
-        finally
-        {
-            try { if (Directory.Exists(dir)) Directory.Delete(dir, true); } catch { }
-        }
-    }
-
     private static GpuInfo TestGpu() =>
         new("RTX 4090", "32.0.15.8129", "95.02.18.80.C1", "0x1234", "GPU-abc",
             "0000:01:00.0", 128, "24576 MB", 0, 0, 0, 0, 0, 1);
@@ -69,7 +46,7 @@ public class ReportGeneratorTests
     [Fact]
     public void Generate_EmptyErrors_ReportsNoneFound()
     {
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, []));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [])).Main;
 
         Assert.Contains("No nvlddmkm errors found in Windows Event Log.", report);
         Assert.DoesNotContain("Errors by SM location:", report);
@@ -82,7 +59,7 @@ public class ReportGeneratorTests
         for (int i = 0; i < 12; i++)
             errors.Add(new(new DateTime(2025, 1, 1).AddDays(i), 13, "msg", 3, 1, 0, "Illegal Instruction Encoding"));
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("Errors by SM location:", report);
         Assert.Contains("GPC 3, TPC 1, SM 0", report);
@@ -104,7 +81,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 3), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("Errors by SM location:", report);
         Assert.Contains("GPC 3, TPC 1, SM 0", report);
@@ -122,7 +99,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 1), 13, "msg", 3, 1, 0, "Illegal Instruction Encoding"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("Errors by SM location:", report);
         Assert.Contains("GPC 3, TPC 1, SM 0", report);
@@ -143,7 +120,7 @@ public class ReportGeneratorTests
                 errors.Add(new(new DateTime(2025, 1, 1).AddHours(sm * 24 + rep),
                     13, "msg", 3, 1, sm, "Page Fault"));
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.DoesNotContain("tight recurring cluster", report);
         Assert.Contains("treat as an anecdotal signal", report);
@@ -158,7 +135,7 @@ public class ReportGeneratorTests
                 errors.Add(new(new DateTime(2025, 1, 1).AddHours(sm * 24 + rep),
                     13, "msg", 3, 1, sm, "Page Fault"));
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("too many SMs", report);
         Assert.Contains("clustered signal", report);
@@ -175,7 +152,7 @@ public class ReportGeneratorTests
                 errors.Add(new(new DateTime(2025, 1, 1).AddHours(sm * 24 + rep),
                     13, "msg", 3, 1, sm, "Page Fault"));
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("20 coordinate-tagged error(s)", report);
         Assert.DoesNotContain("Sample below the 10-error threshold", report);
@@ -193,7 +170,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 3), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("Sample below the 10-error threshold", report);
         Assert.DoesNotContain("spread across too many SMs", report);
@@ -208,12 +185,12 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 1), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
-        Assert.Contains("1. GPU IDENTIFICATION", report);
-        Assert.Contains("2. NVLDDMKM ERROR SUMMARY", report);
-        Assert.Contains("3. ERROR TIMELINE", report);
-        Assert.Contains("4. SUMMARY", report);
+        Assert.Contains("## GPU IDENTIFICATION", report);
+        Assert.Contains("## NVLDDMKM ERROR SUMMARY", report);
+        Assert.Contains("## ERROR TIMELINE", report);
+        Assert.Contains("## SUMMARY", report);
     }
 
     [Fact]
@@ -229,7 +206,7 @@ public class ReportGeneratorTests
             new(ts.AddSeconds(5), "game.exe", "nvlddmkm.sys", "game.exe (faulting module: nvlddmkm.sys)"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes)).Main;
 
         Assert.Contains("APPLICATION CRASH CORRELATION", report);
         Assert.Contains("game.exe", report);
@@ -252,7 +229,7 @@ public class ReportGeneratorTests
             new(ts.AddSeconds(-10), "game.exe", "nvlddmkm.sys", "game.exe crashed"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes)).Main;
 
         Assert.Contains("GPU error; 2025-01-15 09:59:50  game.exe (nvlddmkm.sys) [10s before GPU error]", report);
         Assert.DoesNotContain("GPU error then", report);
@@ -278,11 +255,11 @@ public class ReportGeneratorTests
             new(baseTime.AddSeconds(12), "game.exe", "nvlddmkm.sys", "game.exe crashed"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes)).Main;
 
         Assert.Contains("1 application crash(es) matched 5 GPU error(s)", report);
         Assert.Contains("5 correlation pair(s)", report);
-        Assert.Contains("game.exe: 1 crash(es), 5 correlation pair(s)", report);
+        Assert.Contains("| `game.exe` | 1 | 5 |", report);
     }
 
     [Fact]
@@ -301,7 +278,7 @@ public class ReportGeneratorTests
             new(baseTime.AddSeconds(12), "game.exe", "nvlddmkm.sys", "game.exe crashed"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes)).Main;
 
         Assert.Contains("250 correlation pair(s)", report);
         Assert.Contains("further pair(s) omitted", report);
@@ -321,7 +298,7 @@ public class ReportGeneratorTests
             new(baseTime.AddSeconds(5), "game.exe", "nvlddmkm.sys", "game.exe crashed"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes)).Main;
 
         Assert.DoesNotContain("further pair(s) omitted", report);
     }
@@ -338,7 +315,7 @@ public class ReportGeneratorTests
             new(new DateTime(2024, 12, 1), "32.0.15.8129", "setupapi: 32.0.15.8129"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers)).Main;
 
         Assert.Contains("DRIVER INSTALL HISTORY", report);
         Assert.Contains("581.29", report); // Formatted NVIDIA version
@@ -360,7 +337,7 @@ public class ReportGeneratorTests
             new(new DateTime(2024, 12, 1), "32.0.15.8129", "setupapi: 32.0.15.8129"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors, null, null, drivers));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors, null, null, drivers)).Main;
 
         Assert.Contains("DRIVER INSTALL HISTORY", report);
         Assert.Contains("2 NVIDIA adapters detected", report);
@@ -379,7 +356,7 @@ public class ReportGeneratorTests
             new(new DateTime(2024, 12, 1), "32.0.15.8129", "setupapi: 32.0.15.8129"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers)).Main;
 
         Assert.Contains("DRIVER INSTALL HISTORY", report);
         Assert.DoesNotContain("NVIDIA adapters detected", report);
@@ -397,11 +374,11 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 2, 2, 4, 0, 0), "BSOD", 1001, "Fault bucket info"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, crashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, crashes)).Main;
 
         Assert.Contains("SYSTEM CRASHES", report);
-        Assert.Contains("Blue Screen crashes (BSOD):     1", report);
-        Assert.Contains("Unexpected reboots:             1", report);
+        Assert.Contains("**Blue Screen crashes (BSOD):** 1", report);
+        Assert.Contains("**Unexpected reboots:** 1", report);
         Assert.Contains("VIDEO_TDR_FAILURE", report);
     }
 
@@ -416,10 +393,10 @@ public class ReportGeneratorTests
                 "Unexpected reboot: VIDEO_TDR_FAILURE (GPU stopped responding) (code 0x00000116)"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], crashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], crashes)).Main;
 
         Assert.Contains("VIDEO_TDR_FAILURE (GPU stopped responding)", report);
-        Assert.Matches(@"VIDEO_TDR_FAILURE \(GPU stopped responding\)\s+: 2", report);
+        Assert.Matches(@"VIDEO_TDR_FAILURE \(GPU stopped responding\): 2", report);
     }
 
     [Fact]
@@ -430,7 +407,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 2, 1), "REBOOT", 41, "Unexpected reboot: something without a code sentinel"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], crashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], crashes)).Main;
 
         Assert.Contains("Unexpected reboot: something without a code sentinel", report);
     }
@@ -449,7 +426,7 @@ public class ReportGeneratorTests
             new(ts.AddMinutes(window - 1), "REBOOT", 41, "Unexpected reboot: foo (code 0x00000001)"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, crashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, crashes)).Main;
 
         Assert.Contains($"{window} minutes of an nvlddmkm GPU error", report);
         Assert.Contains($"{window}-minute window", report);
@@ -469,7 +446,7 @@ public class ReportGeneratorTests
             new(ts.AddMinutes(window + 1), "REBOOT", 41, "Unexpected reboot: foo (code 0x00000001)"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, crashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, crashes)).Main;
 
         Assert.DoesNotContain("Timing proximity:", report);
     }
@@ -485,7 +462,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], crashes, MaxTimelineEntries: 1));
+            TestGpu(), null, [], crashes, MaxTimelineEntries: 1)).Main;
 
         Assert.Contains("Crash timeline:", report);
         Assert.Contains("2 entries omitted by MaxTimelineEntries cap", report);
@@ -499,7 +476,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 2, 1), "BSOD", 1001, "c1"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], crashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], crashes)).Main;
 
         Assert.Contains("Crash timeline:", report);
         Assert.DoesNotContain("entries omitted by MaxTimelineEntries cap", report);
@@ -511,7 +488,7 @@ public class ReportGeneratorTests
         var errors = new List<NvlddmkmError>();
         string dumpAnalysis = "  Analyzed 2 crash dump(s):\n  foo.dmp\n";
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, null, dumpAnalysis));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, null, dumpAnalysis)).Main;
 
         Assert.Contains("CRASH DUMP ANALYSIS", report);
         Assert.Contains("foo.dmp", report);
@@ -522,9 +499,9 @@ public class ReportGeneratorTests
     {
         var report = ReportGenerator.Generate(new ReportInput(
             TestGpu(), null, [], null, null, null, "  Analyzed 2 crash dump(s):\n  foo.dmp\n",
-            DumpsCopiedThisRun: 0));
+            MinidumpsCopiedThisRun: 0)).Main;
 
-        Assert.Contains("No new dumps copied from system folder this run", report);
+        Assert.Contains("No new minidumps copied from system folder this run", report);
         Assert.Contains("staged by an earlier run", report);
         Assert.Contains("foo.dmp", report);
     }
@@ -534,19 +511,99 @@ public class ReportGeneratorTests
     {
         var report = ReportGenerator.Generate(new ReportInput(
             TestGpu(), null, [], null, null, null, "  Analyzed 3 crash dump(s):\n  foo.dmp\n",
-            DumpsCopiedThisRun: 2));
+            MinidumpsCopiedThisRun: 2)).Main;
 
-        Assert.Contains("2 new dump(s) copied from system folder this run", report);
+        Assert.Contains("2 new minidump(s) copied from system folder this run", report);
     }
 
     [Fact]
     public void Generate_DumpAnalysis_CopyNotAttempted_OmitsStaleOrFreshLine()
     {
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], null, null, null, "  Analyzed 1 crash dump(s):\n  foo.dmp\n"));
+            TestGpu(), null, [], null, null, null, "  Analyzed 1 crash dump(s):\n  foo.dmp\n")).Main;
 
         Assert.DoesNotContain("copied from system folder this run", report);
         Assert.Contains("foo.dmp", report);
+    }
+
+    [Fact]
+    public void Generate_LiveKernelAnalysis_CopiedZeroThisRun_AnnotatesStaleSource()
+    {
+        var report = ReportGenerator.Generate(new ReportInput(
+            TestGpu(), null, [], null, null, null,
+            DumpAnalysis: null,
+            LiveKernelAnalysis: "scanned 2 dump(s)",
+            LiveKernelDumpsCopiedThisRun: 0)).Main;
+
+        Assert.Contains("No new LiveKernel dumps copied from system folder this run", report);
+        Assert.Contains("staged by an earlier run", report);
+    }
+
+    [Fact]
+    public void Generate_LiveKernelAnalysis_CopiedSomeThisRun_AnnotatesFreshCount()
+    {
+        var report = ReportGenerator.Generate(new ReportInput(
+            TestGpu(), null, [], null, null, null,
+            DumpAnalysis: null,
+            LiveKernelAnalysis: "scanned 3 dump(s)",
+            LiveKernelDumpsCopiedThisRun: 4)).Main;
+
+        Assert.Contains("4 new LiveKernel dump(s) copied from system folder this run", report);
+    }
+
+    [Fact]
+    public void Generate_LiveKernelAnalysis_CopyNotAttempted_OmitsStaleOrFreshLine()
+    {
+        var report = ReportGenerator.Generate(new ReportInput(
+            TestGpu(), null, [], null, null, null,
+            DumpAnalysis: null,
+            LiveKernelAnalysis: "scanned 1 dump(s)")).Main;
+
+        Assert.DoesNotContain("LiveKernel dump(s) copied from system folder this run", report);
+        Assert.DoesNotContain("No new LiveKernel dumps copied", report);
+    }
+
+    [Fact]
+    public void Generate_FencedCodeBlockWithHeadingSyntax_DoesNotLeakIntoToc()
+    {
+        var injectedDumpBody = "```text\n## fake heading inside fence\n```\n";
+        var report = ReportGenerator.Generate(new ReportInput(
+            TestGpu(), null, [], null, null, null,
+            DumpAnalysis: injectedDumpBody)).Main;
+
+        var tocStart = report.IndexOf("## Contents", StringComparison.Ordinal);
+        Assert.True(tocStart >= 0, "expected a Contents TOC");
+        var tocEnd = report.IndexOf("## ", tocStart + 1, StringComparison.Ordinal);
+        var toc = tocEnd > tocStart ? report.Substring(tocStart, tocEnd - tocStart) : report.Substring(tocStart);
+        Assert.DoesNotContain("fake heading inside fence", toc);
+    }
+
+    [Fact]
+    public void Generate_WithLiveKernelAnalysis_IncludesLiveKernelSectionAfterCrashDumpAnalysis()
+    {
+        var report = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            DumpAnalysis: "minidump analysis body",
+            LiveKernelAnalysis: "live kernel analysis body")).Main;
+
+        var crashIdx = report.IndexOf("CRASH DUMP ANALYSIS", StringComparison.Ordinal);
+        var lkIdx    = report.IndexOf("LIVE KERNEL DUMP ANALYSIS", StringComparison.Ordinal);
+        Assert.True(crashIdx > 0, "expected CRASH DUMP ANALYSIS header");
+        Assert.True(lkIdx > crashIdx, "expected LIVE KERNEL DUMP ANALYSIS to follow CRASH DUMP ANALYSIS");
+        Assert.Contains("live kernel analysis body", report);
+    }
+
+    [Fact]
+    public void Generate_NoLiveKernelAnalysis_OmitsSection()
+    {
+        var report = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new())).Main;
+
+        Assert.DoesNotContain("LIVE KERNEL DUMP ANALYSIS", report);
     }
 
     private static SystemInfo TestSystem() =>
@@ -560,29 +617,29 @@ public class ReportGeneratorTests
     [Fact]
     public void Generate_WithSystemInfo_IncludesIdentificationSection()
     {
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), TestSystem(), []));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), TestSystem(), [])).Main;
 
-        Assert.Contains("2. SYSTEM IDENTIFICATION", report);
+        Assert.Contains("## SYSTEM IDENTIFICATION", report);
         Assert.Contains("ROG STRIX Z890-E", report);
         Assert.Contains("i9-14900K", report);
         Assert.Contains("32.0 GB", report);
-        Assert.Contains("3. NVLDDMKM ERROR SUMMARY", report);
+        Assert.Contains("## NVLDDMKM ERROR SUMMARY", report);
     }
 
     [Fact]
     public void Generate_WithoutSystemInfo_SkipsIdentificationSection()
     {
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, []));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [])).Main;
 
         Assert.DoesNotContain("SYSTEM IDENTIFICATION", report);
-        Assert.Contains("2. NVLDDMKM ERROR SUMMARY", report);
+        Assert.Contains("## NVLDDMKM ERROR SUMMARY", report);
     }
 
     [Fact]
     public void Generate_PcieLinkBelowMax_MarksAsSampleTimeAndExplainsIdlePower()
     {
         var gpu = TestGpu() with { PcieCurrentGen = 3, PcieMaxGen = 5, PcieCurrentWidth = 8, PcieMaxWidth = 16 };
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, []));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, [])).Main;
 
         Assert.Contains("[LOWER AT SAMPLE]", report);
         Assert.Contains("PCIe Gen:", report);
@@ -596,7 +653,7 @@ public class ReportGeneratorTests
     public void Generate_MatchingPcieLink_DoesNotMarkBelowMax()
     {
         var gpu = TestGpu() with { PcieCurrentGen = 5, PcieMaxGen = 5, PcieCurrentWidth = 16, PcieMaxWidth = 16 };
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, []));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, [])).Main;
 
         Assert.Contains("PCIe Gen:       5 (max 5)", report);
         Assert.DoesNotContain("BELOW MAX", report);
@@ -607,7 +664,7 @@ public class ReportGeneratorTests
     public void Generate_NoPcieLinkInfo_OmitsPcieLines()
     {
         // Default TestGpu() has all PCIe fields at 0 â€” lines should be omitted.
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, []));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [])).Main;
 
         Assert.DoesNotContain("PCIe Gen:", report);
         Assert.DoesNotContain("PCIe Width:", report);
@@ -618,7 +675,7 @@ public class ReportGeneratorTests
     public void Generate_Bar1Small_ReportsReBarNotEnabled()
     {
         var gpu = TestGpu() with { Bar1TotalMib = 256 };
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, []));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, [])).Main;
 
         Assert.Contains("BAR1 Memory:    256 MiB", report);
         Assert.Contains("Resizable BAR: not enabled", report);
@@ -628,7 +685,7 @@ public class ReportGeneratorTests
     public void Generate_Bar1Large_ReportsReBarEnabled()
     {
         var gpu = TestGpu() with { Bar1TotalMib = 32768 };
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, []));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, [])).Main;
 
         Assert.Contains("BAR1 Memory:    32768 MiB", report);
         Assert.Contains("Resizable BAR: enabled", report);
@@ -637,7 +694,7 @@ public class ReportGeneratorTests
     [Fact]
     public void Generate_RedactIdentifiers_HidesUuidAndMachineName()
     {
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], RedactIdentifiers: true));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], RedactIdentifiers: true)).Main;
 
         Assert.DoesNotContain("GPU-abc", report);      // UUID from TestGpu
         Assert.Contains("[redacted]", report);
@@ -658,7 +715,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, null, appCrashes, RedactIdentifiers: true));
+            TestGpu(), null, errors, null, appCrashes, RedactIdentifiers: true)).Main;
 
         Assert.Contains("game.exe", report);
         Assert.Contains("nvlddmkm.sys", report);
@@ -678,7 +735,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, null, appCrashes, RedactIdentifiers: true));
+            TestGpu(), null, errors, null, appCrashes, RedactIdentifiers: true)).Main;
 
         Assert.DoesNotContain("alice", report);
         Assert.Contains(@"%USERPROFILE%\AppData\Local\App\app.exe", report);
@@ -695,7 +752,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], null, appCrashes, RedactIdentifiers: true));
+            TestGpu(), null, [], null, appCrashes, RedactIdentifiers: true)).Main;
 
         Assert.DoesNotContain("alice", report);
         Assert.Contains(@"%USERPROFILE%\Games\launcher.exe", report);
@@ -712,7 +769,7 @@ public class ReportGeneratorTests
             "    FAULTING_MODULE: dxgkrnl.sys\n";
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, null, null, null, dumpAnalysis, RedactIdentifiers: true));
+            TestGpu(), null, errors, null, null, null, dumpAnalysis, RedactIdentifiers: true)).Main;
 
         Assert.Contains("firefox.exe", report);
         Assert.Contains("nvlddmkm.sys", report);
@@ -734,7 +791,7 @@ public class ReportGeneratorTests
             "    MODULE_NAME:  nv_driver\n";
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], null, null, null, dumpAnalysis, RedactIdentifiers: true));
+            TestGpu(), null, [], null, null, null, dumpAnalysis, RedactIdentifiers: true)).Main;
 
         Assert.DoesNotContain("alice", report);
         Assert.Contains(@"%USERPROFILE%\symbols", report);
@@ -750,10 +807,10 @@ public class ReportGeneratorTests
         // a "minidumps folder alongside this report". It does still explain
         // what redaction preserves vs. scrubs so a reader of the report
         // understands what the [redacted] markers replaced.
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], RedactIdentifiers: true));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], RedactIdentifiers: true)).Main;
 
         Assert.Contains("[redacted]", report);
-        Assert.Contains("PRESERVED", report);
+        Assert.Contains("**preserved**", report);
         Assert.DoesNotContain("minidumps/", report);
     }
 
@@ -761,7 +818,7 @@ public class ReportGeneratorTests
     public void Generate_MultiGpuSystem_SurfacesWarningInHeader()
     {
         var gpu = TestGpu() with { NvidiaDeviceCount = 2 };
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, []));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, [])).Main;
 
         Assert.Contains("2 NVIDIA GPUs detected", report);
         Assert.Contains("RTX 4090", report);
@@ -771,7 +828,7 @@ public class ReportGeneratorTests
     [Fact]
     public void Generate_SingleGpuSystem_OmitsMultiGpuWarning()
     {
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, []));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [])).Main;
         Assert.DoesNotContain("NVIDIA GPUs detected", report);
     }
 
@@ -790,7 +847,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 3), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors)).Main;
 
         Assert.Contains("Errors by SM location:", report);
         Assert.Contains("GPC 3, TPC 1, SM 0", report);
@@ -816,7 +873,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 2), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors)).Main;
 
         Assert.Contains("cannot be attributed to a specific adapter", report);
         Assert.Contains("isolate to one GPU", report);
@@ -1010,7 +1067,7 @@ public class ReportGeneratorTests
     [Fact]
     public void Generate_WithoutRedact_IncludesIdentifiers()
     {
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, []));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [])).Main;
 
         Assert.Contains("GPU-abc", report);
         Assert.Contains("0000:01:00.0", report);
@@ -1031,7 +1088,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 3), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors)).Main;
 
         Assert.DoesNotContain("effectively zero", report);
         Assert.DoesNotContain("inconsistent with a random distribution", report);
@@ -1055,7 +1112,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 2), 13, "msg", 3, 1, 0, "Illegal Instruction Encoding"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(gpu, null, errors)).Main;
 
         Assert.DoesNotContain("out of 170 total SMs", report);
         Assert.DoesNotContain("out of", report);
@@ -1071,7 +1128,7 @@ public class ReportGeneratorTests
         for (int i = 0; i < 12; i++)
             errors.Add(new(new DateTime(2025, 1, 1).AddDays(i), 13, "msg", 3, 1, 0, "Page Fault"));
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("Total SMs on this GPU: 128", report);
         Assert.Contains("1 of 128 SM(s) (0.8% of the GPU)", report);
@@ -1094,7 +1151,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 8), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("ERROR FREQUENCY", report);
         Assert.Contains("No driver install events matched", report);
@@ -1113,10 +1170,35 @@ public class ReportGeneratorTests
             new(new DateTime(2024, 12, 1), "32.0.15.8129", "setupapi: 32.0.15.8129"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers)).Main;
 
         Assert.Contains("ERROR FREQUENCY", report);
         Assert.DoesNotContain("No driver install events matched", report);
+    }
+
+    [Fact]
+    public void Generate_FrequencyChart_DriverAnnotation_CollapsesConsecutiveDuplicatesPreservesReinstalls()
+    {
+        var errors = new List<NvlddmkmError>
+        {
+            new(new DateTime(2026, 5, 12, 10, 0, 0), 13, "msg", 3, 1, 0, "Page Fault"),
+            new(new DateTime(2026, 5, 14, 10, 0, 0), 13, "msg", 3, 1, 0, "Page Fault"),
+        };
+        var drivers = new List<EventLogParser.DriverInstallEvent>
+        {
+            new(new DateTime(2026, 5, 10, 12, 39, 24), "32.0.15.9636", "setupapi: 596.36"),
+            new(new DateTime(2026, 5, 12, 18, 21, 44), "32.0.15.9649", "setupapi: 596.49"),
+            new(new DateTime(2026, 5, 12, 20, 44, 37), "32.0.15.9649", "setupapi: 596.49"),
+            new(new DateTime(2026, 5, 12, 22, 15, 40), "32.0.15.9649", "setupapi: 596.49"),
+            new(new DateTime(2026, 5, 14, 11, 42, 23), "32.0.15.8097", "setupapi: 580.97"),
+            new(new DateTime(2026, 5, 14, 19, 50, 42), "32.0.15.9649", "setupapi: 596.49"),
+            new(new DateTime(2026, 5, 14, 22,  0, 33), "32.0.15.9649", "setupapi: 596.49"),
+        };
+
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers)).Main;
+
+        Assert.Contains("(drv 596.49 > 580.97 > 596.49)", report);
+        Assert.DoesNotContain("596.49 > 596.49", report);
     }
 
     [Fact]
@@ -1187,7 +1269,7 @@ public class ReportGeneratorTests
                 new(new DateTime(2025, 1, 2), 13, "msg", 3, 1, 0, "Page Fault"),
                 new(new DateTime(2025, 1, 3), 13, "msg", 3, 1, 1, "Page Fault"),
             };
-            var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+            var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
             // Two locations, 3 errors total. Percentages come out to 66.7% / 33.3%.
             Assert.Contains("66.7%", report);
@@ -1206,7 +1288,7 @@ public class ReportGeneratorTests
         {
             new(new DateTime(2025, 1, 1), 13, "msg", 3, 1, 0, "Page Fault"),
         };
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.DoesNotContain("SCOPE OF THIS REPORT", report);
         Assert.DoesNotContain("see SCOPE block", report);
@@ -1226,7 +1308,7 @@ public class ReportGeneratorTests
             Health: new CollectorHealth
             {
                 Truncation = new CollectionTruncation { RequestedMaxDays = 365, MaxEventsCap = 5000 },
-            }));
+            })).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains("Requested window: last 365 day(s).", report);
@@ -1253,7 +1335,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("System Event Log retention:", report);
         Assert.Contains("System log: mode Circular; max 256.0 MiB; current 128.0 MiB; 41,965 record(s).", report);
@@ -1281,7 +1363,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("Application Event Log retention:", report);
         Assert.Contains("Application log: mode Circular; max 128.0 MiB; current 64.0 MiB; 12,345 record(s).", report);
@@ -1298,7 +1380,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 1), 13, "msg", 3, 1, 0, "Page Fault"),
         };
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, Health: new CollectorHealth()));
+            TestGpu(), null, errors, Health: new CollectorHealth())).Main;
 
         Assert.DoesNotContain("SCOPE OF THIS REPORT", report);
         Assert.DoesNotContain("see SCOPE block", report);
@@ -1323,7 +1405,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, Health: health));
+            TestGpu(), null, errors, Health: health)).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains("Requested window: last 365 day(s).", report);
@@ -1352,7 +1434,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, Health: health));
+            TestGpu(), null, errors, Health: health)).Main;
 
         var summaryBlock = SliceFinalSummary(report);
         Assert.Contains("2 GPU errors recorded in Windows Event Log. (capped — see SCOPE block)", summaryBlock);
@@ -1367,7 +1449,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 2), 13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         var summaryBlock = SliceFinalSummary(report);
         Assert.Contains("2 GPU errors recorded in Windows Event Log.", summaryBlock);
@@ -1376,7 +1458,7 @@ public class ReportGeneratorTests
 
     private static string SliceFinalSummary(string report)
     {
-        var idx = report.LastIndexOf(". SUMMARY", StringComparison.Ordinal);
+        var idx = report.LastIndexOf("## SUMMARY", StringComparison.Ordinal);
         Assert.True(idx >= 0, "final SUMMARY section header expected");
         return report[idx..];
     }
@@ -1404,7 +1486,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, null, appCrashes, Health: health));
+            TestGpu(), null, errors, null, appCrashes, Health: health)).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains("nvlddmkm errors: Max Events cap (5000) reached.", report);
@@ -1437,7 +1519,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, crashes, Health: health));
+            TestGpu(), null, errors, crashes, Health: health)).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains("Unexpected reboots (Kernel-Power 41): 200 cap reached.", report);
@@ -1468,7 +1550,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, null, null, drivers, Health: health));
+            TestGpu(), null, errors, null, null, drivers, Health: health)).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains("nvlddmkm errors: Max Events cap (5000) reached.", report);
@@ -1484,7 +1566,7 @@ public class ReportGeneratorTests
         health.Canary("nvlddmkm classifier", "47 events but none matched known payload shapes");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains("Collector health:", report);
@@ -1492,7 +1574,7 @@ public class ReportGeneratorTests
     }
 
     [Fact]
-    public void Generate_LongHealthNotice_WrapsAcrossMultipleLines()
+    public void Generate_LongHealthNotice_EmitsSingleBulletLine()
     {
         var health = new CollectorHealth();
         health.Canary(
@@ -1500,12 +1582,12 @@ public class ReportGeneratorTests
             "63 DeviceSetupManager driver install event(s) matched the NVIDIA driver-install filter but did not include a driver version FLARE could use (15 matched and were parsed). This affects only Driver Install History; it may be incomplete.");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
         var normalized = report.ReplaceLineEndings("\n");
 
-        Assert.Contains("[format-drift] DeviceSetupManager driver install version scheme:", normalized);
-        Assert.Contains("scheme: 63 DeviceSetupManager driver\n      install event(s) matched", normalized);
-        Assert.Contains("This affects only Driver Install History;", normalized);
+        Assert.Contains(
+            "- [format-drift] DeviceSetupManager driver install version scheme: 63 DeviceSetupManager driver install event(s) matched the NVIDIA driver-install filter but did not include a driver version FLARE could use (15 matched and were parsed). This affects only Driver Install History; it may be incomplete.",
+            normalized);
     }
 
     [Fact]
@@ -1515,7 +1597,7 @@ public class ReportGeneratorTests
         health.Failure("nvidia-smi", "not found at System32\\nvidia-smi.exe");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains("Collector health:", report);
@@ -1529,7 +1611,7 @@ public class ReportGeneratorTests
         health.Skipped("minidump copy", "disabled by user");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("Collector health:", report);
         Assert.Contains("[skipped] minidump copy: disabled by user", report);
@@ -1545,7 +1627,7 @@ public class ReportGeneratorTests
         health.Failure("Event Log: nvlddmkm", "access denied");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("[failed] Event Log: nvlddmkm: access denied", report);
         Assert.Contains("No nvlddmkm errors were collected because the Event Log collector failed", report);
@@ -1561,7 +1643,7 @@ public class ReportGeneratorTests
         health.Failure("settings", @"Access to the path 'C:\Users\alice\AppData\Local\FLARE\settings.json' is denied.");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health, RedactIdentifiers: true));
+            TestGpu(), null, [], Health: health, RedactIdentifiers: true)).Main;
 
         Assert.DoesNotContain("alice", report);
         Assert.Contains(@"%USERPROFILE%\AppData\Local\FLARE\settings.json", report);
@@ -1575,7 +1657,7 @@ public class ReportGeneratorTests
         health.Failure("BIOS registry", $"denied on {Environment.MachineName}\\HARDWARE");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health, RedactIdentifiers: true));
+            TestGpu(), null, [], Health: health, RedactIdentifiers: true)).Main;
 
         if (Environment.MachineName.Length >= 2)
             Assert.DoesNotContain(Environment.MachineName, report, StringComparison.OrdinalIgnoreCase);
@@ -1588,7 +1670,7 @@ public class ReportGeneratorTests
         health.Failure("settings", @"Access to 'C:\Users\alice\file' is denied.");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health, RedactIdentifiers: false));
+            TestGpu(), null, [], Health: health, RedactIdentifiers: false)).Main;
 
         Assert.Contains("alice", report);
     }
@@ -1612,9 +1694,9 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, Health: health));
+            TestGpu(), null, errors, Health: health)).Main;
 
-        var chartStart = report.IndexOf("ERROR FREQUENCY", StringComparison.Ordinal);
+        var chartStart = report.IndexOf("## ERROR FREQUENCY", StringComparison.Ordinal);
         var chartEnd = report.IndexOf(". ", chartStart + 1, StringComparison.Ordinal);
         Assert.True(chartStart >= 0 && chartEnd > chartStart, "frequency chart section expected");
         var chart = report[chartStart..chartEnd];
@@ -1630,7 +1712,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 8),  13, "msg", 3, 1, 0, "Page Fault"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("ERROR FREQUENCY", report);
         Assert.DoesNotContain("weekly counts are a lower", report);
@@ -1647,7 +1729,7 @@ public class ReportGeneratorTests
         health.Canary("cdb summary extractor", "banner seen but no tag lines matched");
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("Requested window: last 30 day(s).", report);
         Assert.Contains("Collector health:", report);
@@ -1663,7 +1745,7 @@ public class ReportGeneratorTests
             new(new DateTime(2025, 1, 1), "chrome.exe", "ntdll.dll", "chrome.exe crash"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], null, appCrashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, [], null, appCrashes)).Main;
 
         Assert.Contains("APPLICATION CRASHES", report);
         Assert.Contains("not just GPU-related", report);
@@ -1683,7 +1765,7 @@ public class ReportGeneratorTests
             new(ts.AddSeconds(5), "game.exe", "nvlddmkm.sys", "game.exe crashed"),
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, appCrashes)).Main;
 
         Assert.Contains("timing hint, not a cause", report);
         Assert.Contains("30-second window", report);
@@ -1715,7 +1797,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, DriverInstalls: drivers, Health: health, SortDescending: false));
+            TestGpu(), null, errors, DriverInstalls: drivers, Health: health, SortDescending: false)).Main;
 
         Assert.Contains("528.02   truncated-out  (to 2024-12-01)", report);
         Assert.Contains("555.99   truncated-out  (to 2025-01-01)", report);
@@ -1736,7 +1818,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, DriverInstalls: drivers, SortDescending: false));
+            TestGpu(), null, errors, DriverInstalls: drivers, SortDescending: false)).Main;
 
         Assert.Contains("528.02       0 errors", report);
         Assert.DoesNotContain("truncated-out", report);
@@ -1773,13 +1855,59 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, errors, DriverInstalls: drivers, Health: health, SortDescending: false));
+            TestGpu(), null, errors, DriverInstalls: drivers, Health: health, SortDescending: false)).Main;
 
         Assert.Contains("Periods before 2025-12-04 13:40:33 cannot prove zero nvlddmkm errors.", report);
         Assert.Contains("2025-10-14  581.57   not retained (to 2025-11-05)", report);
         Assert.Contains("2025-11-05  581.80       0 errors  (partial; before 2025-12-04 not retained, to 2025-12-04)", report);
         Assert.Contains("2025-12-04  591.44       1 errors  (to 2025-12-12)", report);
         Assert.DoesNotContain("2025-10-14  581.57       0 errors", report);
+    }
+
+    [Fact]
+    public void Generate_DriverInstallHistory_PreLogBucketWithinRequestedWindow_OmitsNotRetainedAnnotation()
+    {
+        var errors = new List<NvlddmkmError>
+        {
+            new(new DateTime(2026, 5, 11, 9, 0, 0),  13, "m", 3, 1, 0, "Page Fault"),
+            new(new DateTime(2026, 5, 11, 10, 0, 0), 13, "m", 3, 1, 0, "Page Fault"),
+        };
+        var drivers = new List<EventLogParser.DriverInstallEvent>
+        {
+            new(new DateTime(2026, 5, 12, 8, 0, 0), "32.0.15.9144", "d1"),
+        };
+        var now = new DateTime(2026, 5, 14, 12, 0, 0);
+        var health = new CollectorHealth
+        {
+            Truncation = new CollectionTruncation { RequestedMaxDays = 4 },
+            SystemEventLog = new EventLogRetentionInfo(
+                "System",
+                "Circular",
+                MaximumSizeInBytes: 268435456,
+                FileSizeBytes: null,
+                RecordCount: null,
+                OldestRecordNumber: null,
+                OldestRecordTimestamp: new DateTime(2025, 12, 4, 13, 40, 33),
+                OldestRelevantEventTimestamp: new DateTime(2025, 12, 12, 9, 50, 23),
+                OldestRelevantEventDescription: "nvlddmkm 13/14/153"),
+        };
+
+        var buckets = ReportGenerator.ComputeDriverPeriodBuckets(
+            errors, drivers, requestedWindowStart: now.AddDays(-health.Truncation.RequestedMaxDays));
+
+        Assert.Equal(2, buckets.Count);
+        Assert.True(buckets[0].IsPreLog);
+        Assert.Equal(2, buckets[0].ErrorCount);
+        Assert.True(buckets[0].Start >= now.AddDays(-health.Truncation.RequestedMaxDays).AddSeconds(-1),
+            $"pre-log Start should be clamped to requested window start, was {buckets[0].Start:O}");
+
+        var report = ReportGenerator.Generate(new ReportInput(
+            TestGpu(), null, errors, DriverInstalls: drivers, Health: health, SortDescending: false)).Main;
+
+        var preLogLine = report.Split('\n').FirstOrDefault(l => l.Contains("(unknown, pre-log)")) ?? "";
+        Assert.DoesNotContain("not retained", preLogLine);
+        Assert.DoesNotContain("partial", preLogLine);
+        Assert.Contains("2 errors", preLogLine);
     }
 
     [Fact]
@@ -1799,7 +1927,7 @@ public class ReportGeneratorTests
             },
         };
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, Health: health));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, Health: health)).Main;
 
         Assert.Contains("tight recurring cluster", report);
         Assert.Contains("Max Events cap was reached", report);
@@ -1814,7 +1942,7 @@ public class ReportGeneratorTests
         for (int i = 0; i < 12; i++)
             errors.Add(new(new DateTime(2025, 1, 1).AddDays(i), 13, "msg", 3, 1, 0, "Illegal Instruction Encoding"));
 
-        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors));
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
 
         Assert.Contains("tight recurring cluster", report);
         Assert.DoesNotContain("Max Events cap was reached", report);
@@ -1834,7 +1962,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], crashes, RedactIdentifiers: true));
+            TestGpu(), null, [], crashes, RedactIdentifiers: true)).Main;
 
         Assert.DoesNotContain(machineName, report);
         Assert.Contains("[redacted]", report);
@@ -1850,7 +1978,7 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], null, appCrashes, RedactIdentifiers: true));
+            TestGpu(), null, [], null, appCrashes, RedactIdentifiers: true)).Main;
 
         Assert.DoesNotContain(@"C:\Users\alice", report);
         Assert.Contains(@"%USERPROFILE%\Desktop\game.exe", report);
@@ -1943,9 +2071,9 @@ public class ReportGeneratorTests
         var health = new CollectorHealth();
         health.Failure("nvidia-smi", "not found at System32\\nvidia-smi.exe");
 
-        var report = ReportGenerator.Generate(new ReportInput(emptyGpu, null, [], Health: health));
+        var report = ReportGenerator.Generate(new ReportInput(emptyGpu, null, [], Health: health)).Main;
 
-        Assert.Contains("1. GPU IDENTIFICATION", report);
+        Assert.Contains("## GPU IDENTIFICATION", report);
         Assert.Contains("GPU identification unavailable", report);
         Assert.Contains("see SCOPE block", report);
         Assert.DoesNotContain("  GPU:            \n", report);
@@ -1953,19 +2081,17 @@ public class ReportGeneratorTests
     }
 
     [Fact]
-    public void Generate_GpuCollectorFailed_RendersAvailableIndependentFields()
+    public void Generate_GpuCollectorFailed_SuppressesAllGpuFieldsAfterPlaceholder()
     {
         var gpuWithVulkanData = new GpuInfo("", "", "", "", "", "", 128, "24576 MB", 0, 0, 0, 0, 0, 1);
         var health = new CollectorHealth();
         health.Failure("nvidia-smi", "not found at System32\\nvidia-smi.exe");
 
-        var report = ReportGenerator.Generate(new ReportInput(gpuWithVulkanData, null, [], Health: health));
+        var report = ReportGenerator.Generate(new ReportInput(gpuWithVulkanData, null, [], Health: health)).Main;
 
         Assert.Contains("GPU identification unavailable", report);
-        Assert.Contains("SMs:", report);
-        Assert.Contains("128", report);
-        Assert.Contains("Memory:", report);
-        Assert.Contains("24576 MB", report);
+        Assert.DoesNotContain("SMs:", report);
+        Assert.DoesNotContain("24576 MB", report);
     }
 
     [Fact]
@@ -1973,7 +2099,7 @@ public class ReportGeneratorTests
     {
         var emptyGpu = new GpuInfo("", "", "", "", "", "", 0, "", 0, 0, 0, 0, 0, 1);
 
-        var report = ReportGenerator.Generate(new ReportInput(emptyGpu, null, []));
+        var report = ReportGenerator.Generate(new ReportInput(emptyGpu, null, [])).Main;
 
         Assert.Contains("GPU identification unavailable.", report);
         Assert.DoesNotContain("see SCOPE block", report);
@@ -1993,10 +2119,427 @@ public class ReportGeneratorTests
         };
 
         var report = ReportGenerator.Generate(new ReportInput(
-            TestGpu(), null, [], Health: health));
+            TestGpu(), null, [], Health: health)).Main;
 
         Assert.Contains("SCOPE OF THIS REPORT", report);
         Assert.Contains($"Application crashes/hangs: {EventLogParser.AppCrashCap} cap reached.", report);
+    }
+
+    [Fact]
+    public void Generate_MainReport_StartsWithH1Header()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        Assert.StartsWith("# GPU Error Analysis Report", r.Main);
+    }
+
+    [Fact]
+    public void Generate_MainReport_FooterIsItalicBlockquote()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        Assert.Matches(@"> _Report generated by FLARE.*on \d{4}-\d{2}-\d{2}", r.Main);
+    }
+
+    [Fact]
+    public void Generate_MainReport_RedactionNoteIsBlockquote()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            RedactIdentifiers: true));
+
+        Assert.Contains("> **Note:**", r.Main);
+    }
+
+    [Fact]
+    public void Generate_ScopeSection_UsesMarkdownHeader()
+    {
+        var health = new CollectorHealth();
+        health.Truncation.RequestedMaxDays = 30;
+        health.Truncation.MaxEventsCap = 5000;
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            Health: health));
+
+        Assert.Contains("## SCOPE OF THIS REPORT", r.Main);
+        Assert.Contains("Requested window: last 30 day(s).", r.Main);
+    }
+
+    [Fact]
+    public void Generate_ScopeSection_NoticesUseMarkdownBullets()
+    {
+        var health = new CollectorHealth();
+        health.Truncation.RequestedMaxDays = 30;
+        health.Truncation.MaxEventsCap = 5000;
+        health.Failure("Event Log: nvlddmkm", "test reason for failure");
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            Health: health));
+
+        Assert.Contains("- [failed] Event Log: nvlddmkm: test reason for failure", r.Main);
+    }
+
+    [Fact]
+    public void Generate_GpuIdentification_UsesMarkdownHeader()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        Assert.Contains("## GPU IDENTIFICATION", r.Main);
+    }
+
+    [Fact]
+    public void Generate_GpuIdentification_WrappedInCodeFence()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        var gpuIdx = r.Main.IndexOf("## GPU IDENTIFICATION", StringComparison.Ordinal);
+        Assert.True(gpuIdx > 0);
+        var afterHeader = r.Main.Substring(gpuIdx);
+        Assert.Contains("```", afterHeader);
+    }
+
+    [Fact]
+    public void Generate_SystemIdentification_UsesMarkdownHeader()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: TestSystem(),
+            Errors: new()));
+
+        Assert.Contains("## SYSTEM IDENTIFICATION", r.Main);
+    }
+
+    [Fact]
+    public void Generate_NvlddmkmErrorSummary_UsesMarkdownHeader()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        Assert.Contains("## NVLDDMKM ERROR SUMMARY", r.Main);
+    }
+
+    [Fact]
+    public void Generate_SummarySection_UsesMarkdownHeader()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        Assert.Contains("## SUMMARY", r.Main);
+    }
+
+    [Fact]
+    public void Generate_FrequencyChart_UsesMarkdownHeaderAndCodeFence()
+    {
+        var errors = new List<NvlddmkmError>
+        {
+            new(new DateTime(2026, 5, 1, 0, 0, 0), 13, "", null, null, null, null),
+            new(new DateTime(2026, 5, 8, 0, 0, 0), 13, "", null, null, null, null),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: errors));
+
+        Assert.Contains("## ERROR FREQUENCY (per week)", r.Main);
+        var idx = r.Main.IndexOf("## ERROR FREQUENCY", StringComparison.Ordinal);
+        Assert.Contains("```", r.Main.Substring(idx));
+    }
+
+    [Fact]
+    public void Generate_DriverInstallHistory_UsesMarkdownHeader()
+    {
+        var drivers = new List<EventLogParser.DriverInstallEvent>
+        {
+            new(new DateTime(2026, 4, 1), "32.0.15.7250", ""),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            DriverInstalls: drivers));
+
+        Assert.Contains("## DRIVER INSTALL HISTORY", r.Main);
+        Assert.Contains("32.0.15.7250", r.Main);
+    }
+
+    [Fact]
+    public void Generate_ErrorTimeline_UsesMarkdownHeader()
+    {
+        var errors = new List<NvlddmkmError>
+        {
+            new(new DateTime(2026, 5, 1), 13, "", 0, 1, 2, "Misaligned PC"),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: errors));
+
+        Assert.Contains("## ERROR TIMELINE", r.Main);
+    }
+
+    [Fact]
+    public void Generate_SystemCrashes_UsesMarkdownHeader()
+    {
+        var crashes = new List<SystemCrashEvent>
+        {
+            new(new DateTime(2026, 5, 1), "BSOD", 1001, "VIDEO_TDR_FAILURE"),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            Crashes: crashes));
+
+        Assert.Contains("## SYSTEM CRASHES (BSODs, UNEXPECTED REBOOTS)", r.Main);
+    }
+
+    [Fact]
+    public void Generate_AppCrashCorrelation_UsesMarkdownHeader()
+    {
+        var t = new DateTime(2026, 5, 1, 12, 0, 0);
+        var errors = new List<NvlddmkmError> { new(t, 13, "", 0, 0, 0, "X") };
+        var apps = new List<EventLogParser.AppCrashEvent>
+        {
+            new(t.AddSeconds(5), "game.exe", "nvlddmkm.dll", ""),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: errors,
+            AppCrashes: apps));
+
+        Assert.Contains("## APPLICATION CRASH CORRELATION", r.Main);
+    }
+
+    [Fact]
+    public void Generate_AppCrashCorrelation_GroupedCountsUseTable()
+    {
+        var t = new DateTime(2026, 5, 1, 12, 0, 0);
+        var errors = new List<NvlddmkmError> { new(t, 13, "", 0, 0, 0, "X") };
+        var apps = new List<EventLogParser.AppCrashEvent>
+        {
+            new(t.AddSeconds(5), "game.exe", "nvlddmkm.dll", ""),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: errors,
+            AppCrashes: apps));
+
+        Assert.Contains("| Application | Crashes | Correlation pairs |", r.Main);
+    }
+
+    [Fact]
+    public void Generate_AllAppCrashes_UsesMarkdownHeader()
+    {
+        var apps = new List<EventLogParser.AppCrashEvent>
+        {
+            new(new DateTime(2026, 5, 1), "game.exe", "nvlddmkm.dll", ""),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            AppCrashes: apps));
+
+        Assert.Contains("## APPLICATION CRASHES (1 total)", r.Main);
+    }
+
+    [Fact]
+    public void Generate_CrashDumpAnalysis_UsesMarkdownHeader()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            DumpAnalysis: "any non-empty body"));
+
+        Assert.Contains("## CRASH DUMP ANALYSIS", r.Main);
+    }
+
+    [Fact]
+    public void Generate_DumpAnalysisWithCdbBlock_StackTextMovedToDetails()
+    {
+        var dumpAnalysis =
+            "  Mini0001.dmp\n" +
+            "    Date:       2026-05-01 14:33:21\n" +
+            "    Bugcheck:   0x116 (VIDEO_TDR_FAILURE)\n" +
+            "    Parameters: 0x1 0x2 0x3 0x4\n" +
+            "    >>> GPU-RELATED CRASH <<<\n" +
+            "    --- WinDbg Analysis ---\n" +
+            "        BUGCHECK_STR:  0x116\n" +
+            "        PROCESS_NAME:  game.exe\n" +
+            "        MODULE_NAME: nvlddmkm\n" +
+            "        IMAGE_NAME:  nvlddmkm.sys\n" +
+            "        FAILURE_BUCKET_ID:  0x116_IMAGE_nvlddmkm.sys\n" +
+            "        STACK_TEXT (top frames):\n" +
+            "            nt!KeBugCheckEx\n" +
+            "            dxgkrnl!TdrCollectDbgInfoStage1\n" +
+            "    -----------------------\n";
+
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            DumpAnalysis: dumpAnalysis));
+
+        Assert.Contains("### ", r.Main);
+        Assert.Contains("Mini0001.dmp", r.Main);
+        Assert.Contains("**MODULE_NAME:**", r.Main);
+        Assert.Contains("**FAILURE_BUCKET_ID:**", r.Main);
+        Assert.DoesNotContain("STACK_TEXT", r.Main);
+        Assert.DoesNotContain("nt!KeBugCheckEx", r.Main);
+        Assert.DoesNotContain("dxgkrnl!TdrCollectDbgInfoStage1", r.Main);
+
+        Assert.NotNull(r.Details);
+        Assert.Contains("STACK_TEXT", r.Details);
+        Assert.Contains("nt!KeBugCheckEx", r.Details);
+
+        Assert.Contains($"(./{CdbDetailsSink.DumpsFilenamePlaceholder}#Mini0001.dmp)", r.Main);
+        Assert.Contains("### Mini0001.dmp", r.Details);
+    }
+
+    [Fact]
+    public void Generate_LiveKernelDumpAnalysis_UsesMarkdownHeader()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new(),
+            LiveKernelAnalysis: "any non-null body"));
+
+        Assert.Contains("## LIVE KERNEL DUMP ANALYSIS", r.Main);
+    }
+
+    [Fact]
+    public void SaveUnique_SubstitutesFilenamePlaceholders()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"flare_save_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+        try
+        {
+            var mainWithPlaceholder = $"# Test\n\nSee [`{CdbDetailsSink.DumpsFilenamePlaceholder}`](./{CdbDetailsSink.DumpsFilenamePlaceholder})";
+            var detailsWithPlaceholder = $"# Companion to: `{CdbDetailsSink.MainFilenamePlaceholder}`";
+            var generated = new GeneratedReport(mainWithPlaceholder, detailsWithPlaceholder);
+
+            var saved = ReportGenerator.SaveUnique(generated, tempDir, new DateTime(2026, 5, 13, 12, 0, 0));
+
+            var mainText = File.ReadAllText(saved.MainPath);
+            var detailsText = File.ReadAllText(saved.DetailsPath!);
+
+            Assert.DoesNotContain(CdbDetailsSink.DumpsFilenamePlaceholder, mainText);
+            Assert.DoesNotContain(CdbDetailsSink.MainFilenamePlaceholder, detailsText);
+            Assert.Contains("flare_report_20260513_120000_dumps.md", mainText);
+            Assert.Contains("flare_report_20260513_120000.md", detailsText);
+        }
+        finally
+        {
+            try { Directory.Delete(tempDir, true); } catch { }
+        }
+    }
+
+    [Fact]
+    public void SaveUnique_NoDetails_StripsTopOfReportPointer()
+    {
+        var tempDir = Path.Combine(Path.GetTempPath(), $"flare_save_{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDir);
+        try
+        {
+            var mainWithPointer = $"# Test\n\n> Full crash dump stack traces saved alongside this file as [`{CdbDetailsSink.DumpsFilenamePlaceholder}`](./{CdbDetailsSink.DumpsFilenamePlaceholder}).\n\nBody.";
+            var generated = new GeneratedReport(mainWithPointer, Details: null);
+
+            var saved = ReportGenerator.SaveUnique(generated, tempDir, new DateTime(2026, 5, 13, 12, 0, 0));
+            var mainText = File.ReadAllText(saved.MainPath);
+
+            Assert.DoesNotContain("Full crash dump stack traces", mainText);
+            Assert.Null(saved.DetailsPath);
+        }
+        finally
+        {
+            try { Directory.Delete(tempDir, true); } catch { }
+        }
+    }
+
+    [Fact]
+    public void Generate_MainReport_ContainsTableOfContents()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        Assert.Contains("## Contents", r.Main);
+    }
+
+    [Fact]
+    public void Generate_TableOfContents_LinksToAllSectionHeaders()
+    {
+        var errors = new List<NvlddmkmError>
+        {
+            new(new DateTime(2026, 5, 1, 0, 0, 0), 13, "", 0, 1, 2, "Misaligned PC"),
+            new(new DateTime(2026, 5, 8, 0, 0, 0), 13, "", 0, 1, 2, "Misaligned PC"),
+        };
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: errors));
+
+        var tocStart = r.Main.IndexOf("## Contents", StringComparison.Ordinal);
+        Assert.True(tocStart > 0);
+        var afterToc = r.Main.Substring(tocStart);
+
+        Assert.Contains("[NVLDDMKM ERROR SUMMARY](#nvlddmkm-error-summary)", afterToc);
+        Assert.Contains("[SUMMARY](#summary)", afterToc);
+    }
+
+    [Fact]
+    public void Generate_TableOfContents_AppearsBeforeFirstSection()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        var tocIdx = r.Main.IndexOf("## Contents", StringComparison.Ordinal);
+        var firstSectionIdx = r.Main.IndexOf("## NVLDDMKM", StringComparison.Ordinal);
+        Assert.True(tocIdx > 0);
+        Assert.True(firstSectionIdx > tocIdx, "TOC should come before the first content section");
+    }
+
+    [Fact]
+    public void Generate_TableOfContents_DoesNotIncludeItself()
+    {
+        var r = ReportGenerator.Generate(new ReportInput(
+            Gpu: TestGpu(),
+            System: null,
+            Errors: new()));
+
+        var tocStart = r.Main.IndexOf("## Contents", StringComparison.Ordinal);
+        var afterToc = r.Main.Substring(tocStart);
+
+        Assert.DoesNotContain("[Contents](#contents)", afterToc);
     }
 
 }

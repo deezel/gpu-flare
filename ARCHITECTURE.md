@@ -75,12 +75,12 @@ Sections are numbered dynamically via a local `section` counter (starts at 1, in
 │   ├── Minidumps\      - kernel dumps copied from %SystemRoot%\Minidump
 │   ├── CdbCache\       - raw cdb !analyze -v transcripts (per-dump, keyed by size+mtime)
 │   └── Staging\        - transient holding area for the elevated dump-copy helper
-├── Reports\            - report output dir (fixed location); holds only the generated .txt
+├── Reports\            - report output dir (fixed location); holds only the generated .md
 ├── settings.json
 └── fatal.log[.old]
 ```
 
-The user-configurable report folder contains only the `.txt`. Anything sensitive
+The user-configurable report folder contains only the `.md` files. Anything sensitive
 (raw kernel memory, unscrubbed stack traces) accumulates under the `DO_NOT_SHARE`
 root — the naming is the point: a folder the user has to actively ignore the
 warning in to share. `FlareStorage` is the single source of truth for these

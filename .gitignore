@@ -5,6 +5,7 @@ obj/
 *.suo
 *.userprefs
 *.csproj.user
+*.csproj.lscache
 
 ## IDE
 .vs/

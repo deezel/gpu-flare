@@ -56,14 +56,22 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="SCOPE"
                            Style="{StaticResource SectionLabel}" Margin="0,8,0,8"/>
                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,4,0,4">
-                    <TextBlock Text="Max Days" FontSize="11"
+                    <TextBlock Text="Since" FontSize="11"
                                Foreground="{DynamicResource FlareBodyText}"
                                VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Text="{Binding SinceDate, StringFormat=yyyy-MM-dd, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource SettingInput}"
+                             helpers:SelectAllOnFocus.Enabled="True"
+                             Width="100"
+                             ToolTip="Earliest event included in the report. Date stays anchored across sessions. Max Days is computed from this. Format: yyyy-MM-dd."/>
+                    <TextBlock Text="Max Days" FontSize="11"
+                               Foreground="{DynamicResource FlareBodyText}"
+                               VerticalAlignment="Center" Margin="24,0,8,0"/>
                     <TextBox Text="{Binding MaxDays, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource SettingInput}"
                              helpers:SelectAllOnFocus.Enabled="True"
                              Width="70"
-                             ToolTip="How many days back from now to scan the Windows System and Application event logs."/>
+                             ToolTip="How many days back from today. Linked to Since: changing one updates the other."/>
                     <TextBlock Text="Max Events" FontSize="11"
                                Foreground="{DynamicResource FlareBodyText}"
                                VerticalAlignment="Center" Margin="24,0,8,0"/>
@@ -72,6 +80,14 @@
                              helpers:SelectAllOnFocus.Enabled="True"
                              Width="78"
                              ToolTip="Upper bound on nvlddmkm event-log records pulled in a single run."/>
+                    <TextBlock Text="Max LiveKernel" FontSize="11"
+                               Foreground="{DynamicResource FlareBodyText}"
+                               VerticalAlignment="Center" Margin="24,0,8,0"/>
+                    <TextBox Text="{Binding MaxLiveKernelDumps, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource SettingInput}"
+                             helpers:SelectAllOnFocus.Enabled="True"
+                             Width="60"
+                             ToolTip="Upper bound on LiveKernel watchdog dumps analyzed per run, applied after Max Days. Default 50."/>
                 </StackPanel>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="OPTIONS"

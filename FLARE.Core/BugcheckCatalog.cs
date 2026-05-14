@@ -26,14 +26,22 @@ public static class BugcheckCatalog
         { 0xEF,  new("CRITICAL_PROCESS_DIED",                   null,                     false) },
         { 0xF7,  new("DRIVER_OVERRAN_STACK_BUFFER",             null,                     false) },
         { 0x10D, new("WDF_VIOLATION",                           null,                     false) },
+        { 0x113, new("VIDEO_DXGKRNL_FATAL_ERROR",               null,                     true)  },
         { 0x116, new("VIDEO_TDR_FAILURE",                       "GPU stopped responding", true)  },
-        { 0x117, new("VIDEO_TDR_TIMEOUT_DETECTED",              null,                     true)  },
+        { 0x117, new("VIDEO_TDR_TIMEOUT_DETECTED",              "live-dump code on most builds", true)  },
         { 0x119, new("VIDEO_SCHEDULER_INTERNAL_ERROR",          null,                     true)  },
         { 0x124, new("WHEA_UNCORRECTABLE_ERROR",                null,                     false) },
         { 0x133, new("DPC_WATCHDOG_VIOLATION",                  null,                     false) },
+        { 0x141, new("VIDEO_ENGINE_TIMEOUT_DETECTED",           "GPU engine timeout; live dump", true)  },
+        { 0x1B0, new("DISPLAY_DRIVER_LIVE_DUMP",                "display subsystem live dump",     true) },
+        { 0x1B8, new("DISPLAY_DIAG_BLACK_SCREEN_DETECTED",      "black-screen detector live dump", true) },
         { 0x278, new("KERNEL_MODE_HEAP_CORRUPTION",             null,                     false) },
         { 0x307, new("KERNEL_STORAGE_SLOT_IN_USE",              null,                     false) },
     };
+
+    private static readonly HashSet<uint> LiveDumpCodes = new() { 0x117, 0x141, 0x1B0, 0x1B8 };
+
+    public static bool IsLiveDumpCode(uint code) => LiveDumpCodes.Contains(code);
 
     public static bool IsGpuRelated(uint code) =>
         Entries.TryGetValue(code, out var e) && e.Gpu;

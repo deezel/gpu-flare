@@ -1,0 +1,14 @@
+    PROCESS_NAME:  System
+    STACK_TEXT (top frames):
+      fffff28c`4e7e7248 fffff802`7f3f6d5d     : 00000000`00000116 ffffa50a`28594010 fffff802`c440fff0 ffffffff`c000009a : nt!KeBugCheckEx
+      fffff28c`4e7e7250 fffff802`7f662e54     : fffff802`c440fff0 ffffa509`dac54820 00000000`00002000 ffffa509`dac548e0 : dxgkrnl!TdrBugcheckOnTimeout+0x101
+      fffff28c`4e7e7290 fffff802`7f4059e2     : ffffa509`fd4f1000 00000000`00000000 00000000`00000004 00000000`00000000 : dxgkrnl!ADAPTER_RENDER::Reset+0x220
+      fffff28c`4e7e72c0 fffff802`7f440465     : ffffa50a`00000100 00000000`00000000 fffff28c`00000000 00000000`00000000 : dxgkrnl!DXGADAPTER::Reset+0x58a
+      fffff28c`4e7e7350 fffff802`7f4405c2     : ffffa509`d877a260 ffffa509`c766ad60 00000000`00000000 ffffa50a`1ad49500 : dxgkrnl!TdrResetFromTimeout+0x15
+      fffff28c`4e7e7380 fffff802`ed60817b     : ffffa50a`534d2300 ffffa509`c76bfcc0 ffffa509`c76bfc00 ffffa509`c76bfcc0 : dxgkrnl!TdrResetFromTimeoutWorkItem+0x22
+      fffff28c`4e7e73c0 fffff802`ed8870ba     : ffffa50a`534d2300 ffffa50a`534d2300 fffff802`ed607cc0 ffffa509`c76bfcc0 : nt!ExpWorkerThread+0x4bb
+      fffff28c`4e7e7570 fffff802`edaabdf4     : ffffe281`14051180 ffffa50a`534d2300 fffff802`ed887060 ff2b322f`ff2b322f : nt!PspSystemThreadStartup+0x5a
+      fffff28c`4e7e75c0 00000000`00000000     : fffff28c`4e7e8000 fffff28c`4e7e1000 00000000`00000000 00000000`00000000 : nt!KiStartSystemThread+0x34
+    MODULE_NAME: nvlddmkm
+    IMAGE_NAME:  nvlddmkm.sys
+    FAILURE_BUCKET_ID:  0x116_IMAGE_nvlddmkm.sys

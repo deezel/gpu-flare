@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -68,6 +70,49 @@ internal static class CdbAnalysisCache
             log?.Invoke($"  cdb cache read failed ({Path.GetFileName(dumpPath)}): {ex.Message}");
             return null;
         }
+    }
+
+    public sealed record CachedDumpAnalysis(
+        string CachePath,
+        string DumpFileName,
+        long DumpSize,
+        DateTime DumpMtime,
+        string Transcript);
+
+    public static IEnumerable<CachedDumpAnalysis> EnumerateValid(string? cacheRoot = null)
+    {
+        var root = cacheRoot ?? DefaultCacheRoot();
+        if (!Directory.Exists(root)) yield break;
+
+        foreach (var path in Directory.EnumerateFiles(root, "*.cdb.txt"))
+        {
+            CachedDumpAnalysis? entry = null;
+            try { entry = TryParseCacheFile(path); }
+            catch { }
+            if (entry != null) yield return entry;
+        }
+    }
+
+    private static CachedDumpAnalysis? TryParseCacheFile(string cachePath)
+    {
+        var lines = File.ReadAllLines(cachePath);
+        if (lines.Length < HeaderLineCount + 1) return null;
+        if (lines[0] != $"{VersionHeader}{CacheVersion}") return null;
+        if (!lines[1].StartsWith(DumpHeader, StringComparison.Ordinal)) return null;
+        if (!lines[2].StartsWith(SizeHeader, StringComparison.Ordinal)) return null;
+        if (!lines[3].StartsWith(MtimeHeader, StringComparison.Ordinal)) return null;
+        if (lines[4] != EndOfHeader) return null;
+        if (lines[^1] != TrailerSentinel) return null;
+
+        var dumpName = lines[1][DumpHeader.Length..];
+        if (!long.TryParse(lines[2][SizeHeader.Length..], NumberStyles.Integer,
+                CultureInfo.InvariantCulture, out var size)) return null;
+        if (!DateTime.TryParse(lines[3][MtimeHeader.Length..], CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind, out var mtimeUtc)) return null;
+        var mtimeLocal = mtimeUtc.Kind == DateTimeKind.Utc ? mtimeUtc.ToLocalTime() : mtimeUtc;
+
+        var transcript = string.Join('\n', lines, HeaderLineCount, lines.Length - HeaderLineCount - 1);
+        return new CachedDumpAnalysis(cachePath, dumpName, size, mtimeLocal, transcript);
     }
 
     public static void Store(string dumpPath, string cdbTranscript, Action<string>? log = null, string? cacheRoot = null)

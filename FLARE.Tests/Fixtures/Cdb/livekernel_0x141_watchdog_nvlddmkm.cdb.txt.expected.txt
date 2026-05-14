@@ -1,0 +1,16 @@
+    PROCESS_NAME:  System
+    STACK_TEXT (top frames):
+      ffff9486`795268f0 fffff807`8f504f99     : ffffa706`47d06060 00000000`00000000 00000000`00000000 00000000`00000000 : nt!DbgkpWerCaptureLiveTriageDump+0x8e
+      ffff9486`79526e20 fffff807`8f8b926a     : 00000000`00000000 00000000`00000000 fffff807`8f8d8a50 00000000`c0000099 : nt!DbgkpWerProcessPolicyResult+0x21
+      ffff9486`79526e50 fffff807`8f8b9069     : 00000000`00000003 ffff9486`79527030 ffffa706`47d06060 ffffa706`183a6920 : nt!DbgkWerCaptureLiveKernelDump2+0x1ea
+      ffff9486`79526eb0 fffff807`210bd239     : ffff9684`a21cd910 ffff9684`a21cd910 ffff9684`a676921a ffffa706`294f1000 : nt!DbgkWerCaptureLiveKernelDump+0x69
+      ffff9486`79526f30 fffff807`25564d08     : ffffa706`4dfd7000 ffffa706`4dfd7000 ffffa706`4dfd7000 00000000`00000001 : dxgkrnl!TdrCollectDbgInfoStage1+0xd69
+      ffff9486`795270f0 fffff807`255b7117     : ffffa706`4dfd7001 ffffa706`4dfd76f8 00000000`00000000 ffffa705`00000002 : dxgmms2!VidSchiResetHwEngine+0x210
+      ffff9486`795272e0 fffff807`255e3766     : ffff9486`00000000 ffffa705`f91cc000 ffff9486`79527479 00000000`00000000 : dxgmms2!VidSchiResetEngines+0xcb
+      ffff9486`79527330 fffff807`25539a74     : ffffa705`f91cc000 00000000`00000002 ffff9486`79527479 00000000`01e312ae : dxgmms2!VidSchiCheckHwProgress+0x316
+      ffff9486`795273c0 fffff807`255e4122     : ffffa705`f91cc000 ffff9486`79527530 ffffa706`4eb30010 ffffa705`f91cc000 : dxgmms2!VidSchiScheduleCommandToRun+0x64
+      ffff9486`795274e0 fffff807`255b72cc     : ffffa705`f91cc500 ffffa705`f91cc000 fffff807`255b71f0 00000000`00000000 : dxgmms2!VidSchiRun_PriorityTable+0x42
+      (top 10 frames shown; cdb stack was longer)
+    MODULE_NAME: nvlddmkm
+    IMAGE_NAME:  nvlddmkm.sys
+    FAILURE_BUCKET_ID:  LKD_0x141_IMAGE_nvlddmkm.sys

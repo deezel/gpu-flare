@@ -79,7 +79,7 @@ public class FindCdbTests
     }
 
     [Fact]
-    public void FindCdbInLocalAppData_PrefersPlainCdbOverArchitectureAlias()
+    public void FindCdbInLocalAppData_PrefersX64ArchitectureAliasOverPlainCdb()
     {
         var localAppData = Path.Combine(Path.GetTempPath(), $"flare_cdb_local_{Guid.NewGuid():N}");
         try
@@ -93,7 +93,7 @@ public class FindCdbTests
 
             var result = CdbLocator.FindCdbInLocalAppData(localAppData, File.Exists);
 
-            Assert.Equal(plain, result);
+            Assert.Equal(alias, result);
         }
         finally
         {

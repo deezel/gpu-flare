@@ -7,6 +7,9 @@ namespace FLARE.Core;
 
 public static class DumpAnalyzer
 {
+    internal const string WindbgSectionStartMarker = "--- WinDbg Analysis ---";
+    internal const string WindbgSectionEndMarker = "-----------------------";
+
     // PAGEDU64 kernel dumps normally carry BugCheckCode at 0x38, followed by
     // 4 bytes of padding and the four 8-byte bugcheck parameters starting at
     // 0x40. Some older dump writers have been seen placing the bugcheck at
@@ -258,6 +261,7 @@ public static class DumpAnalyzer
             if (info.IsUserModeException)
             {
                 sb.AppendLine($"    Exception:  0x{info.BugcheckCode:X8} (user-mode dump — not a kernel bugcheck)");
+                health?.Canary("dump userMode heuristic", $"unknown bugcheck 0x{info.BugcheckCode:X} treated as user-mode exception in {info.FileName} — BugcheckCatalog may need updating if this is actually a kernel code");
             }
             else if (info.IsHeuristicMatch)
             {
@@ -303,9 +307,9 @@ public static class DumpAnalyzer
                     var summary = CdbRunner.ExtractCdbSummary(cdbOutput, log, health);
                     if (summary != null)
                     {
-                        sb.AppendLine("    --- WinDbg Analysis ---");
+                        sb.AppendLine($"    {WindbgSectionStartMarker}");
                         sb.Append(summary);
-                        sb.AppendLine("    -----------------------");
+                        sb.AppendLine($"    {WindbgSectionEndMarker}");
                     }
                     else
                     {
