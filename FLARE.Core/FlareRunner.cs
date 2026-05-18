@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FLARE.Core;
 
@@ -53,9 +54,9 @@ public sealed record FlareDependencies(
     Func<int, Action<string>?, CancellationToken, List<EventLogParser.AppCrashEvent>> PullAppCrashEvents,
     Func<int, Action<string>?, CancellationToken, List<EventLogParser.DriverInstallEvent>> PullDriverInstalls,
     Func<string, string, DateTime?, Action<string>?, CancellationToken, ElevatedDumpCopy.StagedDumps> CopyDumps,
-    Func<string, bool, DateTime?, Action<string>?, CancellationToken, string> GenerateDumpReport,
+    Func<string, bool, DateTime?, Action<string>?, CancellationToken, Task<string>> GenerateDumpReport,
     Func<List<LiveKernelDump>, List<NvlddmkmError>, List<EventLogParser.AppCrashEvent>, List<EventLogParser.DriverInstallEvent>,
-         int, bool, bool, string?, CdbDetailsSink, Action<string>?, CancellationToken, string> GenerateLiveKernelReport)
+         int, bool, bool, string?, CdbDetailsSink, Action<string>?, CancellationToken, Task<string>> GenerateLiveKernelReport)
 {
     // Observable from the caller: the same instance the default collectors capture
     // goes into ReportInput.Health, so custom-deps callers can pre-seed or inspect it.
@@ -90,7 +91,7 @@ public static class FlareRunner
         return principal.IsInRole(WindowsBuiltInRole.Administrator);
     }
 
-    public static FlareResult Run(FlareOptions options, Action<string>? log = null, CancellationToken ct = default, FlareDependencies? deps = null)
+    public static async Task<FlareResult> Run(FlareOptions options, Action<string>? log = null, CancellationToken ct = default, FlareDependencies? deps = null)
     {
         deps ??= FlareDependencies.Default();
         var health = deps.Health;
@@ -103,9 +104,9 @@ public static class FlareRunner
         void Log(string msg) => log?.Invoke(RedactLogMessage(msg, options.RedactIdentifiers));
 
         Log("FLARE - Fault Log Analysis & Reboot Examination");
-        Log("================================================\n");
+        Log("================================================");
 
-        Log("Collecting GPU information...");
+        Log("\nCollecting GPU information...");
         ct.ThrowIfCancellationRequested();
         result.Gpu = deps.CollectGpu(Log, ct);
         Log($"  GPU:    {result.Gpu.Name}");
@@ -126,17 +127,17 @@ public static class FlareRunner
         result.Errors = deps.PullGpuErrors(effectiveMaxDays, effectiveMaxEvents, Log, ct);
         Log($"  Found {result.Errors.Count} entries");
 
-        Log("Pulling system crash events...");
+        Log("\nPulling system crash events...");
         ct.ThrowIfCancellationRequested();
         result.Crashes = deps.PullCrashEvents(effectiveMaxDays, Log, ct);
         Log($"  Found {result.Crashes.Count} entries");
 
-        Log("Pulling Application log crash/hang events...");
+        Log("\nPulling Application log crash/hang events...");
         ct.ThrowIfCancellationRequested();
         result.AppCrashes = deps.PullAppCrashEvents(effectiveMaxDays, Log, ct);
         Log($"  Found {result.AppCrashes.Count} Application log entries");
 
-        Log("Pulling driver install history...");
+        Log("\nPulling driver install history...");
         ct.ThrowIfCancellationRequested();
         result.DriverInstalls = deps.PullDriverInstalls(effectiveMaxDays, Log, ct);
         Log($"  Found {result.DriverInstalls.Count} entries");
@@ -153,7 +154,7 @@ public static class FlareRunner
         {
             Directory.CreateDirectory(dumpDir);
             Directory.CreateDirectory(liveKernelDir);
-            Log("Copying crash dump files (minidumps + LiveKernel)...");
+            Log("\nCopying crash dump files (minidumps + LiveKernel)...");
             ct.ThrowIfCancellationRequested();
             var staged = deps.CopyDumps(dumpDir, liveKernelDir, dumpCutoff, Log, ct);
             copiedDumps = staged.Minidumps;
@@ -169,7 +170,7 @@ public static class FlareRunner
         }
         else
         {
-            Log("Crash dump analysis skipped (disabled).");
+            Log("\nCrash dump analysis skipped (disabled).");
             health.Skipped("minidump analysis", "disabled by user; no crash dump files were copied or analyzed");
             health.Skipped("livekernel scan",   "disabled by user; LiveKernel dumps were not scanned");
         }
@@ -182,19 +183,19 @@ public static class FlareRunner
                 result.Crashes = result.Crashes.Concat(dumpCrashRows).OrderBy(e => e.Timestamp).ToList();
             }
 
-            Log("Analyzing crash dumps...");
+            Log("\nAnalyzing crash dumps...");
             ct.ThrowIfCancellationRequested();
-            result.DumpAnalysis = deps.GenerateDumpReport(dumpDir, options.DeepAnalyze, dumpCutoff, Log, ct);
+            result.DumpAnalysis = await deps.GenerateDumpReport(dumpDir, options.DeepAnalyze, dumpCutoff, Log, ct).ConfigureAwait(false);
         }
 
         if (options.DeepAnalyze)
         {
             result.LiveKernelDumps = LiveKernelDumpLocator.Enumerate(liveKernelDir, dumpCutoff, options.MaxLiveKernelDumps, Log, health);
-            Log("Analyzing live kernel dumps...");
+            Log("\nAnalyzing live kernel dumps...");
             ct.ThrowIfCancellationRequested();
             var cdbPath = CdbLocator.FindCdb(Log);
             cdbSink = new CdbDetailsSink();
-            result.LiveKernelAnalysis = deps.GenerateLiveKernelReport(
+            result.LiveKernelAnalysis = await deps.GenerateLiveKernelReport(
                 result.LiveKernelDumps,
                 result.Errors,
                 result.AppCrashes,
@@ -205,10 +206,10 @@ public static class FlareRunner
                 cdbPath,
                 cdbSink,
                 Log,
-                ct);
+                ct).ConfigureAwait(false);
         }
 
-        Log("Generating report...");
+        Log("\nGenerating report...");
         ct.ThrowIfCancellationRequested();
         var generated = ReportGenerator.Generate(new ReportInput(
             Gpu: result.Gpu,
@@ -231,7 +232,7 @@ public static class FlareRunner
         result.HasSmErrors = result.Errors.Any(e => e.Gpc.HasValue);
         result.Health = health;
 
-        Log($"\nReport saved to: {saved.MainPath}");
+        Log($"Report saved to: {saved.MainPath}");
 
         return result;
     }

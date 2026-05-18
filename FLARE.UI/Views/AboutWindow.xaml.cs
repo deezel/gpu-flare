@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -34,6 +35,7 @@ public partial class AboutWindow : Window
         var asm = Assembly.GetExecutingAssembly();
         VersionText.Text = BuildBanner.GetAboutVersionLine(asm);
         RuntimeText.Text = $".NET {RuntimeInformation.FrameworkDescription.Replace(".NET ", "")} / {RuntimeInformation.RuntimeIdentifier}";
+        DependenciesText.Text = string.Join("  ·  ", BuildBanner.GetDependencies(asm).Select(d => $"{d.Name} {d.Version}"));
 
         var mesh = BuildMesh(out _positions);
         var logo = new BitmapImage(new Uri("pack://application:,,,/Logo/flare_filled_logo.png"));

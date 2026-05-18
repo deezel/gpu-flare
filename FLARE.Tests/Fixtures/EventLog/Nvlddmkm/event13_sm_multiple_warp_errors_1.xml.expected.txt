@@ -1,0 +1,7 @@
+Timestamp: 2026-05-08T20:52:58.911Z
+EventId: 13
+Message: Graphics SM Global Exception on (GPC 6, TPC 2, SM 0): Multiple Warp Errors
+ErrorType: Multiple Warp Errors
+Gpc: 6
+Tpc: 2
+Sm: 0

@@ -1,0 +1,7 @@
+Timestamp: 2026-05-08T20:52:53.915Z
+EventId: 13
+Message: Graphics SM Warp Exception on (GPC 6, TPC 2, SM 0): Illegal Instruction Encoding
+ErrorType: Illegal Instruction Encoding
+Gpc: 6
+Tpc: 2
+Sm: 0

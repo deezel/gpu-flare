@@ -34,7 +34,7 @@ FLARE gathers and correlates data from multiple sources:
 
 Grab the latest build from the [GitHub Releases page](../../releases). Single `FLARE.exe`, no installer. Requires the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0). Per-commit CI builds are also available from [GitHub Actions artifacts](../../actions), but those expire after 90 days — use Releases for anything you want to keep.
 
-The title bar tells you which kind of build you're running: a clean `FLARE 0.7.1 - …` is a tagged release; `[SNAPSHOT] FLARE 0.7.1-alpha.0.<N>+<hash> - …` is a per-commit CI artifact (the `-alpha.0.<N>` suffix is MinVer's commit height past the most recent `v*` tag); `[DEV BUILD] FLARE 0.7.1-alpha.0.<N>+dev - …` is a local `dotnet build`. The About dialog repeats this information.
+The title bar tells you which kind of build you're running: a clean `FLARE <version> - …` is a tagged release; `[SNAPSHOT] FLARE <version>-alpha.0.<N>+<hash> - …` is a per-commit CI artifact (the `-alpha.0.<N>` suffix is MinVer's commit height past the most recent `v*` tag); `[DEV BUILD] FLARE <version>-alpha.0.<N>+dev - …` is a local `dotnet build`. The About dialog repeats this information.
 
 **Unsigned binary — and it's going to stay that way.** FLARE releases are not code-signed and will not be. Windows SmartScreen may warn on first run. This is a permanent, deliberate project decision; please don't file issues or review comments asking for it to change.
 
@@ -87,7 +87,7 @@ The crash dump analysis checkbox copies both system minidumps and live kernel wa
 
 FLARE auto-detects cdb.exe under Microsoft debugger locations — Windows Kits (`Program Files\Windows Kits\10\Debuggers`), WinDbg app packages (`Program Files\WindowsApps\*WinDbg*`), and per-user WinDbg aliases under `LocalAppData\Microsoft\{WindowsApps,WinDbg}`. PATH is intentionally not used, and there is no configured cdb path override.
 
-**Note:** cdb deep analysis takes up to 30 seconds per dump file. With many dumps in `C:\WINDOWS\Minidump`, the first analysis run over a fresh set can run to several minutes. Results are cached under `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\CdbCache`, keyed on the dump's path, size, and mtime, so subsequent runs reuse the prior transcript and only newly-copied dumps incur the cost. Delete that cache folder to force re-analysis. The analysis can be cancelled at any time via the Cancel button.
+**Note:** cdb deep analysis takes up to 30 seconds per dump file when running cold. cdb runs the largest dump first (to warm the symbol cache) and then the remainder concurrently up to `min(CPU count, 6)` with size-weighted scheduling, typically landing real-world batches in a third of the serial time. Results are cached under `%LOCALAPPDATA%\FLARE\DO_NOT_SHARE\CdbCache`, keyed on the dump's path, size, and mtime, so subsequent runs reuse the prior transcript and only newly-copied dumps incur the cost. Delete that cache folder to force re-analysis. The analysis can be cancelled at any time via the Cancel button.
 
 ### Installing cdb.exe
 
@@ -100,6 +100,8 @@ Alternatively, install the [Windows SDK](https://developer.microsoft.com/en-us/w
 ## Output
 
 Reports are saved to `%LOCALAPPDATA%\FLARE\Reports\` as paired Markdown files: a main `flare_report_<ts>.md` (the report itself — scoped for forum-pasting, PR comments, GitHub issues) and, when crash dump analysis is enabled and cdb is available, a companion `flare_report_<ts>_dumps.md` carrying full stack traces, one fenced block per dump under a `### filename.dmp` heading. The main report keeps the structured fields per dump (`MODULE_NAME`, `FAILURE_BUCKET_ID`, etc.) and links to the corresponding stack-trace block in the dumps file. The **Open** button in the UI jumps to the folder and highlights the main file. The report folder contains only the generated `.md` files — no dumps, no caches — so it's safe to zip, share, or sync as-is. If you want a specific report somewhere else, copy the `.md` files after the run.
+
+Report output bytes are identical regardless of cdb scheduling (serial or parallel) given the same input set.
 
 A sample run is checked in under [examples/](examples/) — [`flare_report_20260516_104327.md`](examples/flare_report_20260516_104327.md) and its companion [`flare_report_20260516_104327_dumps.md`](examples/flare_report_20260516_104327_dumps.md) — covering a window with several real TDR storms, so you can see the shape FLARE produces under genuine fault load before running it yourself.
 

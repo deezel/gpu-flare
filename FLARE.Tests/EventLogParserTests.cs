@@ -37,7 +37,7 @@ public class SetupApiLogTests : IDisposable
             @"Install Device - PCI\VEN_10DE&DEV_2684&SUBSYS_0000&REV_00\{4D36E968-E325-11CE-BFC1-08002BE10318} 10:05:00.000",
             @"inf:   Driver Version = 6.14,32.0.15.8129"
         ]);
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
         Assert.Single(result);
         Assert.Equal("32.0.15.8129", result[0].DriverVersion);
     }
@@ -50,7 +50,7 @@ public class SetupApiLogTests : IDisposable
             @"Install Device - PCI\VEN_10DE&DEV_2684&SUBSYS_0000&REV_00\{4D36E968-E325-11CE-BFC1-08002BE10318} 10:05:00.000",
             @"inf:   Driver Version = 6.14,31.0.15.5599"
         ]);
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
         Assert.Single(result);
         Assert.Equal("31.0.15.5599", result[0].DriverVersion);
     }
@@ -63,7 +63,7 @@ public class SetupApiLogTests : IDisposable
             @"Install Device - PCI\VEN_10DE&DEV_2684&SUBSYS_0000&REV_00\{4D36E968-E325-11CE-BFC1-08002BE10318} 10:05:00.000",
             @"inf:   Driver Version = 6.14,33.0.15.1234"
         ]);
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
         Assert.Single(result);
         Assert.Equal("33.0.15.1234", result[0].DriverVersion);
     }
@@ -72,7 +72,7 @@ public class SetupApiLogTests : IDisposable
     public void ParseSetupApiLog_EmptyFile_ReturnsEmpty()
     {
         File.WriteAllText(_tempFile, "");
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
         Assert.Empty(result);
     }
 
@@ -87,7 +87,7 @@ public class SetupApiLogTests : IDisposable
             @"Install Device - PCI\VEN_10DE&DEV_2684&SUBSYS_0000&REV_00\{4D36E968-E325-11CE-BFC1-08002BE10318} 10:05:00.000",
             @"inf:   Driver Version = 6.14,10.0.22621.1234"   // non-NVIDIA vendor pattern
         ]);
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
         Assert.Empty(result);
     }
 
@@ -104,7 +104,7 @@ public class SetupApiLogTests : IDisposable
         ]);
 
         var cutoff = new DateTime(2025, 1, 1);
-        var result = EventLogParser.ParseSetupApiLog(_tempFile, cutoff);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, cutoff, ct: TestContext.Current.CancellationToken);
 
         Assert.Empty(result);
     }
@@ -119,7 +119,7 @@ public class SetupApiLogTests : IDisposable
         ]);
 
         var cutoff = new DateTime(2025, 1, 1);
-        var result = EventLogParser.ParseSetupApiLog(_tempFile, cutoff);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, cutoff, ct: TestContext.Current.CancellationToken);
 
         Assert.Single(result);
         Assert.Equal("32.0.15.8129", result[0].DriverVersion);
@@ -134,7 +134,7 @@ public class SetupApiLogTests : IDisposable
             @"inf:   Driver Version = 6.14,31.0.15.5599"
         ]);
 
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
 
         Assert.Single(result);
     }
@@ -152,7 +152,7 @@ public class SetupApiLogTests : IDisposable
         ]);
         var health = new CollectorHealth();
 
-        var result = EventLogParser.ParseSetupApiLog(_tempFile, cutoff: null, log: null, health: health);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, cutoff: null, log: null, health: health, ct: TestContext.Current.CancellationToken);
 
         Assert.Single(result);
         Assert.Equal("32.0.15.8129", result[0].DriverVersion);
@@ -171,7 +171,7 @@ public class SetupApiLogTests : IDisposable
             @"inf:   Driver Version = 6.14,32.0.15.8129"
         ]);
 
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
 
         Assert.Single(result);
         Assert.Equal(new DateTime(2025, 3, 16, 0, 10, 0), result[0].Timestamp);
@@ -186,7 +186,7 @@ public class SetupApiLogTests : IDisposable
             @"inf:   Driver Version = 6.14,32.0.15.8129"
         ]);
 
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
 
         Assert.Single(result);
         Assert.Equal(new DateTime(2025, 3, 15, 10, 5, 0), result[0].Timestamp);
@@ -204,7 +204,7 @@ public class SetupApiLogTests : IDisposable
             @"<<<  Section end 2026/01/07 21:15:02.570",
         ]);
 
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
 
         Assert.Single(result);
         Assert.Equal(new DateTime(2026, 1, 7, 21, 14, 38), result[0].Timestamp);
@@ -224,7 +224,7 @@ public class SetupApiLogTests : IDisposable
             @"     inf:                Driver Version = 03/05/2025,1.0.15.0",
         ]);
 
-        var result = EventLogParser.ParseSetupApiLog(_tempFile);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
 
         Assert.Empty(result);
     }
@@ -239,7 +239,7 @@ public class SetupApiLogTests : IDisposable
         ]);
         var health = new CollectorHealth();
 
-        EventLogParser.ParseSetupApiLog(_tempFile, cutoff: null, log: null, health: health);
+        EventLogParser.ParseSetupApiLog(_tempFile, cutoff: null, log: null, health: health, ct: TestContext.Current.CancellationToken);
 
         Assert.Empty(health.Notices);
     }
@@ -296,7 +296,8 @@ public class SetupApiLogTests : IDisposable
 
         var result = EventLogParser.ParseSetupApiDevLogs(
                 windowsDir,
-                cutoff: new DateTime(2026, 1, 1))
+                cutoff: new DateTime(2026, 1, 1),
+                ct: TestContext.Current.CancellationToken)
             .OrderBy(e => e.Timestamp)
             .ToList();
 
@@ -321,7 +322,7 @@ public class SetupApiLogTests : IDisposable
         File.WriteAllLines(Path.Combine(infDir, "setupapi.dev.log"), duplicateInstall);
         File.WriteAllLines(Path.Combine(infDir, "setupapi.dev.20260109_212303.log"), duplicateInstall);
 
-        var parsed = EventLogParser.ParseSetupApiDevLogs(windowsDir);
+        var parsed = EventLogParser.ParseSetupApiDevLogs(windowsDir, ct: TestContext.Current.CancellationToken);
         var deduped = EventLogParser.DeduplicateDriverInstalls(parsed);
 
         Assert.Equal(2, parsed.Count);
@@ -929,5 +930,109 @@ public class NormalizeEventPropertiesTests
         Assert.True(
             timediff > msCutoff,
             $"event at {lastMinuteBefore:O} (timediff={timediff}ms) must be outside the window (msCutoff={msCutoff}ms).");
+    }
+
+    private const string EventNs = "http://schemas.microsoft.com/win/2004/08/events/event";
+
+    private static string SyntheticEventXml(int eventId, string systemTime, params string[] dataValues)
+    {
+        var data = string.Concat(dataValues.Select(v => $"<Data>{System.Security.SecurityElement.Escape(v)}</Data>"));
+        return $"""
+            <Event xmlns="{EventNs}">
+              <System>
+                <Provider Name="nvlddmkm" />
+                <EventID>{eventId}</EventID>
+                <TimeCreated SystemTime="{systemTime}" />
+              </System>
+              <EventData>{data}</EventData>
+            </Event>
+            """;
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_ExtractsTimestampAsUtc()
+    {
+        var xml = SyntheticEventXml(13, "2026-01-15T12:34:56.789Z", "no payload");
+        var parsed = EventLogParser.ParseNvlddmkmEventXml(xml);
+        Assert.Equal(DateTimeKind.Utc, parsed.Timestamp.Kind);
+        Assert.Equal(new DateTime(2026, 1, 15, 12, 34, 56, 789, DateTimeKind.Utc), parsed.Timestamp);
+        Assert.Equal(13, parsed.EventId);
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_ExtractsSmCoords()
+    {
+        var xml = SyntheticEventXml(13, "2026-01-15T12:00:00Z", "Graphics SM GPC 2, TPC 3, SM 5 reported a fault");
+        var parsed = EventLogParser.ParseNvlddmkmEventXml(xml);
+        Assert.Equal(2, parsed.Gpc);
+        Assert.Equal(3, parsed.Tpc);
+        Assert.Equal(5, parsed.Sm);
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_RecognizesPageFaultExceptionType()
+    {
+        var xml = SyntheticEventXml(14, "2026-01-15T12:00:00Z", "Exception type: Page Fault on engine X");
+        var parsed = EventLogParser.ParseNvlddmkmEventXml(xml);
+        Assert.Equal("Page Fault", parsed.ErrorType);
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_Event153_DefaultsToTdrErrorType()
+    {
+        var xml = SyntheticEventXml(153, "2026-01-15T12:00:00Z", "engine timeout no other markers");
+        var parsed = EventLogParser.ParseNvlddmkmEventXml(xml);
+        Assert.Equal("TDR (Timeout Detection and Recovery)", parsed.ErrorType);
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_NoEventData_StillParses()
+    {
+        var xml = $"""
+            <Event xmlns="{EventNs}">
+              <System>
+                <Provider Name="nvlddmkm" />
+                <EventID>13</EventID>
+                <TimeCreated SystemTime="2026-01-15T00:00:00Z" />
+              </System>
+            </Event>
+            """;
+        var parsed = EventLogParser.ParseNvlddmkmEventXml(xml);
+        Assert.Equal(13, parsed.EventId);
+        Assert.Null(parsed.Gpc);
+        Assert.Null(parsed.ErrorType);
+        Assert.Equal("Event 13", parsed.Message);
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_MissingTimeCreated_Throws()
+    {
+        var xml = $"""
+            <Event xmlns="{EventNs}">
+              <System><EventID>13</EventID></System>
+            </Event>
+            """;
+        Assert.Throws<FormatException>(() => EventLogParser.ParseNvlddmkmEventXml(xml));
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_MissingEventId_Throws()
+    {
+        var xml = $"""
+            <Event xmlns="{EventNs}">
+              <System><TimeCreated SystemTime="2026-01-15T00:00:00Z" /></System>
+            </Event>
+            """;
+        Assert.Throws<FormatException>(() => EventLogParser.ParseNvlddmkmEventXml(xml));
+    }
+
+    [Fact]
+    public void ParseNvlddmkmEventXml_MultipleDataValues_JoinedWithSeparator()
+    {
+        var xml = SyntheticEventXml(13, "2026-01-15T12:00:00Z", "first", "second", "Graphics SM GPC 1, TPC 0, SM 4 fault");
+        var parsed = EventLogParser.ParseNvlddmkmEventXml(xml);
+        Assert.Equal(1, parsed.Gpc);
+        Assert.Equal(0, parsed.Tpc);
+        Assert.Equal(4, parsed.Sm);
     }
 }

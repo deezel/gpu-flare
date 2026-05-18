@@ -4,12 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FLARE.Core;
 
 public static class LiveKernelDumpReport
 {
-    public static string Generate(
+    public static async Task<string> Generate(
         List<LiveKernelDump> dumps,
         List<NvlddmkmError> nvlddmkmErrors,
         List<EventLogParser.AppCrashEvent> appCrashes,
@@ -22,7 +23,8 @@ public static class LiveKernelDumpReport
         Action<string>? log,
         CancellationToken ct,
         CollectorHealth? health,
-        string? cdbCacheRoot = null)
+        string? cdbCacheRoot = null,
+        Func<IReadOnlyList<string>, string, Action<string>?, CancellationToken, CollectorHealth?, string?, Task<IReadOnlyDictionary<string, string?>>>? runAllCdb = null)
     {
         var sb = new StringBuilder();
         var orphans = ScanOrphans(dumps, maxDays, cdbCacheRoot, health);
@@ -81,6 +83,15 @@ public static class LiveKernelDumpReport
             ? dumps.OrderByDescending(d => d.Timestamp).ToList()
             : dumps.OrderBy(d => d.Timestamp).ToList();
 
+        IReadOnlyDictionary<string, string?> transcripts = new Dictionary<string, string?>();
+        if (deepAnalysis && cdbPath != null)
+        {
+            var runner = runAllCdb ?? ((paths, cdb, l, c, h, root) =>
+                ParallelCdbRunner.RunAllAsync(paths, cdb, "LiveKernel dumps", l, c, h, root));
+            transcripts = await runner(ordered.Select(d => d.FullPath).ToList(), cdbPath, log, ct, health, cdbCacheRoot)
+                .ConfigureAwait(false);
+        }
+
         foreach (var d in ordered)
         {
             ct.ThrowIfCancellationRequested();
@@ -109,27 +120,7 @@ public static class LiveKernelDumpReport
 
             if (deepAnalysis && cdbPath != null)
             {
-                var cached = CdbAnalysisCache.TryLoad(d.FullPath, log, cdbCacheRoot);
-                string? transcript;
-                if (cached != null)
-                {
-                    log?.Invoke($"  {d.FileName}: using cached cdb analysis");
-                    transcript = cached;
-                }
-                else
-                {
-                    log?.Invoke($"  Analyzing {d.FileName} ({FormatSize(d.FileSize)}) with cdb...");
-                    transcript = CdbRunner.RunCdbAnalysis(cdbPath, d.FullPath, log, ct);
-                    if (transcript != null)
-                    {
-                        CdbAnalysisCache.Store(d.FullPath, transcript, log, cdbCacheRoot);
-                        log?.Invoke($"  {d.FileName}: cdb analysis done");
-                    }
-                    else
-                    {
-                        log?.Invoke($"  {d.FileName}: cdb analysis failed (no output or timed out)");
-                    }
-                }
+                transcripts.TryGetValue(d.FullPath, out var transcript);
                 if (transcript != null)
                 {
                     var summary = CdbRunner.ExtractCdbSummary(transcript, log, health);

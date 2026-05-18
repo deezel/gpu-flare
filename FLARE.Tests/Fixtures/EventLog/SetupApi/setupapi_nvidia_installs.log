@@ -1,0 +1,935 @@
+[Boot Session: 2026/05/15 21:52:34.500]
+
+>>>  [Device Install (DiInstallDevice) - PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009]
+>>>  Section start 2026/05/15 21:56:10.377
+      cmd: C:\WINDOWS\system32\RunDll32.EXE "C:\Program Files\NVIDIA Corporation\Installer2\CoreTemp.{927DA1B2-1145-4424-9FA7-E5DDD04AD32C}\NVPrxy64.DLL",Proxy {82F12A58-A906-4309-8E4D-12741E48EC65} false
+     ndv: Flags: 0x00000000
+     dvi: Class GUID of device changed to: {4d36e968-e325-11ce-bfc1-08002be10318}.
+     sto: {Setup Import Driver Package: %USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv_dispi.inf} 21:56:10.409
+     inf:      Provider: NVIDIA
+     inf:      Class GUID: {4D36E968-E325-11CE-BFC1-08002BE10318}
+     inf:      Driver Version: 05/05/2026,32.0.15.9649
+     inf:      Catalog File: NV_DISP.CAT
+     sto:      {Copy Driver Package: %USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv_dispi.inf} 21:56:10.465
+     sto:           Driver Package = %USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv_dispi.inf
+     sto:           Flags          = 0x00000007
+     sto:           Destination    = %USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}
+     sto:           Copying driver package files to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}'.
+!    sto:           CopyINF driver package '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvpcf.inf' does not exist
+!    sto:           CopyINF driver package '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvppc.inf' does not exist
+     flq:           {FILE_QUEUE_COMMIT} 21:56:10.547
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\_nvngx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\_nvngx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-opticalflow.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-opticalflow.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvwgf2umx.so' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvwgf2umx.so'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvml_loader.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvml_loader.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsvc64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvc64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\dbInstaller.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\dbInstaller.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvppex.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvppex.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsvcr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvcr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvtileiras32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvtileiras32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdebugdump.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdebugdump.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvtileiras64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvtileiras64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvngx_dlssg.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvngx_dlssg.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsvsr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvsr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvwssr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwssr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcudart_hybrid64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcudart_hybrid64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsmartmax64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmax64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-ml.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ml.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvd3dum.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvd3dum.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdevtoolsr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdevtoolsr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvMemMapStoragex.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStoragex.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv-vk32.json' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv-vk32.json'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv-vk64.json' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv-vk64.json'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvIccAdvancedColorIdentity.icm' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvIccAdvancedColorIdentity.icm'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncMFTH264x.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTH264x.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncMFTav1x.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTav1x.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcuda32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\OpenCL32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\OpenCL32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-tileiras.so' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-tileiras.so'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcuda64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvAIDVC.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIDVC.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv3dappshext.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv3dappshext.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\OpenCL64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\OpenCL64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvAIHDR.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIHDR.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NV_DISP.CAT' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NV_DISP.CAT'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdrsdb.bin' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdrsdb.bin'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvgames.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgames.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvofapi.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvofapi.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvxdbat.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvxdbat.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncodeAPI64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncodeAPI64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvldumd.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvldumd.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdxgml.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxgml.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvoglv32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoglv32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvvamanager64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvamanager64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdlist.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdlist.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvdxgdmal.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvdxgdmal.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvoglv64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoglv64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdisps.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdisps.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\license.txt' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\license.txt'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncMFThevc.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFThevc.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdlppx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdlppx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvAIVPx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIVPx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvshext.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvshext.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvoptix.bin' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoptix.bin'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvrtum64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvrtum64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvlicensings.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvlicensings.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvoptix.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoptix.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvngx_update.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvngx_update.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvvitvs.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvitvs.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvTelemetry64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvTelemetry64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvoptix_loader.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvoptix_loader.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-ngx.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ngx.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvMemMapStorageax.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStorageax.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libcuda.so.1.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libcuda.so.1.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvd3dumx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvd3dumx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-ml_loader.so' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ml_loader.so'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvwgf2um.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwgf2um.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\gsp_ga10x.bin' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\gsp_ga10x.bin'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\MCU.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\MCU.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvptxJitCompiler32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvptxJitCompiler32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvptxJitCompiler64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvptxJitCompiler64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libcuda_loader.so' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libcuda_loader.so'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\vulkaninfo-x64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkaninfo-x64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\vulkaninfo-x86.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkaninfo-x86.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvofapi64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvofapi64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv_dispi.inf' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv_dispi.inf'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv3dappshextr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv3dappshextr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvgamesr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgamesr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvAIDVCx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIDVCx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcuvid32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuvid32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvAIHDRx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIHDRx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcubins.bin' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcubins.bin'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcoproc.bin' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcoproc.bin'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\gsp_tu10x.bin' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\gsp_tu10x.bin'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcuvid64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuvid64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvDecMFTMjpeg.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvDecMFTMjpeg.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvxdapix.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvxdapix.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvldumdx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvldumdx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvxdplcy.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvxdplcy.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdispsr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdispsr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvvkscv64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvkscv64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdlistx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdlistx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvlddmkm.sys' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvlddmkm.sys'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncMFThevcx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFThevcx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdxdlkernels.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxdlkernels.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvlicensingsr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvlicensingsr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvvitvsr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvitvsr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsmartmaxapp.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmaxapp.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvidia-ngx-updater' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-ngx-updater'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nv-vksc64.json' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv-vksc64.json'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-nvvm.so.4' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-nvvm.so.4'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvwgf2umx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwgf2umx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvml.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvml.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvui.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvui.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcuda_loader32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda_loader32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcuda_loader64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda_loader64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcudadebugger.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcudadebugger.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvopencl32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvopencl32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvopencl64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvopencl64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvvamanager.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvvamanager.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdispco64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdispco64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvidia-pcc.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-pcc.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvDecMFTMjpegx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvDecMFTMjpegx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcudaETW.xml' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcudaETW.xml'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-ptxjitcompiler.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ptxjitcompiler.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvidia-smi.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-smi.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvMemMapStorageaxec.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStorageaxec.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\vulkan-1-x64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkan-1-x64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\vulkan-1-x86.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkan-1-x86.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsmartmaxapp64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmaxapp64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvFBC.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvFBC.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-nvvm70.so.4' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-nvvm70.so.4'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvapi.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvapi.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvcpl.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcpl.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libcudadebugger.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libcudadebugger.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvIFR.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvIFR.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvinfo.pb' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvinfo.pb'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvppe.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvppe.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvvm32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvm32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdxgdmal32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxgdmal32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvvm70.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvm70.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvOSC.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvOSC.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvvm64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvm64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvngx.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvngx.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdxgdmal64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxgdmal64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvuir.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvuir.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvcuvid.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvcuvid.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsvs.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvs.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvwss.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwss.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvobjectloader64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvobjectloader64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvgpucomp32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgpucomp32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdirectsr.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdirectsr.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvgpucomp64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgpucomp64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvPresent64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvPresent64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvsmartmax.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmax.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvdevtools.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdevtools.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-encode.so.1' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-encode.so.1'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvMemMapStorage.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStorage.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvdxdlkernels.so' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvdxdlkernels.so'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncMFTH264.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTH264.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncMFTav1.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTav1.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvFBC64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvFBC64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\libnvidia-gpucomp.so' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-gpucomp.so'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvidia-smi' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-smi'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvapi64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvapi64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\nvEncodeAPI.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncodeAPI.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvIFR64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvIFR64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NVWMI\nvPerfProvider.man' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NVWMI\nvPerfProvider.man'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NVWMI\nvWmi.mof' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NVWMI\nvWmi.mof'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NVWMI\nvWmi64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NVWMI\nvWmi64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\nvgwls.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\nvgwls.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\nvtopps.db3' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\nvtopps.db3'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\dlsargs.xml' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\dlsargs.xml'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\NvMessageBus.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\NvMessageBus.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\dlsnetparams.csv' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\dlsnetparams.csv'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\messagebus_client.conf' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\messagebus_client.conf'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\NVDisplay.Container.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\NVDisplay.Container.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\NvContainerRecovery.bat' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\NvContainerRecovery.bat'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\NvcDispWatchdog.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\NvcDispWatchdog.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\messagebus.conf' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\messagebus.conf'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\_DisplayDriverRAS.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\_DisplayDriverRAS.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\NvcDispCorePlugin.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\NvcDispCorePlugin.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\wksServicePluginZ.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\wksServicePluginZ.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\NvXDCore.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\NvXDCore.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\_nvtopps.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\_nvtopps.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\LocalSystem\_NvMsgBusBroadcast.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\_NvMsgBusBroadcast.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\Session\nvxdsyncplugin.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\nvxdsyncplugin.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\Session\wksServicePlugin.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\wksServicePlugin.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\Session\_NvGSTPlugin.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\_NvGSTPlugin.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\Display.NvContainer\plugins\Session\nvprofileupdaterplugin.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\nvprofileupdaterplugin.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker01.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker01.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker02.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker02.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker03.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker03.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker04.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker04.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker05.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker05.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker06.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker06.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker07.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker07.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\Sticker08.png' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker08.png'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\FreqTransfer32.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\FreqTransfer32.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\FreqTransfer64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\FreqTransfer64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\SphericalEquirect32.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\SphericalEquirect32.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\SphericalEquirect64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\SphericalEquirect64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\NvCamera32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvCamera32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\NvCamera64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvCamera64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\NvCameraEnable.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvCameraEnable.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\GreenScreenBG01.jpg' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\GreenScreenBG01.jpg'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\GreenScreenBG02.jpg' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\GreenScreenBG02.jpg'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\scratches.jpg' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\scratches.jpg'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\d3dcompiler_47_32.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\d3dcompiler_47_32.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\d3dcompiler_47_64.dll' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\d3dcompiler_47_64.dll'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\tools_licenses.txt' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\tools_licenses.txt'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\HighresBlender32.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\HighresBlender32.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\ShotWithGeforce518x32.rgba' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ShotWithGeforce518x32.rgba'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\HighresBlender64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\HighresBlender64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\NvImageConvert32.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvImageConvert32.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\NvImageConvert64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvImageConvert64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\ReShadeFXC32.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ReShadeFXC32.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\ReShadeFXC64.exe' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ReShadeFXC64.exe'.
+     flq:                Copying '%USERPROFILE%\appdata\local\temp\nvcleanstall\display.driver\NvCamera\ui.tga' to '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ui.tga'.
+     flq:           {FILE_QUEUE_COMMIT - exit(0x00000000)} 21:56:12.409
+     sto:      {Copy Driver Package: exit(0x00000000)} 21:56:12.415
+     ump:      Import flags: 0x00000000
+     pol:      {Driver package policy check} 21:56:12.421
+     pol:      {Driver package policy check - exit(0x00000000)} 21:56:12.422
+     sto:      {Stage Driver Package: %USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv_dispi.inf} 21:56:12.423
+     inf:           Provider       = NVIDIA
+     inf:           Class GUID     = {4d36e968-e325-11ce-bfc1-08002be10318}
+     inf:           Driver Version = 05/05/2026,32.0.15.9649
+     inf:           Catalog File   = NV_DISP.CAT
+     inf:           Version Flags  = 0x00000003
+!    sto:           CopyINF driver package '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvpcf.inf' does not exist
+!    sto:           CopyINF driver package '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvppc.inf' does not exist
+     inf:           {Query Configurability: %USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv_dispi.inf} 21:56:12.506
+     inf:                Driver package is partially isolated.
+!    inf:                Driver package 'nv_dispi.inf' is NOT configurable.
+     inf:           {Query Configurability: exit(0x00000000)} 21:56:12.634
+     flq:           {FILE_QUEUE_COMMIT} 21:56:12.641
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\_nvngx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\_nvngx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-opticalflow.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-opticalflow.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvwgf2umx.so' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvwgf2umx.so'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvml_loader.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvml_loader.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvc64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsvc64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\dbInstaller.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\dbInstaller.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvppex.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvppex.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvcr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsvcr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvtileiras32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvtileiras32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdebugdump.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdebugdump.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvtileiras64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvtileiras64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvngx_dlssg.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvngx_dlssg.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvsr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsvsr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwssr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvwssr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcudart_hybrid64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcudart_hybrid64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmax64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsmartmax64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ml.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-ml.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvd3dum.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvd3dum.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdevtoolsr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdevtoolsr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStoragex.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvMemMapStoragex.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv-vk32.json' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv-vk32.json'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv-vk64.json' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv-vk64.json'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvIccAdvancedColorIdentity.icm' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvIccAdvancedColorIdentity.icm'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTH264x.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncMFTH264x.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTav1x.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncMFTav1x.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcuda32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\OpenCL32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\OpenCL32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-tileiras.so' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-tileiras.so'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcuda64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIDVC.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvAIDVC.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv3dappshext.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv3dappshext.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\OpenCL64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\OpenCL64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIHDR.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvAIHDR.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NV_DISP.CAT' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NV_DISP.CAT'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdrsdb.bin' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdrsdb.bin'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgames.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvgames.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvofapi.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvofapi.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvxdbat.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvxdbat.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncodeAPI64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncodeAPI64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvldumd.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvldumd.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxgml.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdxgml.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoglv32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvoglv32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvamanager64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvvamanager64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdlist.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdlist.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvdxgdmal.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvdxgdmal.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoglv64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvoglv64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdisps.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdisps.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\license.txt' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\license.txt'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFThevc.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncMFThevc.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdlppx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdlppx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIVPx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvAIVPx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvshext.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvshext.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoptix.bin' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvoptix.bin'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvrtum64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvrtum64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvlicensings.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvlicensings.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvoptix.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvoptix.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvngx_update.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvngx_update.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvitvs.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvvitvs.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvTelemetry64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvTelemetry64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvoptix_loader.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvoptix_loader.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ngx.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-ngx.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStorageax.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvMemMapStorageax.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libcuda.so.1.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libcuda.so.1.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvd3dumx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvd3dumx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ml_loader.so' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-ml_loader.so'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwgf2um.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvwgf2um.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\gsp_ga10x.bin' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\gsp_ga10x.bin'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\MCU.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\MCU.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvptxJitCompiler32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvptxJitCompiler32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvptxJitCompiler64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvptxJitCompiler64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libcuda_loader.so' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libcuda_loader.so'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkaninfo-x64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\vulkaninfo-x64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkaninfo-x86.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\vulkaninfo-x86.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvofapi64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvofapi64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv_dispi.inf' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv_dispi.inf'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv3dappshextr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv3dappshextr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgamesr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvgamesr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIDVCx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvAIDVCx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuvid32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcuvid32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvAIHDRx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvAIHDRx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcubins.bin' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcubins.bin'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcoproc.bin' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcoproc.bin'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\gsp_tu10x.bin' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\gsp_tu10x.bin'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuvid64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcuvid64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvDecMFTMjpeg.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvDecMFTMjpeg.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvxdapix.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvxdapix.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvldumdx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvldumdx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvxdplcy.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvxdplcy.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdispsr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdispsr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvkscv64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvvkscv64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdlistx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdlistx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvlddmkm.sys' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvlddmkm.sys'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFThevcx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncMFThevcx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxdlkernels.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdxdlkernels.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvlicensingsr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvlicensingsr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvitvsr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvvitvsr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmaxapp.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsmartmaxapp.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-ngx-updater' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvidia-ngx-updater'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nv-vksc64.json' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv-vksc64.json'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-nvvm.so.4' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-nvvm.so.4'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwgf2umx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvwgf2umx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvml.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvml.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvui.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvui.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda_loader32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcuda_loader32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcuda_loader64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcuda_loader64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcudadebugger.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcudadebugger.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvopencl32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvopencl32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvopencl64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvopencl64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvvamanager.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvvamanager.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdispco64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdispco64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-pcc.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvidia-pcc.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvDecMFTMjpegx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvDecMFTMjpegx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcudaETW.xml' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcudaETW.xml'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-ptxjitcompiler.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-ptxjitcompiler.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-smi.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvidia-smi.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStorageaxec.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvMemMapStorageaxec.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkan-1-x64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\vulkan-1-x64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\vulkan-1-x86.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\vulkan-1-x86.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmaxapp64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsmartmaxapp64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvFBC.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvFBC.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-nvvm70.so.4' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-nvvm70.so.4'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvapi.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvapi.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvcpl.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvcpl.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libcudadebugger.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libcudadebugger.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvIFR.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvIFR.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvinfo.pb' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvinfo.pb'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvppe.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvppe.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvm32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvvm32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxgdmal32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdxgdmal32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvm70.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvvm70.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvOSC.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvOSC.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvvm64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvvm64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvngx.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvngx.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdxgdmal64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdxgdmal64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvuir.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvuir.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvcuvid.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvcuvid.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsvs.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsvs.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvwss.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvwss.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvobjectloader64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvobjectloader64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgpucomp32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvgpucomp32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdirectsr.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdirectsr.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvgpucomp64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvgpucomp64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvPresent64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvPresent64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvsmartmax.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvsmartmax.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvdevtools.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvdevtools.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-encode.so.1' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-encode.so.1'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvMemMapStorage.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvMemMapStorage.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvdxdlkernels.so' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvdxdlkernels.so'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTH264.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncMFTH264.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncMFTav1.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncMFTav1.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvFBC64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvFBC64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\libnvidia-gpucomp.so' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\libnvidia-gpucomp.so'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvidia-smi' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvidia-smi'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvapi64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvapi64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvEncodeAPI.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nvEncodeAPI.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvIFR64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvIFR64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NVWMI\nvPerfProvider.man' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NVWMI\nvPerfProvider.man'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NVWMI\nvWmi.mof' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NVWMI\nvWmi.mof'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NVWMI\nvWmi64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NVWMI\nvWmi64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\nvgwls.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\nvgwls.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\nvtopps.db3' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\nvtopps.db3'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\dlsargs.xml' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\dlsargs.xml'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\NvMessageBus.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\NvMessageBus.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\dlsnetparams.csv' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\dlsnetparams.csv'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\messagebus_client.conf' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\messagebus_client.conf'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\NVDisplay.Container.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\NVDisplay.Container.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\NvContainerRecovery.bat' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\NvContainerRecovery.bat'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\NvcDispWatchdog.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\NvcDispWatchdog.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\messagebus.conf' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\messagebus.conf'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\_DisplayDriverRAS.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\_DisplayDriverRAS.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\NvcDispCorePlugin.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\NvcDispCorePlugin.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\wksServicePluginZ.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\wksServicePluginZ.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\NvXDCore.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\NvXDCore.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\_nvtopps.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\_nvtopps.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\LocalSystem\_NvMsgBusBroadcast.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem\_NvMsgBusBroadcast.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\nvxdsyncplugin.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\Session\nvxdsyncplugin.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\wksServicePlugin.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\Session\wksServicePlugin.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\_NvGSTPlugin.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\Session\_NvGSTPlugin.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\Display.NvContainer\plugins\Session\nvprofileupdaterplugin.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\Session\nvprofileupdaterplugin.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker01.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker01.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker02.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker02.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker03.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker03.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker04.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker04.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker05.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker05.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker06.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker06.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker07.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker07.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\Sticker08.png' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\Sticker08.png'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\FreqTransfer32.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\FreqTransfer32.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\FreqTransfer64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\FreqTransfer64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\SphericalEquirect32.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\SphericalEquirect32.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\SphericalEquirect64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\SphericalEquirect64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvCamera32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\NvCamera32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvCamera64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\NvCamera64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvCameraEnable.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\NvCameraEnable.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\GreenScreenBG01.jpg' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\GreenScreenBG01.jpg'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\GreenScreenBG02.jpg' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\GreenScreenBG02.jpg'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\scratches.jpg' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\scratches.jpg'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\d3dcompiler_47_32.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\d3dcompiler_47_32.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\d3dcompiler_47_64.dll' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\d3dcompiler_47_64.dll'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\tools_licenses.txt' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\tools_licenses.txt'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\HighresBlender32.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\HighresBlender32.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ShotWithGeforce518x32.rgba' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\ShotWithGeforce518x32.rgba'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\HighresBlender64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\HighresBlender64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvImageConvert32.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\NvImageConvert32.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\NvImageConvert64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\NvImageConvert64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ReShadeFXC32.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\ReShadeFXC32.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ReShadeFXC64.exe' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\ReShadeFXC64.exe'.
+     flq:                Copying '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\NvCamera\ui.tga' to 'C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera\ui.tga'.
+     flq:           {FILE_QUEUE_COMMIT - exit(0x00000000)} 21:56:15.371
+     sto:           {DRIVERSTORE IMPORT VALIDATE} 21:56:15.394
+     sig:                Driver package catalog is valid.
+     sig:                {_VERIFY_FILE_SIGNATURE} 21:56:15.423
+     sig:                     Key      = nv_dispi.inf
+     sig:                     FilePath = C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv_dispi.inf
+     sig:                     Catalog  = C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NV_DISP.CAT
+!    sig:                     Verifying file against specific (valid) catalog failed.
+!    sig:                     Error 0x800b0109: A certificate chain processed, but terminated in a root certificate which is not trusted by the trust provider.
+     sig:                {_VERIFY_FILE_SIGNATURE exit(0x800b0109)} 21:56:15.440
+     sig:                {_VERIFY_FILE_SIGNATURE} 21:56:15.442
+     sig:                     Key      = nv_dispi.inf
+     sig:                     FilePath = C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\nv_dispi.inf
+     sig:                     Catalog  = C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NV_DISP.CAT
+     sig:                     Success: File is signed in Authenticode(tm) catalog.
+     sig:                     Error 0xe0000241: The INF was signed with an Authenticode(tm) catalog from a trusted publisher.
+     sig:                {_VERIFY_FILE_SIGNATURE exit(0xe0000241)} 21:56:15.457
+!!!  sig:                Failed to verify file '_nvngx.dll' against catalog 'NV_DISP.CAT'. Error = 0xE000024B
+!!!  sig:                Catalog did not contain file hash. File is likely corrupt or a victim of tampering.
+!!!  sig:                Driver package appears to be tampered. Filename = nv_dispi.inf, Error = 0xE000024B
+!    sig:                Driver package appears to be tampered, but user wants to install it anyway.
+     sto:           {DRIVERSTORE IMPORT VALIDATE: exit(0x00000000)} 21:56:15.975
+     sig:           Signer Score  = 0x0F000000 (Authenticode)
+     sig:           Signer Name   = NVCleanstall Driver Modding Authority
+     sig:           Submission ID = 29989690_13996196463270214_1152921505700993082
+     sto:           {Core Driver Package Import: nv_dispi.inf_amd64_c53d060af33db88f} 21:56:16.001
+     sto:                {DRIVERSTORE IMPORT BEGIN} 21:56:16.001
+     sto:                {DRIVERSTORE IMPORT BEGIN: exit(0x00000000)} 21:56:16.001
+     cpy:                {Copy Directory: C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}} 21:56:16.001
+     cpy:                     Target Path = C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f
+     cpy:                     {Copy Directory: C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer} 21:56:16.002
+     cpy:                          Target Path = C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer
+     cpy:                          {Copy Directory: C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins} 21:56:16.005
+     cpy:                               Target Path = C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins
+     cpy:                               {Copy Directory: C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\LocalSystem} 21:56:16.007
+     cpy:                                    Target Path = C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem
+     cpy:                               {Copy Directory: exit(0x00000000)} 21:56:16.011
+     cpy:                               {Copy Directory: C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\Display.NvContainer\plugins\Session} 21:56:16.011
+     cpy:                                    Target Path = C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\Session
+     cpy:                               {Copy Directory: exit(0x00000000)} 21:56:16.014
+     cpy:                          {Copy Directory: exit(0x00000000)} 21:56:16.014
+     cpy:                     {Copy Directory: exit(0x00000000)} 21:56:16.014
+     cpy:                     {Copy Directory: C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NvCamera} 21:56:16.022
+     cpy:                          Target Path = C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera
+     cpy:                     {Copy Directory: exit(0x00000000)} 21:56:16.031
+     cpy:                     {Copy Directory: C:\WINDOWS\System32\DriverStore\Temp\{057b8bcf-d18e-4549-a4db-94595005ec48}\NVWMI} 21:56:16.055
+     cpy:                          Target Path = C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NVWMI
+     cpy:                     {Copy Directory: exit(0x00000000)} 21:56:16.056
+     cpy:                {Copy Directory: exit(0x00000000)} 21:56:16.060
+     idb:                {Register Driver Package: C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nv_dispi.inf} 21:56:22.001
+     idb:                     Created driver package object 'nv_dispi.inf_amd64_c53d060af33db88f' in DRIVERS database node.
+     idb:                     Created driver INF file object 'oem63.inf' in DRIVERS database node.
+     idb:                     Registered driver package 'nv_dispi.inf_amd64_c53d060af33db88f' with 'oem63.inf'.
+     idb:                {Register Driver Package: exit(0x00000000)} 21:56:22.019
+     idb:                {Publish Driver Package: C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nv_dispi.inf} 21:56:22.019
+     idb:                     Activating driver package 'nv_dispi.inf_amd64_c53d060af33db88f'.
+     cpy:                     Published 'nv_dispi.inf_amd64_c53d060af33db88f\nv_dispi.inf' to 'oem63.inf'.
+     idb:                     Indexed 213 device IDs for 'nv_dispi.inf_amd64_c53d060af33db88f'.
+     sto:                     Flushed driver database node 'DRIVERS'. Time = 0 ms
+     sto:                     Flushed driver database node 'SYSTEM'. Time = 0 ms
+     idb:                {Publish Driver Package: exit(0x00000000)} 21:56:22.180
+     sto:                {DRIVERSTORE IMPORT END} 21:56:22.213
+     dvi:                     Flushed all driver package files to disk. Time = 676 ms
+     sig:                     Installed catalog 'NV_DISP.CAT' as 'oem63.cat'.
+     sto:                {DRIVERSTORE IMPORT END: exit(0x00000000)} 21:56:22.928
+!    sto:                CopyINF driver package '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvpcf.inf' does not exist
+!    sto:                CopyINF driver package '%USERPROFILE%\AppData\Local\Temp\{64c8358e-cb46-f546-9c9d-1f2dcd257e76}\nvppc.inf' does not exist
+     sto:           {Core Driver Package Import: exit(0x00000000)} 21:56:22.928
+     sto:      {Stage Driver Package: exit(0x00000000)} 21:56:22.948
+     sto: {Setup Import Driver Package - exit (0x00000000)} 21:56:23.179
+     dvi: Searching for hardware ID(s):
+     dvi:      pci\ven_10de&dev_2204&subsys_87af1043&rev_a1
+     dvi:      pci\ven_10de&dev_2204&subsys_87af1043
+     dvi:      pci\ven_10de&dev_2204&cc_030000
+     dvi:      pci\ven_10de&dev_2204&cc_0300
+     dvi: Searching for compatible ID(s):
+     dvi:      pci\ven_10de&dev_2204&rev_a1
+     dvi:      pci\ven_10de&dev_2204
+     dvi:      pci\ven_10de&cc_030000
+     dvi:      pci\ven_10de&cc_0300
+     dvi:      pci\ven_10de
+     dvi:      pci\cc_030000&dt_1
+     dvi:      pci\cc_030000
+     dvi:      pci\cc_0300&dt_1
+     dvi:      pci\cc_0300
+     dvi: Class GUID of device changed to: {4d36e968-e325-11ce-bfc1-08002be10318}.
+     ump: {Plug and Play Service: Device Install for PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009}
+     dvi:      Install flags: 0x00010211
+     dvi:      Searching for hardware ID(s):
+     dvi:           pci\ven_10de&dev_2204&subsys_87af1043&rev_a1
+     dvi:           pci\ven_10de&dev_2204&subsys_87af1043
+     dvi:           pci\ven_10de&dev_2204&cc_030000
+     dvi:           pci\ven_10de&dev_2204&cc_0300
+     dvi:      Searching for compatible ID(s):
+     dvi:           pci\ven_10de&dev_2204&rev_a1
+     dvi:           pci\ven_10de&dev_2204
+     dvi:           pci\ven_10de&cc_030000
+     dvi:           pci\ven_10de&cc_0300
+     dvi:           pci\ven_10de
+     dvi:           pci\cc_030000&dt_1
+     dvi:           pci\cc_030000
+     dvi:           pci\cc_0300&dt_1
+     dvi:           pci\cc_0300
+     dvi:      Class GUID of device changed to: {4d36e968-e325-11ce-bfc1-08002be10318}.
+     ndv:      {Core Device Install} 21:56:23.340
+     dvi:           {Install Device - PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009} 21:56:23.400
+     dvi:                Device Status: 0x0180200a
+     dvi:                Config Flags: 0x00000000
+     dvi:                Parent Device: PCI\VEN_1022&DEV_14DB&SUBSYS_88771043&REV_00\3&11583659&0&09
+     dvi:                {DIF_ALLOW_INSTALL} 21:56:23.401
+     dvi:                     Default installer: Enter 21:56:23.403
+     dvi:                     Default installer: Exit
+     dvi:                {DIF_ALLOW_INSTALL - exit(0xe000020e)} 21:56:23.403
+     dvi:                {DIF_INSTALLDEVICEFILES} 21:56:23.404
+     dvi:                     Default installer: Enter 21:56:23.404
+     dvi:                     Default installer: Exit
+     dvi:                {DIF_INSTALLDEVICEFILES - exit(0x00000000)} 21:56:23.507
+     dvi:                {_SCAN_FILE_QUEUE} 21:56:23.507
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NVWMI\nvPerfProvider.man' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NVWMI\nvWmi.mof' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NVWMI\nvWmi64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\NVDisplay.Container.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\NvContainerRecovery.bat' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\NvMessageBus.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\dlsargs.xml' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\dlsnetparams.csv' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\messagebus_client.conf' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\nvgwls.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\nvtopps.db3' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\NvXDCore.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\NvcDispCorePlugin.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\NvcDispWatchdog.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\_DisplayDriverRAS.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\_NvMsgBusBroadcast.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\_nvtopps.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\messagebus.conf' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\LocalSystem\wksServicePluginZ.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\Session\_NvGSTPlugin.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\Session\nvprofileupdaterplugin.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\Session\nvxdsyncplugin.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\Display.NvContainer\plugins\Session\wksServicePlugin.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nv3dappshext.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nv3dappshextr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcoproc.bin' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcpl.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdevtools.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdevtoolsr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdisps.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdispsr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvgames.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvgamesr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvlicensings.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvlicensingsr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvshext.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsmartmax.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsmartmax64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsmartmaxapp.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsmartmaxapp64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsvc64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsvcr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsvs.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvsvsr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvui.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvuir.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvvitvs.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvvitvsr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvwss.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvwssr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvxdapix.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvxdbat.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvxdplcy.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\system32\lxss\lib\libnvdxdlkernels.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\system32\lxss\lib\libnvidia-opticalflow.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\system32\lxss\lib\libnvidia-opticalflow.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\system32\lxss\lib\libnvoptix.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\_nvngx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdirectsr.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvngx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvngx_update.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\FreqTransfer32.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\FreqTransfer64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\GreenScreenBG01.jpg' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\GreenScreenBG02.jpg' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\HighresBlender32.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\HighresBlender64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\NvCamera32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\NvCamera64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\NvCameraEnable.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\NvImageConvert32.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\NvImageConvert64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\ReShadeFXC32.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\ReShadeFXC64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\ShotWithGeforce518x32.rgba' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\SphericalEquirect32.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\SphericalEquirect64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker01.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker02.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker03.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker04.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker05.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker06.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker07.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\Sticker08.png' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\d3dcompiler_47_32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\d3dcompiler_47_64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\scratches.jpg' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\tools_licenses.txt' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvCamera\ui.tga' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvopencl32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvopencl64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvlddmkm.sys' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvvm32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvvm64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvvm70.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvMemMapStorage.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvMemMapStorageax.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvMemMapStorageaxec.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvMemMapStoragex.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvOSC.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvPresent64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\gsp_ga10x.bin' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\gsp_tu10x.bin' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libcuda.so.1.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libcuda_loader.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libcudadebugger.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvcuvid.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvdxdlkernels.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvdxgdmal.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-encode.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-gpucomp.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-ml.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-ml_loader.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-nvvm.so.4' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-nvvm70.so.4' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-opticalflow.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-ptxjitcompiler.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-tileiras.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvoptix_loader.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvvamanager.so.1' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvwgf2umx.so' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nv-vk64.json' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nv-vksc64.json' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvAIDVC.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvAIDVCx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvAIHDR.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvAIHDRx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvAIVPx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvDecMFTMjpeg.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvDecMFTMjpegx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvEncMFTH264.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvEncMFTH264x.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvEncMFThevc.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvEncMFThevcx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcubins.bin' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcuda32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcuda64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcudaETW.xml' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcudart_hybrid64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvd3dumx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdlistx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdlppx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdxdlkernels.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdxgdmal32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdxgdmal64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdxgml.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvgpucomp32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvgpucomp64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvidia-smi' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvldumdx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvml.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvobjectloader64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvoglv64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvoptix.bin' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvoptix.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvppe.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvppex.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvptxJitCompiler32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvptxJitCompiler64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvrtum64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvtileiras64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvvamanager64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvvkscv64.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvwgf2umx.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nv-vk32.json' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvIccAdvancedColorIdentity.icm' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvd3dum.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdispco64.exe' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdlist.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvldumd.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvoglv32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvtileiras32.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvwgf2um.dll' pruned from copy.
+     flq:                     File 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvTelemetry64.dll' pruned from copy.
+     dvi:                {_SCAN_FILE_QUEUE - exit(0x00000000)} 21:56:29.360
+     flq:                {FILE_QUEUE_COMMIT} 21:56:29.361
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\dbInstaller.exe' to 'C:\WINDOWS\system32\DRIVERS\NVIDIA Corporation\Drs\dbInstaller.exe'.
+     cpy:                     Last driver package 'nv_dispig.inf_amd64_f4c7a2fd13e0f763' to copy 'C:\WINDOWS\system32\DRIVERS\NVIDIA Corporation\Drs\dbInstaller.exe' needs to be reconfigured.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdrsdb.bin' to 'C:\WINDOWS\system32\DRIVERS\NVIDIA Corporation\Drs\nvdrsdb.bin'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcpl.dll' to 'C:\WINDOWS\system32\nvcpl.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libcuda_loader.so' to 'C:\WINDOWS\system32\lxss\lib\libcuda.so'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libcuda_loader.so' to 'C:\WINDOWS\system32\lxss\lib\libcuda.so.1'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libcuda_loader.so' to 'C:\WINDOWS\system32\lxss\lib\libcuda.so.1.1'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libcudadebugger.so.1' to 'C:\WINDOWS\system32\lxss\lib\libcudadebugger.so.1'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvcuvid.so.1' to 'C:\WINDOWS\system32\lxss\lib\libnvcuvid.so'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvcuvid.so.1' to 'C:\WINDOWS\system32\lxss\lib\libnvcuvid.so.1'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-encode.so.1' to 'C:\WINDOWS\system32\lxss\lib\libnvidia-encode.so'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-encode.so.1' to 'C:\WINDOWS\system32\lxss\lib\libnvidia-encode.so.1'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-gpucomp.so' to 'C:\WINDOWS\system32\lxss\lib\libnvidia-gpucomp.so'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-ml_loader.so' to 'C:\WINDOWS\system32\lxss\lib\libnvidia-ml.so.1'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvidia-ngx.so.1' to 'C:\WINDOWS\system32\lxss\lib\libnvidia-ngx.so.1'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\libnvwgf2umx.so' to 'C:\WINDOWS\system32\lxss\lib\libnvwgf2umx.so'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvidia-ngx-updater' to 'C:\WINDOWS\system32\lxss\lib\nvidia-ngx-updater'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvidia-smi' to 'C:\WINDOWS\system32\lxss\lib\nvidia-smi'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\license.txt' to 'C:\WINDOWS\system32\DRIVERS\NVIDIA Corporation\license.txt'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\MCU.exe' to 'C:\WINDOWS\system32\MCU.exe'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvdebugdump.exe' to 'C:\WINDOWS\system32\nvdebugdump.exe'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvidia-smi.exe' to 'C:\WINDOWS\system32\nvidia-smi.exe'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvFBC64.dll' to 'C:\WINDOWS\system32\NvFBC64.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvIFR64.dll' to 'C:\WINDOWS\system32\NvIFR64.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\OpenCL64.dll' to 'C:\WINDOWS\system32\OpenCL.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvEncodeAPI64.dll' to 'C:\WINDOWS\system32\nvEncodeAPI64.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvapi64.dll' to 'C:\WINDOWS\system32\nvapi64.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcuda_loader64.dll' to 'C:\WINDOWS\system32\nvcuda.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcudadebugger.dll' to 'C:\WINDOWS\system32\nvcudadebugger.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcuvid64.dll' to 'C:\WINDOWS\system32\nvcuvid.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvidia-pcc.exe' to 'C:\WINDOWS\system32\nvidia-pcc.exe'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvinfo.pb' to 'C:\WINDOWS\system32\nvinfo.pb'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvml_loader.dll' to 'C:\WINDOWS\system32\nvml.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvofapi64.dll' to 'C:\WINDOWS\system32\nvofapi64.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkan-1-x64.dll' to 'C:\WINDOWS\system32\vulkan-1-999-0-0-0.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkan-1-x64.dll' to 'C:\WINDOWS\system32\vulkan-1.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkaninfo-x64.exe' to 'C:\WINDOWS\system32\vulkaninfo-1-999-0-0-0.exe'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkaninfo-x64.exe' to 'C:\WINDOWS\system32\vulkaninfo.exe'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvFBC.dll' to 'C:\WINDOWS\SysWow64\NvFBC.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\NvIFR.dll' to 'C:\WINDOWS\SysWow64\NvIFR.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\OpenCL32.dll' to 'C:\WINDOWS\SysWow64\OpenCL.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvEncodeAPI.dll' to 'C:\WINDOWS\SysWow64\nvEncodeAPI.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvapi.dll' to 'C:\WINDOWS\SysWow64\nvapi.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcuda_loader32.dll' to 'C:\WINDOWS\SysWow64\nvcuda.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvcuvid32.dll' to 'C:\WINDOWS\SysWow64\nvcuvid.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\nvofapi.dll' to 'C:\WINDOWS\SysWow64\nvofapi.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkan-1-x86.dll' to 'C:\WINDOWS\SysWow64\vulkan-1-999-0-0-0.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkan-1-x86.dll' to 'C:\WINDOWS\SysWow64\vulkan-1.dll'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkaninfo-x86.exe' to 'C:\WINDOWS\SysWow64\vulkaninfo-1-999-0-0-0.exe'.
+     flq:                     Hardlinking 'C:\WINDOWS\System32\DriverStore\FileRepository\nv_dispi.inf_amd64_c53d060af33db88f\vulkaninfo-x86.exe' to 'C:\WINDOWS\SysWow64\vulkaninfo.exe'.
+     flq:                {FILE_QUEUE_COMMIT - exit(0x00000000)} 21:56:30.395
+     dvi:                {_SCAN_FILE_QUEUE} 21:56:30.395
+     dvi:                {_SCAN_FILE_QUEUE - exit(0x00000000)} 21:56:30.396
+     dvi:                {DIF_REGISTER_COINSTALLERS} 21:56:30.396
+     dvi:                     Reset Device: Resetting device configuration. 21:56:30.397
+     dvi:                     Reset Device: Resetting device configuration completed. 21:56:30.397
+     dvi:                     Default installer: Enter 21:56:30.397
+     inf:                          {Install from INF Section - Section021.CoInstallers} 21:56:30.398
+     inf:                               Flags         - 0x001001ee
+     inf:                          {Install from INF Section - exit(0x00000000)} 21:56:30.398
+     dvi:                     Default installer: Exit
+     dvi:                {DIF_REGISTER_COINSTALLERS - exit(0x00000000)} 21:56:30.398
+     dvi:                {DIF_INSTALLINTERFACES} 21:56:30.400
+     dvi:                     Default installer: Enter 21:56:30.400
+     dvi:                     Default installer: Exit
+     dvi:                {DIF_INSTALLINTERFACES - exit(0x00000000)} 21:56:30.457
+     dvi:                {DIF_INSTALLDEVICE} 21:56:30.457
+     dvi:                     Default installer: Enter 21:56:30.457
+     dvi:                          {Install DEVICE}
+     inf:                               {Install from INF Section - Section021} 21:56:30.459
+     inf:                                    Flags         - 0x001005ee
+     inf:                               {Install from INF Section - exit(0x00000000)} 21:56:30.479
+     inf:                               {Install from INF Section - Section021.Hw} 21:56:30.479
+     inf:                                    Flags         - 0x00100004
+     inf:                               {Install from INF Section - exit(0x00000000)} 21:56:30.481
+     dvi:                               {Writing Device Properties}
+     dvi:                                    Strong Name=oem63.inf:0f066de3b9184289:Section021:32.0.15.9649:pci\ven_10de&dev_2204
+     dvi:                               {Writing Device Properties - Complete}
+     inf:                               AddService=nvlddmkm,0x00000002,nv_nvlddmkm_serviceInstallRS__01,nv_nvlddmkm_RS_eventlogging  (nv_dispi.inf line 2028)
+     dvi:                               Add Service: Modified existing service 'nvlddmkm'.
+     dvi:                               Restart required for any devices using this service.
+     inf:                               {Install from INF Section - nv_nvlddmkm_serviceInstallRS__01} 21:56:30.484
+     inf:                                    Flags         - 0x00100004
+     inf:                               {Install from INF Section - exit(0x00000000)} 21:56:30.646
+     inf:                               {Install from INF Section - nv_nvlddmkm_RS_eventlogging} 21:56:30.646
+     inf:                                    Flags         - 0x00100004
+     inf:                               {Install from INF Section - exit(0x00000000)} 21:56:30.646
+     inf:                               AddService=NVDisplay.ContainerLocalSystem,0x00000800,NvDisplayContainer_ServiceInstall  (nv_dispi.inf line 2029)
+     dvi:                               Add Service: Modified existing service 'NVDisplay.ContainerLocalSystem'.
+     dvi:                               Restart required for any devices using this service.
+     inf:                               {Install from INF Section - NvDisplayContainer_ServiceInstall} 21:56:30.649
+     inf:                                    Flags         - 0x00100004
+     inf:                               {Install from INF Section - exit(0x00000000)} 21:56:30.650
+     dvi:                               Start Service: Starting service 'NVDisplay.ContainerLocalSystem'. 21:56:30.650
+     dvi:                               Start Service: Successfully restarted service 'NVDisplay.ContainerLocalSystem'. 21:56:31.181
+     dvi:                          {Install DEVICE exit (0x00000000)}
+     sto:                          {Configure Driver Package: c:\windows\system32\driverstore\filerepository\nv_dispi.inf_amd64_c53d060af33db88f\nv_dispi.inf} 21:56:31.183
+     sto:                               Source Filter  = Section021
+     sto:                               Target Filter  = PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009
+     inf:                               Config Options = IsolationCompat
+     inf:                               Class GUID     = {4d36e968-e325-11ce-bfc1-08002be10318}
+     inf:                               Class Options  = Configurable
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3090 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3090}
+     inf:                                    Section Name = Section021
+     inf:                                    {Configure Device: PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009}
+     inf:                                    {Configure Device: exit(0x00000000)}
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3080}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3070 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3080 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3080}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3080}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3070 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3070}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3070}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060 Ti}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3060}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3050}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     inf:                               {Configure Driver: NVIDIA GeForce RTX 3050}
+     inf:                                    Section Name = Section021
+     inf:                               {Configure Driver: exit(0x00000000)}
+     sto:                          {Configure Driver Package: exit(0x00000000)} 21:56:31.340
+     dvi:                          Install Device: Configuring device class. 21:56:31.341
+     dvi:                          Install Device: Configuring device class completed. 21:56:31.342
+     dvi:                          Device Status: 0x0180200a
+     dvi:                          {Restarting Devices} 21:56:31.342
+     dvi:                               Query-remove: PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009
+     dvi:                               Start: PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009
+     dvi:                               Restart verified: PCI\VEN_10DE&DEV_2204&SUBSYS_87AF1043&REV_A1\4&1BABDF5B&0&0009
+     dvi:                          {Restarting Devices exit} 21:56:34.612
+     dvi:                     Default installer: Exit
+     dvi:                {DIF_INSTALLDEVICE - exit(0x00000000)} 21:56:34.613
+     dvi:                {DIF_NEWDEVICEWIZARD_FINISHINSTALL} 21:56:34.613
+     dvi:                     Default installer: Enter 21:56:34.615
+     dvi:                     Default installer: Exit
+     dvi:                {DIF_NEWDEVICEWIZARD_FINISHINSTALL - exit(0xe000020e)} 21:56:34.616
+     dvi:           {Install Device - exit(0x00000000)} 21:56:34.617
+     dvi:      {Core Device Install - exit(0x00000000)} 21:56:34.618
+     ump: {Plug and Play Service: Device Install exit(00000000)}
+<<<  Section end 2026/05/15 21:56:34.627

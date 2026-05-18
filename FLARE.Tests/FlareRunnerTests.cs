@@ -45,30 +45,30 @@ public class FlareRunnerTests : IDisposable
         PullAppCrashEvents: (_, _, _) => { callOrder.Add("appcrashes"); return []; },
         PullDriverInstalls: (_, _, _) => { callOrder.Add("drivers"); return []; },
         CopyDumps: (_, _, _, _, _) => { callOrder.Add("minidumps"); return new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()); },
-        GenerateDumpReport: (_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return "fake"; },
-        GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+        GenerateDumpReport: (_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return Task.FromResult("fake"); },
+        GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
 
     [Fact]
-    public void Run_DoesNotMutateCallerFlareOptions()
+    public async Task Run_DoesNotMutateCallerFlareOptions()
     {
         var callOrder = new List<string>();
         var options = Options();
         options.MaxDays = 99999;
         options.MaxEvents = 99999;
 
-        FlareRunner.Run(options, log: null, ct: default, deps: FakeDeps(callOrder));
+        await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: FakeDeps(callOrder));
 
         Assert.Equal(99999, options.MaxDays);
         Assert.Equal(99999, options.MaxEvents);
     }
 
     [Fact]
-    public void Run_WithFakeDeps_CallsCollectorsInDocumentedOrder()
+    public async Task Run_WithFakeDeps_CallsCollectorsInDocumentedOrder()
     {
         var callOrder = new List<string>();
         var options = Options(o => o.DeepAnalyze = true);
 
-        FlareRunner.Run(options, log: null, ct: default, deps: FakeDeps(callOrder));
+        await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: FakeDeps(callOrder));
 
         Assert.Equal(
             new[] { "gpu", "system", "errors", "crashes", "appcrashes", "drivers", "minidumps" },
@@ -76,11 +76,11 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_WithFakeDeps_PopulatesResultAndWritesReport()
+    public async Task Run_WithFakeDeps_PopulatesResultAndWritesReport()
     {
         var options = Options(o => o.DeepAnalyze = true);
 
-        var result = FlareRunner.Run(options, log: null, ct: default, deps: FakeDeps(new List<string>()));
+        var result = await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: FakeDeps(new List<string>()));
 
         Assert.NotNull(result.Gpu);
         Assert.Equal("FakeGPU", result.Gpu.Name);
@@ -92,13 +92,13 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_WithDeepAnalyzeDisabled_SkipsMinidumpCopy()
+    public async Task Run_WithDeepAnalyzeDisabled_SkipsMinidumpCopy()
     {
         var callOrder = new List<string>();
         var logs = new List<string>();
         var options = Options(o => o.DeepAnalyze = false);
 
-        var result = FlareRunner.Run(options, log: logs.Add, ct: default, deps: FakeDeps(callOrder));
+        var result = await FlareRunner.Run(options, log: logs.Add, ct: TestContext.Current.CancellationToken, deps: FakeDeps(callOrder));
 
         Assert.DoesNotContain("minidumps", callOrder);
         Assert.DoesNotContain("dumpanalysis", callOrder);
@@ -108,76 +108,76 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_WithRedactionEnabled_RedactsUuidInProgressLog()
+    public async Task Run_WithRedactionEnabled_RedactsUuidInProgressLog()
     {
         var logs = new List<string>();
         var options = Options(o => o.RedactIdentifiers = true);
 
-        FlareRunner.Run(options, logs.Add, ct: default, deps: FakeDeps(new List<string>()));
+        await FlareRunner.Run(options, logs.Add, ct: TestContext.Current.CancellationToken, deps: FakeDeps(new List<string>()));
 
         Assert.DoesNotContain(logs, l => l.Contains("GPU-01234567-89ab-cdef-0123-456789abcdef"));
         Assert.Contains(logs, l => l.Contains("UUID:   [redacted]"));
     }
 
     [Fact]
-    public void Run_WithRedactionDisabled_KeepsUuidInProgressLog()
+    public async Task Run_WithRedactionDisabled_KeepsUuidInProgressLog()
     {
         var logs = new List<string>();
         var options = Options(o => o.RedactIdentifiers = false);
 
-        FlareRunner.Run(options, logs.Add, ct: default, deps: FakeDeps(new List<string>()));
+        await FlareRunner.Run(options, logs.Add, ct: TestContext.Current.CancellationToken, deps: FakeDeps(new List<string>()));
 
         Assert.Contains(logs, l => l.Contains("UUID:   GPU-01234567-89ab-cdef-0123-456789abcdef"));
     }
 
     [Fact]
-    public void Run_ProgressLog_NamesApplicationLogSource()
+    public async Task Run_ProgressLog_NamesApplicationLogSource()
     {
         var logs = new List<string>();
 
-        FlareRunner.Run(Options(), logs.Add, ct: default, deps: FakeDeps(new List<string>()));
+        await FlareRunner.Run(Options(), logs.Add, ct: TestContext.Current.CancellationToken, deps: FakeDeps(new List<string>()));
 
         Assert.Contains(logs, l => l.Contains("Application log", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
-    public void Run_CreatesReportAndMinidumpDirectories()
+    public async Task Run_CreatesReportAndMinidumpDirectories()
     {
         var options = Options(o => o.DeepAnalyze = true);
 
-        FlareRunner.Run(options, log: null, ct: default, deps: FakeDeps(new List<string>()));
+        await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: FakeDeps(new List<string>()));
 
         Assert.True(Directory.Exists(_tempDir), "report dir should be created");
         Assert.True(Directory.Exists(_tempDumpDir), "minidumps dir should be created");
     }
 
     [Fact]
-    public void Run_DoesNotCreateMinidumpSubfolderInsideReportDir()
+    public async Task Run_DoesNotCreateMinidumpSubfolderInsideReportDir()
     {
         var options = Options(o => o.DeepAnalyze = true);
 
-        FlareRunner.Run(options, log: null, ct: default, deps: FakeDeps(new List<string>()));
+        await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: FakeDeps(new List<string>()));
 
         Assert.False(Directory.Exists(Path.Combine(_tempDir, "minidumps")),
             "report folder must not contain a minidumps subfolder");
     }
 
     [Fact]
-    public void Run_PreCancelledToken_ThrowsBeforeAnyCollectorIsCalled()
+    public async Task Run_PreCancelledToken_ThrowsBeforeAnyCollectorIsCalled()
     {
         var callOrder = new List<string>();
         using var cts = new CancellationTokenSource();
         cts.Cancel();
         var options = Options(o => o.DeepAnalyze = true);
 
-        Assert.Throws<OperationCanceledException>(() =>
+        await Assert.ThrowsAsync<OperationCanceledException>(() =>
             FlareRunner.Run(options, log: null, ct: cts.Token, deps: FakeDeps(callOrder)));
 
         Assert.Empty(callOrder);
     }
 
     [Fact]
-    public void Run_CancellationDuringPipeline_StopsBeforeNextCollector()
+    public async Task Run_CancellationDuringPipeline_StopsBeforeNextCollector()
     {
         var callOrder = new List<string>();
         using var cts = new CancellationTokenSource();
@@ -190,19 +190,19 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents: (_, _, _) => { callOrder.Add("appcrashes"); return []; },
             PullDriverInstalls: (_, _, _) => { callOrder.Add("drivers"); return []; },
             CopyDumps: (_, _, _, _, _) => { callOrder.Add("minidumps"); return new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()); },
-            GenerateDumpReport: (_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return ""; },
-            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+            GenerateDumpReport: (_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return Task.FromResult(""); },
+            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
 
         var options = Options(o => o.DeepAnalyze = true);
 
-        Assert.Throws<OperationCanceledException>(() =>
+        await Assert.ThrowsAsync<OperationCanceledException>(() =>
             FlareRunner.Run(options, log: null, ct: cts.Token, deps: deps));
 
         Assert.Equal(new[] { "gpu" }, callOrder);
     }
 
     [Fact]
-    public void Run_CancellationDuringMinidumpCopy_Propagates()
+    public async Task Run_CancellationDuringMinidumpCopy_Propagates()
     {
         var callOrder = new List<string>();
         using var cts = new CancellationTokenSource();
@@ -221,19 +221,19 @@ public class FlareRunnerTests : IDisposable
                 ct.ThrowIfCancellationRequested();
                 return new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>());
             },
-            GenerateDumpReport: (_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return ""; },
-            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+            GenerateDumpReport: (_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return Task.FromResult(""); },
+            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
 
         var options = Options(o => o.DeepAnalyze = true);
 
-        Assert.Throws<OperationCanceledException>(() =>
+        await Assert.ThrowsAsync<OperationCanceledException>(() =>
             FlareRunner.Run(options, log: null, ct: cts.Token, deps: deps));
 
         Assert.Equal(new[] { "gpu", "system", "errors", "crashes", "appcrashes", "drivers", "minidumps" }, callOrder);
     }
 
     [Fact]
-    public void Run_AppendsMinidumpRowsToCrashesWhenDumpsAreStaged()
+    public async Task Run_AppendsMinidumpRowsToCrashesWhenDumpsAreStaged()
     {
         Directory.CreateDirectory(_tempDir);
         Directory.CreateDirectory(_tempDumpDir);
@@ -248,16 +248,16 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents: (_, _, _) => [],
             PullDriverInstalls: (_, _, _) => [],
             CopyDumps: (_, _, _, _, _) => new ElevatedDumpCopy.StagedDumps(new List<string> { staged }, new List<string>()),
-            GenerateDumpReport: (_, _, _, _, _) => "",
-            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+            GenerateDumpReport: (_, _, _, _, _) => Task.FromResult(""),
+            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
 
-        var result = FlareRunner.Run(Options(o => o.DeepAnalyze = true), log: null, ct: default, deps: deps);
+        var result = await FlareRunner.Run(Options(o => o.DeepAnalyze = true), log: null, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.Contains(result.Crashes, c => c.Source == "MINIDUMP" && c.Description.Contains("mini-2025.dmp"));
     }
 
     [Fact]
-    public void Run_WithDefaultDependencies_DegradesWithoutThrowing()
+    public async Task Run_WithDefaultDependencies_DegradesWithoutThrowing()
     {
         var options = Options(o =>
         {
@@ -267,7 +267,7 @@ public class FlareRunnerTests : IDisposable
         });
         var logs = new List<string>();
 
-        var result = FlareRunner.Run(options, log: logs.Add, ct: default);
+        var result = await FlareRunner.Run(options, log: logs.Add, ct: TestContext.Current.CancellationToken);
 
         Assert.NotNull(result);
         Assert.NotEmpty(result.Report);
@@ -277,13 +277,13 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_WithDeepAnalyzeDisabled_SkipsCopyAndCreatesNoStagingDir()
+    public async Task Run_WithDeepAnalyzeDisabled_SkipsCopyAndCreatesNoStagingDir()
     {
         var callOrder = new List<string>();
         var options = Options(o => o.DeepAnalyze = false);
         var logs = new List<string>();
 
-        var result = FlareRunner.Run(options, log: logs.Add, ct: default, deps: FakeDeps(callOrder));
+        var result = await FlareRunner.Run(options, log: logs.Add, ct: TestContext.Current.CancellationToken, deps: FakeDeps(callOrder));
 
         Assert.DoesNotContain("minidumps", callOrder);
         Assert.DoesNotContain("dumpanalysis", callOrder);
@@ -295,7 +295,7 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_ForwardsMaxDaysCutoffToMinidumpCopy()
+    public async Task Run_ForwardsMaxDaysCutoffToMinidumpCopy()
     {
         DateTime? seenCutoff = null;
         var deps = new FlareDependencies(
@@ -306,22 +306,22 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents:(_, _, _) => [],
             PullDriverInstalls:(_, _, _) => [],
             CopyDumps:         (_, _, cutoff, _, _) => { seenCutoff = cutoff; return new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()); },
-            GenerateDumpReport:(_, _, _, _, _) => "",
-            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+            GenerateDumpReport:(_, _, _, _, _) => Task.FromResult(""),
+            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
         var options = Options(o =>
         {
             o.MaxDays = 7;
             o.DeepAnalyze = true;
         });
 
-        FlareRunner.Run(options, log: null, ct: default, deps: deps);
+        await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.NotNull(seenCutoff);
         Assert.Equal(DateTime.Today.AddDays(-7), seenCutoff.Value);
     }
 
     [Fact]
-    public void Run_WithDeepAnalyzeDisabled_IgnoresPreStagedDumps()
+    public async Task Run_WithDeepAnalyzeDisabled_IgnoresPreStagedDumps()
     {
         Directory.CreateDirectory(_tempDumpDir);
         File.WriteAllBytes(Path.Combine(_tempDumpDir, "stale.dmp"), new byte[2048]);
@@ -336,11 +336,11 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents:(_, _, _) => [],
             PullDriverInstalls:(_, _, _) => [],
             CopyDumps:         (_, _, _, _, _) => { callOrder.Add("minidumps"); return new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()); },
-            GenerateDumpReport:(_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return "  Analyzed 1 crash dump(s):\n  stale.dmp\n"; },
-            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+            GenerateDumpReport:(_, _, _, _, _) => { callOrder.Add("dumpanalysis"); return Task.FromResult("  Analyzed 1 crash dump(s):\n  stale.dmp\n"); },
+            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
         var options = Options(o => o.DeepAnalyze = false);
 
-        var result = FlareRunner.Run(options, logs.Add, ct: default, deps: deps);
+        var result = await FlareRunner.Run(options, logs.Add, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.DoesNotContain("minidumps", callOrder);
         Assert.DoesNotContain("dumpanalysis", callOrder);
@@ -352,7 +352,7 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_WithAllCollectorsPopulated_RendersEveryOptionalSection()
+    public async Task Run_WithAllCollectorsPopulated_RendersEveryOptionalSection()
     {
         var baseTime = new DateTime(2025, 1, 15, 10, 0, 0);
         var errors = new List<NvlddmkmError>
@@ -381,15 +381,15 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents:(_, _, _) => appCrashes,
             PullDriverInstalls:(_, _, _) => driverInstalls,
             CopyDumps:         (_, _, _, _, _) => new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()),
-            GenerateDumpReport:(_, _, _, _, _) => "  Fake dump analysis body",
-            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+            GenerateDumpReport:(_, _, _, _, _) => Task.FromResult("  Fake dump analysis body"),
+            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
 
         Directory.CreateDirectory(_tempDir);
         Directory.CreateDirectory(_tempDumpDir);
         File.WriteAllBytes(Path.Combine(_tempDumpDir, "trigger.dmp"), new byte[64]);
 
         var options = Options(o => o.DeepAnalyze = true);
-        var result = FlareRunner.Run(options, log: null, ct: default, deps: deps);
+        var result = await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: deps);
 
         string[] expectedHeaders =
         [
@@ -410,11 +410,11 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_SavedReportFileContentsMatchResultReport()
+    public async Task Run_SavedReportFileContentsMatchResultReport()
     {
         var options = Options(o => o.DeepAnalyze = true);
 
-        var result = FlareRunner.Run(options, log: null, ct: default, deps: FakeDeps(new List<string>()));
+        var result = await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: FakeDeps(new List<string>()));
         var onDisk = File.ReadAllText(result.SavedPath);
 
         var expectedMainName = Path.GetFileName(result.SavedPath);
@@ -437,7 +437,7 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_CollectorHealthIsObservableThroughDependencies()
+    public async Task Run_CollectorHealthIsObservableThroughDependencies()
     {
         var health = new CollectorHealth();
         var deps = FlareDependencies.Default(health) with
@@ -449,19 +449,19 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents = (_, _, _) => [],
             PullDriverInstalls = (_, _, _) => [],
             CopyDumps = (_, _, _, _, _) => new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()),
-            GenerateDumpReport = (_, _, _, _, _) => "",
-            GenerateLiveKernelReport = (_, _, _, _, _, _, _, _, _, _, _) => "",
+            GenerateDumpReport = (_, _, _, _, _) => Task.FromResult(""),
+            GenerateLiveKernelReport = (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""),
         };
         var options = Options(o => o.MaxDays = 42);
 
-        var result = FlareRunner.Run(options, log: null, ct: default, deps: deps);
+        var result = await FlareRunner.Run(options, log: null, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.Equal(42, deps.Health.Truncation.RequestedMaxDays);
         Assert.Contains("Requested window: last 42 day(s).", result.Report);
     }
 
     [Fact]
-    public void Run_ResultExposesCollectorHealthSoUiCanDistinguishFailureFromEmpty()
+    public async Task Run_ResultExposesCollectorHealthSoUiCanDistinguishFailureFromEmpty()
     {
         var health = new CollectorHealth();
         health.Failure("Event Log: nvlddmkm", "access denied");
@@ -474,11 +474,11 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents = (_, _, _) => [],
             PullDriverInstalls = (_, _, _) => [],
             CopyDumps = (_, _, _, _, _) => new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()),
-            GenerateDumpReport = (_, _, _, _, _) => "",
-            GenerateLiveKernelReport = (_, _, _, _, _, _, _, _, _, _, _) => "",
+            GenerateDumpReport = (_, _, _, _, _) => Task.FromResult(""),
+            GenerateLiveKernelReport = (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""),
         };
 
-        var result = FlareRunner.Run(Options(), log: null, ct: default, deps: deps);
+        var result = await FlareRunner.Run(Options(), log: null, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.NotNull(result.Health);
         Assert.Same(health, result.Health);
@@ -487,7 +487,7 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_CrashDumpCopySkippedByUacDecline_PipelineStillCompletes()
+    public async Task Run_CrashDumpCopySkippedByUacDecline_PipelineStillCompletes()
     {
         var logs = new List<string>();
         var deps = new FlareDependencies(
@@ -502,11 +502,11 @@ public class FlareRunnerTests : IDisposable
                 log?.Invoke("  Minidump copy skipped (UAC declined). Event log and GPU info still collected.");
                 return new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>());
             },
-            GenerateDumpReport: (_, _, _, _, _) => "",
-            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => "");
+            GenerateDumpReport: (_, _, _, _, _) => Task.FromResult(""),
+            GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
         var options = Options(o => o.DeepAnalyze = true);
 
-        var result = FlareRunner.Run(options, log: logs.Add, ct: default, deps: deps);
+        var result = await FlareRunner.Run(options, log: logs.Add, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.NotEmpty(result.Report);
         Assert.True(File.Exists(result.SavedPath));
@@ -514,7 +514,7 @@ public class FlareRunnerTests : IDisposable
     }
 
     [Fact]
-    public void Run_DeepAnalyzeOn_InvokesLiveKernelCollectionAndReport()
+    public async Task Run_DeepAnalyzeOn_InvokesLiveKernelCollectionAndReport()
     {
         var health = new CollectorHealth();
         var deps = new FlareDependencies(
@@ -525,17 +525,17 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents: (_, _, _) => new(),
             PullDriverInstalls: (_, _, _) => new(),
             CopyDumps:          (_, _, _, _, _) => new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()),
-            GenerateDumpReport: (_, _, _, _, _) => "minidump report",
-            GenerateLiveKernelReport: (dumps, _, _, _, _, _, _, _, _, _, _) => "live kernel report body")
+            GenerateDumpReport: (_, _, _, _, _) => Task.FromResult("minidump report"),
+            GenerateLiveKernelReport: (dumps, _, _, _, _, _, _, _, _, _, _) => Task.FromResult("live kernel report body"))
         { Health = health };
 
-        var result = FlareRunner.Run(Options(o => { o.DeepAnalyze = true; o.MaxDays = 30; }), log: null, ct: default, deps: deps);
+        var result = await FlareRunner.Run(Options(o => { o.DeepAnalyze = true; o.MaxDays = 30; }), log: null, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.Equal("live kernel report body", result.LiveKernelAnalysis);
     }
 
     [Fact]
-    public void Run_DeepAnalyzeWithCdb_PopulatesDetailsSavedPath()
+    public async Task Run_DeepAnalyzeWithCdb_PopulatesDetailsSavedPath()
     {
         var health = new CollectorHealth();
         var deps = new FlareDependencies(
@@ -546,15 +546,15 @@ public class FlareRunnerTests : IDisposable
             PullAppCrashEvents: (_, _, _) => new(),
             PullDriverInstalls: (_, _, _) => new(),
             CopyDumps:          (_, _, _, _, _) => new ElevatedDumpCopy.StagedDumps(new List<string>(), new List<string>()),
-            GenerateDumpReport: (_, _, _, _, _) => "",
+            GenerateDumpReport: (_, _, _, _, _) => Task.FromResult(""),
             GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, sink, _, _) =>
             {
                 sink.EmitInlineAndArchive(DumpSection.LiveKernel, "Synthetic.dmp", "    BUGCHECK_STR:  0x141\n    MODULE_NAME: nvlddmkm\n    STACK_TEXT:\n      nt!KeBugCheckEx\n");
-                return "live kernel report body";
+                return Task.FromResult("live kernel report body");
             })
         { Health = health };
 
-        var result = FlareRunner.Run(Options(o => { o.DeepAnalyze = true; o.MaxDays = 30; }), log: null, ct: default, deps: deps);
+        var result = await FlareRunner.Run(Options(o => { o.DeepAnalyze = true; o.MaxDays = 30; }), log: null, ct: TestContext.Current.CancellationToken, deps: deps);
 
         Assert.NotNull(result.DetailsSavedPath);
         Assert.EndsWith("_dumps.md", result.DetailsSavedPath);

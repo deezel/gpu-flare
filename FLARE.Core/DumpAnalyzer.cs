@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FLARE.Core;
 
@@ -206,7 +208,14 @@ public static class DumpAnalyzer
             p1, p2, p3, p4, isGpu, IsUserModeException: userMode);
     }
 
-    public static string GenerateDumpReport(string dumpDir, bool forceDeepAnalysis = false, Action<string>? log = null, System.Threading.CancellationToken ct = default, DateTime? cutoff = null, CollectorHealth? health = null)
+    public static async Task<string> GenerateDumpReport(
+        string dumpDir,
+        bool forceDeepAnalysis = false,
+        Action<string>? log = null,
+        System.Threading.CancellationToken ct = default,
+        DateTime? cutoff = null,
+        CollectorHealth? health = null,
+        Func<IReadOnlyList<string>, string, Action<string>?, System.Threading.CancellationToken, CollectorHealth?, Task<IReadOnlyDictionary<string, string?>>>? runAllCdb = null)
     {
         var sb = new StringBuilder();
         var allFiles = Directory.GetFiles(dumpDir, "*.dmp");
@@ -237,9 +246,19 @@ public static class DumpAnalyzer
         sb.AppendLine($"  Analyzed {dumpFiles.Length} crash dump(s):");
         sb.AppendLine();
 
+        var ordered = dumpFiles.OrderByDescending(f => new FileInfo(f).LastWriteTime).ToList();
+
+        IReadOnlyDictionary<string, string?> transcripts = new Dictionary<string, string?>();
+        if (deepAnalysis && cdbPath != null)
+        {
+            var runner = runAllCdb ?? ((paths, cdb, l, c, h) =>
+                ParallelCdbRunner.RunAllAsync(paths, cdb, "minidumps", l, c, h));
+            transcripts = await runner(ordered, cdbPath, log, ct, health).ConfigureAwait(false);
+        }
+
         int gpuCrashes = 0;
         int heuristicGpuCrashes = 0;
-        foreach (var dmp in dumpFiles.OrderByDescending(f => new FileInfo(f).LastWriteTime))
+        foreach (var dmp in ordered)
         {
             ct.ThrowIfCancellationRequested();
             var info = AnalyzeDump(dmp, log);
@@ -280,29 +299,13 @@ public static class DumpAnalyzer
 
             if (deepAnalysis && cdbPath != null)
             {
-                var cdbOutput = CdbAnalysisCache.TryLoad(dmp, log);
-                if (cdbOutput != null)
+                transcripts.TryGetValue(dmp, out var cdbOutput);
+                if (cdbOutput == null)
                 {
-                    log?.Invoke($"  {info.FileName}: using cached cdb analysis");
+                    sb.AppendLine("    WinDbg Analysis: unavailable (cdb produced no usable output or timed out).");
+                    health?.Failure($"cdb analysis: {info.FileName}", "cdb produced no usable output or timed out");
                 }
                 else
-                {
-                    log?.Invoke($"  Analyzing {info.FileName} with cdb...");
-                    cdbOutput = CdbRunner.RunCdbAnalysis(cdbPath, dmp, log, ct);
-                    if (cdbOutput != null)
-                    {
-                        CdbAnalysisCache.Store(dmp, cdbOutput, log);
-                        log?.Invoke($"  {info.FileName}: cdb analysis done");
-                    }
-                    else
-                    {
-                        log?.Invoke($"  {info.FileName}: cdb analysis failed");
-                        sb.AppendLine("    WinDbg Analysis: unavailable (cdb produced no usable output or timed out).");
-                        health?.Failure($"cdb analysis: {info.FileName}", "cdb produced no usable output or timed out");
-                    }
-                }
-
-                if (cdbOutput != null)
                 {
                     var summary = CdbRunner.ExtractCdbSummary(cdbOutput, log, health);
                     if (summary != null)

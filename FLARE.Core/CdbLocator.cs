@@ -40,7 +40,7 @@ public static class CdbLocator
 
         var resolved = ResolveAutoDetect(trustedPaths, programFiles, localAppData, fileExists);
         if (resolved != null)
-            log?.Invoke($"Note: cdb resolved via auto-detect: {resolved}");
+            log?.Invoke($"  Note: cdb resolved via auto-detect: {resolved}");
         return resolved;
     }
 

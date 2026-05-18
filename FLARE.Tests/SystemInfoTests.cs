@@ -17,14 +17,14 @@ public class SystemInfoTests
     [Fact]
     public void Collect_ReturnsNonNullRecord()
     {
-        var info = SystemInfo.Collect();
+        var info = SystemInfo.Collect(ct: TestContext.Current.CancellationToken);
         Assert.NotNull(info);
     }
 
     [Fact]
     public void Collect_OnRealMachine_PopulatesAtLeastCpuAndRam()
     {
-        var info = SystemInfo.Collect();
+        var info = SystemInfo.Collect(ct: TestContext.Current.CancellationToken);
         Assert.True(info.TotalMemoryBytes > 0, "expected non-zero RAM from GlobalMemoryStatusEx");
     }
 }

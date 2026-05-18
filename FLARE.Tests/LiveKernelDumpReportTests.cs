@@ -20,7 +20,7 @@ public class LiveKernelDumpReportTests : IDisposable
         try { Directory.Delete(_tempDir, true); } catch { }
     }
 
-    private string Generate(
+    private Task<string> Generate(
         List<LiveKernelDump>? dumps = null,
         List<NvlddmkmError>? nvErrors = null,
         List<AppCrashEvent>? appCrashes = null,
@@ -40,7 +40,7 @@ public class LiveKernelDumpReportTests : IDisposable
             cdbPath,
             new CdbDetailsSink(),
             log: null,
-            ct: default,
+            ct: TestContext.Current.CancellationToken,
             health: null,
             cdbCacheRoot: _cdbCacheRoot);
 
@@ -67,26 +67,26 @@ public class LiveKernelDumpReportTests : IDisposable
     }
 
     [Fact]
-    public void Generate_NoDumps_PrintsNoDumpsLine()
+    public async Task Generate_NoDumps_PrintsNoDumpsLine()
     {
-        var body = Generate();
+        var body = await Generate();
 
         Assert.Contains("No live kernel dumps found in last 30 day(s).", body);
     }
 
     [Fact]
-    public void Generate_EmptyDumpsWithUpstreamFailure_PointsToScopeBlock()
+    public async Task Generate_EmptyDumpsWithUpstreamFailure_PointsToScopeBlock()
     {
         var health = new CollectorHealth();
         health.Skipped("minidump copy", "UAC prompt declined; crash dump files were not copied");
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump>(),
             new(), new(), new(),
             maxDays: 30, sortDescending: true,
             deepAnalysis: true, cdbPath: null,
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: health, cdbCacheRoot: _cdbCacheRoot);
+            log: null, ct: TestContext.Current.CancellationToken, health: health, cdbCacheRoot: _cdbCacheRoot);
 
         Assert.Contains("upstream collection was skipped or failed", body);
         Assert.Contains("SCOPE block", body);
@@ -94,26 +94,26 @@ public class LiveKernelDumpReportTests : IDisposable
     }
 
     [Fact]
-    public void Generate_EmptyDumpsNoUpstreamIssue_KeepsCleanWording()
+    public async Task Generate_EmptyDumpsNoUpstreamIssue_KeepsCleanWording()
     {
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump>(),
             new(), new(), new(),
             maxDays: 30, sortDescending: true,
             deepAnalysis: true, cdbPath: null,
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: new CollectorHealth(), cdbCacheRoot: _cdbCacheRoot);
+            log: null, ct: TestContext.Current.CancellationToken, health: new CollectorHealth(), cdbCacheRoot: _cdbCacheRoot);
 
         Assert.Contains("No live kernel dumps found in last 30 day(s).", body);
         Assert.DoesNotContain("upstream collection was skipped or failed", body);
     }
 
     [Fact]
-    public void Generate_SingleDump_RendersHeaderClassificationAndGpuRelatedMarker()
+    public async Task Generate_SingleDump_RendersHeaderClassificationAndGpuRelatedMarker()
     {
         var dump = WriteDumpAndDescribe(_tempDir, "WATCHDOG-20260512-2148.dmp", "WATCHDOG", 0x141);
 
-        var body = Generate(new List<LiveKernelDump> { dump });
+        var body = await Generate(new List<LiveKernelDump> { dump });
 
         Assert.Contains("[WATCHDOG] WATCHDOG-20260512-2148.dmp", body);
         Assert.Contains("0x141 VIDEO_ENGINE_TIMEOUT_DETECTED", body);
@@ -124,28 +124,28 @@ public class LiveKernelDumpReportTests : IDisposable
     }
 
     [Fact]
-    public void Generate_NonGpuDump_OmitsGpuRelatedMarker()
+    public async Task Generate_NonGpuDump_OmitsGpuRelatedMarker()
     {
         var dump = WriteDumpAndDescribe(_tempDir, "x.dmp", "OTHER:Foo", 0x1A);
 
-        var body = Generate(new List<LiveKernelDump> { dump });
+        var body = await Generate(new List<LiveKernelDump> { dump });
 
         Assert.DoesNotContain("⚠️ **GPU-RELATED**", body);
     }
 
     [Fact]
-    public void Generate_DeepAnalysisWithCdbOutput_IncludesWinDbgBlock()
+    public async Task Generate_DeepAnalysisWithCdbOutput_IncludesWinDbgBlock()
     {
         var dump = WriteDumpAndDescribe(_tempDir, "WATCHDOG-x.dmp", "WATCHDOG", 0x141);
         SeedCdbCache(dump.FullPath, CDB_PROCESS_NAME_SYSTEM_SAMPLE);
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump> { dump },
             new(), new(), new(),
             maxDays: 30, sortDescending: true,
             deepAnalysis: true, cdbPath: SyntheticCdbPath(),
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: null, cdbCacheRoot: _cdbCacheRoot);
+            log: null, ct: TestContext.Current.CancellationToken, health: null, cdbCacheRoot: _cdbCacheRoot);
 
         Assert.Contains("**WinDbg Analysis**", body);
         Assert.Contains("**PROCESS_NAME:**", body);
@@ -157,18 +157,18 @@ public class LiveKernelDumpReportTests : IDisposable
     }
 
     [Fact]
-    public void Generate_DeepAnalysisWithNonSystemProcess_OmitsSystemNote()
+    public async Task Generate_DeepAnalysisWithNonSystemProcess_OmitsSystemNote()
     {
         var dump = WriteDumpAndDescribe(_tempDir, "OTHER-x.dmp", "WATCHDOG", 0x141);
         SeedCdbCache(dump.FullPath, CDB_PROCESS_NAME_NON_SYSTEM_SAMPLE);
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump> { dump },
             new(), new(), new(),
             maxDays: 30, sortDescending: true,
             deepAnalysis: true, cdbPath: SyntheticCdbPath(),
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: null, cdbCacheRoot: _cdbCacheRoot);
+            log: null, ct: TestContext.Current.CancellationToken, health: null, cdbCacheRoot: _cdbCacheRoot);
 
         Assert.Contains("**WinDbg Analysis**", body);
         Assert.DoesNotContain("scheduler worker-thread", body);
@@ -210,12 +210,12 @@ nvlddmkm+0x12345
     }
 
     [Fact]
-    public void Generate_NoCorrelationsInWindow_PrintsNoneInWindow()
+    public async Task Generate_NoCorrelationsInWindow_PrintsNoneInWindow()
     {
         var t = new DateTime(2026, 5, 12, 21, 48, 56);
         var dump = WriteDumpAtTime("WATCHDOG-x.dmp", "WATCHDOG", 0x141, t);
 
-        var body = Generate(new List<LiveKernelDump> { dump });
+        var body = await Generate(new List<LiveKernelDump> { dump });
 
         Assert.Contains("**Correlation** (±60s window):", body);
         Assert.Contains("nvlddmkm 13/14/153:", body);
@@ -225,7 +225,7 @@ nvlddmkm+0x12345
     }
 
     [Fact]
-    public void Generate_NvlddmkmWithinWindow_RendersClosestMatch()
+    public async Task Generate_NvlddmkmWithinWindow_RendersClosestMatch()
     {
         var t = new DateTime(2026, 5, 12, 21, 48, 56);
         var dump = WriteDumpAtTime("WATCHDOG-x.dmp", "WATCHDOG", 0x141, t);
@@ -235,14 +235,14 @@ nvlddmkm+0x12345
             new NvlddmkmError(t.AddMinutes(10),  13, "", null, null, null, "SM"),
         };
 
-        var body = Generate(new List<LiveKernelDump> { dump }, nvErrors: nv);
+        var body = await Generate(new List<LiveKernelDump> { dump }, nvErrors: nv);
 
         Assert.Contains("ID:153", body);
         Assert.DoesNotContain("ID:13 ", body);
     }
 
     [Fact]
-    public void Generate_AppCrashWithinWindow_PrintsAppNameAndOffset()
+    public async Task Generate_AppCrashWithinWindow_PrintsAppNameAndOffset()
     {
         var t = new DateTime(2026, 5, 12, 21, 48, 56);
         var dump = WriteDumpAtTime("WATCHDOG-x.dmp", "WATCHDOG", 0x141, t);
@@ -251,14 +251,14 @@ nvlddmkm+0x12345
             new AppCrashEvent(t.AddSeconds(1), "MicrosoftSecurityApp.exe", "", ""),
         };
 
-        var body = Generate(new List<LiveKernelDump> { dump }, appCrashes: apps);
+        var body = await Generate(new List<LiveKernelDump> { dump }, appCrashes: apps);
 
         Assert.Contains("MicrosoftSecurityApp.exe", body);
         Assert.Contains("+1s", body);
     }
 
     [Fact]
-    public void Generate_DriverInstall_PicksMostRecentPrior()
+    public async Task Generate_DriverInstall_PicksMostRecentPrior()
     {
         var t = new DateTime(2026, 5, 12, 21, 48, 56);
         var dump = WriteDumpAtTime("WATCHDOG-x.dmp", "WATCHDOG", 0x141, t);
@@ -268,19 +268,19 @@ nvlddmkm+0x12345
             new DriverInstallEvent(t.AddDays(-20),  "32.0.15.7250", ""),
         };
 
-        var body = Generate(new List<LiveKernelDump> { dump }, drivers: drivers);
+        var body = await Generate(new List<LiveKernelDump> { dump }, drivers: drivers);
 
         Assert.Contains("32.0.15.7250", body);
         Assert.DoesNotContain("31.0.15.5219", body);
     }
 
     [Fact]
-    public void Generate_NoDriversAtAll_PrintsNoneFound()
+    public async Task Generate_NoDriversAtAll_PrintsNoneFound()
     {
         var t = new DateTime(2026, 5, 12, 21, 48, 56);
         var dump = WriteDumpAtTime("WATCHDOG-x.dmp", "WATCHDOG", 0x141, t);
 
-        var body = Generate(new List<LiveKernelDump> { dump });
+        var body = await Generate(new List<LiveKernelDump> { dump });
 
         Assert.Contains("nearest driver install: none found", body);
     }
@@ -296,7 +296,7 @@ nvlddmkm+0x12345
     }
 
     [Fact]
-    public void Generate_LocatorCapHit_EchoesSuffixAndNoteInline()
+    public async Task Generate_LocatorCapHit_EchoesSuffixAndNoteInline()
     {
         var t = new DateTime(2026, 5, 12, 21, 48, 56);
         var dump = WriteDumpAtTime("WATCHDOG-x.dmp", "WATCHDOG", 0x141, t);
@@ -304,31 +304,31 @@ nvlddmkm+0x12345
         health.Truncation.LiveKernelScanCap = true;
         health.Truncation.LiveKernelScanTotal = 200;
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump> { dump },
             new(), new(), new(),
             maxDays: 30, sortDescending: true,
             deepAnalysis: false, cdbPath: null,
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: health, cdbCacheRoot: _cdbCacheRoot);
+            log: null, ct: TestContext.Current.CancellationToken, health: health, cdbCacheRoot: _cdbCacheRoot);
 
         Assert.Contains("Scanned: 1 dump(s) within last 30 day(s) (capped — see SCOPE block)", body);
         Assert.Contains("> Note: livekernel scan capped at 1 of 200 dump(s)", body);
     }
 
     [Fact]
-    public void Generate_NoLocatorCap_OmitsCapSuffixAndNote()
+    public async Task Generate_NoLocatorCap_OmitsCapSuffixAndNote()
     {
         var t = new DateTime(2026, 5, 12, 21, 48, 56);
         var dump = WriteDumpAtTime("WATCHDOG-x.dmp", "WATCHDOG", 0x141, t);
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump> { dump },
             new(), new(), new(),
             maxDays: 30, sortDescending: true,
             deepAnalysis: false, cdbPath: null,
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: new CollectorHealth(), cdbCacheRoot: _cdbCacheRoot);
+            log: null, ct: TestContext.Current.CancellationToken, health: new CollectorHealth(), cdbCacheRoot: _cdbCacheRoot);
 
         Assert.Contains("Scanned: 1 dump(s) within last 30 day(s)", body);
         Assert.DoesNotContain("(capped — see SCOPE block)", body);
@@ -336,19 +336,19 @@ nvlddmkm+0x12345
     }
 
     [Fact]
-    public void Generate_SortAscending_OrdersOldestFirst()
+    public async Task Generate_SortAscending_OrdersOldestFirst()
     {
         var t = new DateTime(2026, 5, 12, 12, 0, 0);
         var a = WriteDumpAtTime("a.dmp", "WATCHDOG", 0x141, t);
         var b = WriteDumpAtTime("b.dmp", "WATCHDOG", 0x141, t.AddHours(1));
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump> { a, b },
             new(), new(), new(),
             maxDays: 30, sortDescending: false,
             deepAnalysis: false, cdbPath: null,
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: null, cdbCacheRoot: _cdbCacheRoot);
+            log: null, ct: TestContext.Current.CancellationToken, health: null, cdbCacheRoot: _cdbCacheRoot);
 
         var aIdx = body.IndexOf("a.dmp", StringComparison.Ordinal);
         var bIdx = body.IndexOf("b.dmp", StringComparison.Ordinal);
@@ -356,7 +356,7 @@ nvlddmkm+0x12345
     }
 
     [Fact]
-    public void Generate_DeletedDumpButCachedTranscript_SurfacesAsOrphanWithSourceRemovedMarker()
+    public async Task Generate_DeletedDumpButCachedTranscript_SurfacesAsOrphanWithSourceRemovedMarker()
     {
         var dumpName = "WATCHDOG-20260513-0930.dmp";
         var dumpPath = Path.Combine(_tempDir, dumpName);
@@ -365,13 +365,13 @@ nvlddmkm+0x12345
         CdbAnalysisCache.Store(dumpPath, CDB_PROCESS_NAME_SYSTEM_SAMPLE, log: null, cacheRoot: _cdbCacheRoot);
         File.Delete(dumpPath);
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump>(),
             new(), new(), new(),
             maxDays: 365, sortDescending: true,
             deepAnalysis: true, cdbPath: SyntheticCdbPath(),
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: null,
+            log: null, ct: TestContext.Current.CancellationToken, health: null,
             cdbCacheRoot: _cdbCacheRoot);
 
         Assert.Contains("Cached analyses (source dump no longer present)", body);
@@ -381,7 +381,7 @@ nvlddmkm+0x12345
     }
 
     [Fact]
-    public void Generate_OrphanCount_Above_MaxLiveKernelDumpsCap_TrimsToCapAndFlagsTruncation()
+    public async Task Generate_OrphanCount_Above_MaxLiveKernelDumpsCap_TrimsToCapAndFlagsTruncation()
     {
         Directory.CreateDirectory(_cdbCacheRoot);
         var baseTime = DateTime.Now;
@@ -398,13 +398,13 @@ nvlddmkm+0x12345
         var health = new CollectorHealth();
         health.Truncation.MaxLiveKernelDumpsCap = 3;
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump>(),
             new(), new(), new(),
             maxDays: 365, sortDescending: true,
             deepAnalysis: false, cdbPath: null,
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: health,
+            log: null, ct: TestContext.Current.CancellationToken, health: health,
             cdbCacheRoot: _cdbCacheRoot);
 
         Assert.True(health.Truncation.LiveKernelOrphanCap);
@@ -418,7 +418,40 @@ nvlddmkm+0x12345
     }
 
     [Fact]
-    public void Generate_LiveDumpAndOrphan_RendersBothInSeparateSections()
+    public async Task Generate_DeepAnalysis_PreservesDateOrderRegardlessOfCdbCompletion()
+    {
+        var t = new DateTime(2026, 5, 12, 12, 0, 0);
+        var a = WriteDumpAtTime("WATCHDOG-a.dmp", "WATCHDOG", 0x141, t);
+        var b = WriteDumpAtTime("WATCHDOG-b.dmp", "WATCHDOG", 0x141, t.AddHours(2));
+
+        Func<IReadOnlyList<string>, string, Action<string>?, CancellationToken, CollectorHealth?, string?, Task<IReadOnlyDictionary<string, string?>>> runner =
+            (paths, _, _, _, _, _) =>
+            {
+                IReadOnlyDictionary<string, string?> d = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase)
+                {
+                    [a.FullPath] = "BUGCHECK_STR: 0x141\nMODULE_NAME: nvlddmkm\nSTACK_TEXT:\n  nt!FrameA\n\n",
+                    [b.FullPath] = "BUGCHECK_STR: 0x141\nMODULE_NAME: nvlddmkm\nSTACK_TEXT:\n  nt!FrameB\n\n",
+                };
+                return Task.FromResult(d);
+            };
+
+        var body = await LiveKernelDumpReport.Generate(
+            new List<LiveKernelDump> { a, b },
+            new(), new(), new(),
+            maxDays: 30, sortDescending: true,
+            deepAnalysis: true, cdbPath: SyntheticCdbPath(),
+            sink: new CdbDetailsSink(),
+            log: null, ct: TestContext.Current.CancellationToken, health: null,
+            cdbCacheRoot: _cdbCacheRoot,
+            runAllCdb: runner);
+
+        var aIdx = body.IndexOf("WATCHDOG-a.dmp", StringComparison.Ordinal);
+        var bIdx = body.IndexOf("WATCHDOG-b.dmp", StringComparison.Ordinal);
+        Assert.True(bIdx >= 0 && aIdx > bIdx, "newer dump (b) should render before older one (a)");
+    }
+
+    [Fact]
+    public async Task Generate_LiveDumpAndOrphan_RendersBothInSeparateSections()
     {
         var live = WriteDumpAndDescribe(_tempDir, "WATCHDOG-live.dmp", "WATCHDOG", 0x141);
 
@@ -429,13 +462,13 @@ nvlddmkm+0x12345
         CdbAnalysisCache.Store(orphanPath, CDB_PROCESS_NAME_SYSTEM_SAMPLE, log: null, cacheRoot: _cdbCacheRoot);
         File.Delete(orphanPath);
 
-        var body = LiveKernelDumpReport.Generate(
+        var body = await LiveKernelDumpReport.Generate(
             new List<LiveKernelDump> { live },
             new(), new(), new(),
             maxDays: 365, sortDescending: true,
             deepAnalysis: false, cdbPath: null,
             sink: new CdbDetailsSink(),
-            log: null, ct: default, health: null,
+            log: null, ct: TestContext.Current.CancellationToken, health: null,
             cdbCacheRoot: _cdbCacheRoot);
 
         var liveIdx = body.IndexOf("WATCHDOG-live.dmp", StringComparison.Ordinal);

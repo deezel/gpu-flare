@@ -65,9 +65,8 @@
             <StackPanel Margin="0,12,0,0">
                 <TextBlock Text="Daniel Naslund (@deezel)" FontSize="11"
                            Foreground="{DynamicResource FlareMutedText}"/>
-                <TextBlock FontSize="11"
-                           Foreground="{DynamicResource FlareLabelText}" Margin="0,8,0,0"
-                           Text="Vortice.Vulkan  ·  CommunityToolkit.Mvvm  ·  WPF"/>
+                <TextBlock x:Name="DependenciesText" FontSize="11" TextWrapping="Wrap"
+                           Foreground="{DynamicResource FlareLabelText}" Margin="0,8,0,0"/>
             </StackPanel>
 
             <TextBlock TextWrapping="Wrap" FontSize="11"

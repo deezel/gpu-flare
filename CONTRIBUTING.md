@@ -28,7 +28,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the 60-second tour. Short version:
 
 ## A note on test density
 
-300+ tests against 5,700+ LOC of product code is a high ratio, and deliberate. Three categories earn it:
+The suite is large relative to the product code and deliberately so. Three categories earn it:
 
 1. **Security invariants** — the env-variable whitelist in `MinidumpLocator`, the trusted-root check for `cdb.exe`, and the reparse-point re-check in the elevated dump-copy helper all guard threats that break silently. Pinning tests are the only backstop.
 2. **Parsers for formats FLARE doesn't control** — nvlddmkm event payloads, PAGEDU64 header offsets, nvidia-smi `-q` layout, the `.0.15.` NVIDIA driver-version segment, setupapi.dev.log. A silent Windows or NVIDIA format shift would otherwise land as an empty report section with no diagnostic.
@@ -45,15 +45,16 @@ A softer fourth tier — report-formatting assertions — pins exact phrasing in
 
 ## Opening a pull request
 
-1. Branch from `dev`.
+1. Branch from `main`.
 2. Keep commits small and topical.
 3. Add or update tests for any new parsing, report rendering, or correlation logic.
-4. Run `dotnet test FLARE.slnx` before pushing — the suite (300+ tests covering Core parsers, pipeline orchestration, UI settings/view-model, and security-critical cdb auto-detection) is fast.
-5. Target `dev` (never `main`). Releases are squash-merged from `dev` to `main` and tagged `v*.*.*`.
+4. Run `dotnet test FLARE.slnx` before pushing — the suite covers Core parsers, pipeline orchestration, UI settings/view-model, and security-critical cdb auto-detection.
+5. Target `main`. Once merged, a release is cut by tagging `v*.*.*` on the merge commit.
 
 ## Releases
 
-- CI builds on every push/PR against `main`.
+- PRs trigger the `test` job only (cross-platform, fast).
+- The `build` job runs only on `v*` tag pushes and produces the packaged exe.
 - Version is derived from the most recent `v*` tag by MinVer at build time; there is no `<Version>` element in the csproj and no manual version bump per release.
-- Pushing a tag `v*` triggers the release workflow — MinVer reads the tag, the workflow packages `FLARE-<version>-win-x64.zip`, and publishes a GitHub Release using `HISTORY.log` as the body. Update `HISTORY.log` for the new version before tagging.
+- Pushing a tag `v*` triggers the release workflow — MinVer reads the tag, the workflow packages `FLARE-<version>-win-x64.zip`, extracts the top entry from `HISTORY.log` via awk (anchored on the `vX.Y.Z:` header) for the release body, and publishes a GitHub Release. The release job also verifies the `HISTORY.log` top entry matches the tag before publishing — fail-fast if they drift. Update `HISTORY.log` for the new version before tagging.
 - Binaries are **not code-signed** and will not be. See the README "Unsigned binary" section for the reasoning; this is a settled decision, not a roadmap item. First-run SmartScreen warnings are expected. PRs, issues, or review comments proposing code-signing will be closed with a pointer back to the README.

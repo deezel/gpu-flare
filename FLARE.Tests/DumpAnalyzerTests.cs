@@ -304,23 +304,23 @@ public class DumpAnalyzerTests : IDisposable
     }
 
     [Fact]
-    public void GenerateDumpReport_NoDumps_ReportsNone()
+    public async Task GenerateDumpReport_NoDumps_ReportsNone()
     {
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, ct: TestContext.Current.CancellationToken);
         Assert.Contains("No minidump files found", result);
     }
 
     [Fact]
-    public void GenerateDumpReport_WithDumps_CountsGpuCrashes()
+    public async Task GenerateDumpReport_WithDumps_CountsGpuCrashes()
     {
         WriteDump("gpu.dmp", BuildPageDu64(0x116));
         WriteDump("other.dmp", BuildPageDu64(0xEF));
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, ct: TestContext.Current.CancellationToken);
         Assert.Contains("GPU-related crashes: 1 of 2", result);
     }
 
     [Fact]
-    public void GenerateDumpReport_CutoffExcludesOlderDumps()
+    public async Task GenerateDumpReport_CutoffExcludesOlderDumps()
     {
         // The Minidumps directory accumulates dumps from every prior run. A
         // report claiming "last 7 days" must not analyze a 6-month-old dump.
@@ -330,7 +330,7 @@ public class DumpAnalyzerTests : IDisposable
         File.SetLastWriteTime(recent, DateTime.Now.AddHours(-1));
 
         var cutoff = DateTime.Now.AddDays(-7);
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir, cutoff: cutoff);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, cutoff: cutoff, ct: TestContext.Current.CancellationToken);
 
         Assert.Contains("recent.dmp", result);
         Assert.DoesNotContain("old.dmp", result);
@@ -338,7 +338,7 @@ public class DumpAnalyzerTests : IDisposable
     }
 
     [Fact]
-    public void GenerateDumpReport_CutoffExcludesAllDumps_ExplainsWhy()
+    public async Task GenerateDumpReport_CutoffExcludesAllDumps_ExplainsWhy()
     {
         // When every on-disk dump is pre-cutoff, the report must not say
         // "No minidump files found" (misleading — they exist, just not in
@@ -348,19 +348,19 @@ public class DumpAnalyzerTests : IDisposable
         File.SetLastWriteTime(old, DateTime.Now.AddDays(-180));
 
         var cutoff = DateTime.Now.AddDays(-7);
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir, cutoff: cutoff);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, cutoff: cutoff, ct: TestContext.Current.CancellationToken);
 
         Assert.Contains("older than cutoff", result);
         Assert.DoesNotContain("No minidump files found", result);
     }
 
     [Fact]
-    public void GenerateDumpReport_NullCutoff_IncludesEverything()
+    public async Task GenerateDumpReport_NullCutoff_IncludesEverything()
     {
         var old = WriteDump("old.dmp", BuildPageDu64(0x116));
         File.SetLastWriteTime(old, DateTime.Now.AddDays(-180));
 
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, ct: TestContext.Current.CancellationToken);
 
         Assert.Contains("old.dmp", result);
     }
@@ -397,7 +397,7 @@ public class DumpAnalyzerTests : IDisposable
     }
 
     [Fact]
-    public void GenerateDumpReport_HeuristicMatch_AnnotatesLine()
+    public async Task GenerateDumpReport_HeuristicMatch_AnnotatesLine()
     {
         var data = new byte[256];
         Encoding.ASCII.GetBytes("PAGEDU64").CopyTo(data, 0);
@@ -407,13 +407,13 @@ public class DumpAnalyzerTests : IDisposable
         BitConverter.GetBytes((uint)0).CopyTo(data, 0x4C);
         WriteDump("heur_render.dmp", data);
 
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, ct: TestContext.Current.CancellationToken);
 
         Assert.Contains("heuristic match", result);
     }
 
     [Fact]
-    public void GenerateDumpReport_GpuRelatedTotal_AnnotatesHeuristicContribution()
+    public async Task GenerateDumpReport_GpuRelatedTotal_AnnotatesHeuristicContribution()
     {
         var data = new byte[256];
         Encoding.ASCII.GetBytes("PAGEDU64").CopyTo(data, 0);
@@ -425,20 +425,20 @@ public class DumpAnalyzerTests : IDisposable
         WriteDump("direct_gpu.dmp", BuildPageDu64(0x116));
         WriteDump("other.dmp", BuildPageDu64(0xEF));
 
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, ct: TestContext.Current.CancellationToken);
 
         Assert.Contains("GPU-related crashes: 2 of 3 (1 via heuristic match)", result);
     }
 
     [Fact]
-    public void GenerateDumpReport_UserModeDump_RendersExceptionLabelNotBugcheck()
+    public async Task GenerateDumpReport_UserModeDump_RendersExceptionLabelNotBugcheck()
     {
         // User-mode MDMP must never be labelled "Bugcheck" — that's the whole
         // point of the IsUserModeException flag: a reader scanning the report
         // shouldn't confuse an application access violation with a kernel BSOD.
         WriteDump("user_render.dmp", BuildMdmp(0xC0000005));
 
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, ct: TestContext.Current.CancellationToken);
 
         Assert.Contains("Exception:", result);
         Assert.Contains("user-mode dump", result);
@@ -446,17 +446,44 @@ public class DumpAnalyzerTests : IDisposable
     }
 
     [Fact]
-    public void GenerateDumpReport_KernelBugcheck_StillRendersBugcheckLabel()
+    public async Task GenerateDumpReport_KernelBugcheck_StillRendersBugcheckLabel()
     {
         // A documented kernel bugcheck stays on the Bugcheck rendering path —
         // the Exception path must not leak across into normal PAGEDU64 flow.
         WriteDump("kernel_render.dmp", BuildPageDu64(0x116));
 
-        var result = DumpAnalyzer.GenerateDumpReport(_tempDir);
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, ct: TestContext.Current.CancellationToken);
 
         Assert.Contains("Bugcheck:", result);
         Assert.Contains("VIDEO_TDR_FAILURE", result);
         Assert.DoesNotContain("user-mode dump", result);
+    }
+
+    [Fact]
+    public async Task GenerateDumpReport_DeepAnalysis_PreservesDateDescendingOrderRegardlessOfCdbCompletion()
+    {
+        var oldPath = WriteDump("old.dmp", BuildPageDu64(0x116));
+        var newPath = WriteDump("new.dmp", BuildPageDu64(0x116));
+        File.SetLastWriteTime(oldPath, DateTime.Now.AddDays(-5));
+        File.SetLastWriteTime(newPath, DateTime.Now.AddHours(-1));
+
+        Func<IReadOnlyList<string>, string, Action<string>?, CancellationToken, CollectorHealth?, Task<IReadOnlyDictionary<string, string?>>> runner =
+            (paths, _, _, _, _) =>
+            {
+                IReadOnlyDictionary<string, string?> d = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase)
+                {
+                    [oldPath] = "BUGCHECK_STR: 0x116\nSTACK_TEXT:\n  nt!OldFrame\n\n",
+                    [newPath] = "BUGCHECK_STR: 0x116\nSTACK_TEXT:\n  nt!NewFrame\n\n",
+                };
+                return Task.FromResult(d);
+            };
+
+        var result = await DumpAnalyzer.GenerateDumpReport(_tempDir, forceDeepAnalysis: false, log: null,
+            ct: TestContext.Current.CancellationToken, cutoff: null, health: null, runAllCdb: runner);
+
+        var oldIdx = result.IndexOf("old.dmp", StringComparison.Ordinal);
+        var newIdx = result.IndexOf("new.dmp", StringComparison.Ordinal);
+        Assert.True(newIdx >= 0 && oldIdx > newIdx, "newest dump should render before older one regardless of cdb run order");
     }
 
     [Fact]

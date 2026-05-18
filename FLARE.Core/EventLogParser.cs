@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace FLARE.Core;
 
@@ -379,6 +380,29 @@ public static partial class EventLogParser
             : $"Event {eventId}";
 
         return new NvlddmkmError(timestamp, eventId, msg, gpc, tpc, sm, errorType);
+    }
+
+    public static NvlddmkmError ParseNvlddmkmEventXml(string eventXml)
+    {
+        var doc = XDocument.Parse(eventXml);
+        var ns = doc.Root!.GetDefaultNamespace();
+        var system = doc.Root.Element(ns + "System")
+            ?? throw new FormatException("Event XML missing <System> element");
+
+        var timeAttr = system.Element(ns + "TimeCreated")?.Attribute("SystemTime")?.Value
+            ?? throw new FormatException("Event XML missing TimeCreated/@SystemTime");
+        var timestamp = DateTime.Parse(timeAttr, CultureInfo.InvariantCulture,
+            DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+        var eventIdText = system.Element(ns + "EventID")?.Value
+            ?? throw new FormatException("Event XML missing EventID");
+        var eventId = int.Parse(eventIdText, CultureInfo.InvariantCulture);
+
+        var eventData = doc.Root.Element(ns + "EventData");
+        var values = eventData?.Elements().Select(e => (object?)e.Value) ?? Enumerable.Empty<object?>();
+        var allData = NormalizeEventProperties(values);
+
+        return ClassifyGpuError(timestamp, eventId, allData);
     }
 
     public record AppCrashEvent(

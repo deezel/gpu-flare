@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -15,10 +16,11 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly ISettingsService _settingsService;
     private readonly IStartupNotices _startupNotices;
-    private readonly Func<FlareOptions, Action<string>?, CancellationToken, FlareResult> _runFlare;
+    private readonly Func<FlareOptions, Action<string>?, CancellationToken, Task<FlareResult>> _runFlare;
     private readonly Func<(string Text, string Tooltip)> _resolveCdbStatus;
     private readonly StringBuilder _logBuilder = new();
     private readonly object _logLock = new();
+    private Stopwatch? _runWatch;
     private CancellationTokenSource? _cts;
     private bool _suppressSettingsSideEffects;
 
@@ -92,7 +94,7 @@ public partial class MainViewModel : ObservableObject
     internal MainViewModel(
         ISettingsService settingsService,
         IStartupNotices startupNotices,
-        Func<FlareOptions, Action<string>?, CancellationToken, FlareResult> runFlare,
+        Func<FlareOptions, Action<string>?, CancellationToken, Task<FlareResult>> runFlare,
         Func<(string Text, string Tooltip)>? resolveCdbStatus = null)
     {
         _settingsService = settingsService;
@@ -190,9 +192,31 @@ public partial class MainViewModel : ObservableObject
     {
         lock (_logLock)
         {
+            if (_runWatch != null)
+                msg = StampLog(msg, _runWatch.Elapsed);
             _logBuilder.AppendLine(msg);
         }
     }
+
+    internal static string StampLog(string msg, TimeSpan elapsed)
+    {
+        var prefix = $"[{(int)elapsed.TotalMinutes:D2}:{elapsed.Seconds:D2}] ";
+        if (msg.Length == 0) return prefix;
+        var lines = msg.Split('\n');
+        var sb = new StringBuilder(msg.Length + prefix.Length * lines.Length);
+        for (int i = 0; i < lines.Length; i++)
+        {
+            sb.Append(prefix);
+            sb.Append(lines[i]);
+            if (i < lines.Length - 1) sb.Append('\n');
+        }
+        return sb.ToString();
+    }
+
+    internal static string FormatRunDuration(TimeSpan t)
+        => t.TotalSeconds < 60
+            ? $"{(int)t.TotalSeconds}s"
+            : $"{(int)t.TotalMinutes}m {t.Seconds}s";
 
     private void FlushLog()
     {
@@ -366,18 +390,14 @@ public partial class MainViewModel : ObservableObject
         lock (_logLock) { _logBuilder.Clear(); }
         LogOutput = "";
         _logFlushTimer.Start();
+        _runWatch = Stopwatch.StartNew();
         if (inputNote != null) AppendLog(inputNote);
 
         try
         {
             _cts = new CancellationTokenSource();
             var ct = _cts.Token;
-
-            FlareResult? result = null;
-            await Task.Run(() =>
-            {
-                result = _runFlare(options, AppendLog, ct);
-            }, ct);
+            var result = await Task.Run(() => _runFlare(options, AppendLog, ct), ct).ConfigureAwait(true);
 
             if (result != null)
                 CompleteRun(result);
@@ -404,16 +424,21 @@ public partial class MainViewModel : ObservableObject
             _logFlushTimer.Stop();
             // Final flush so the last batch reaches the UI even though the timer just stopped.
             FlushLog();
+            _runWatch = null;
         }
     }
 
     private void CompleteRun(FlareResult result)
     {
-        AppendLog("");
-        AppendLog("Analysis complete.");
+        var elapsed = _runWatch?.Elapsed ?? TimeSpan.Zero;
         var retentionSummary = RunStatusFormatter.GetEventLogRetentionSummary(result);
         if (retentionSummary != null)
+        {
+            AppendLog("");
             AppendLog(retentionSummary);
+        }
+        AppendLog("");
+        AppendLog($"Analysis complete in {FormatRunDuration(elapsed)}.");
 
         _lastSavedPath = result.SavedPath;
         StatusText = RunStatusFormatter.GetRunStatusText(result);

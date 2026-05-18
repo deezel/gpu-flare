@@ -37,7 +37,7 @@ public class MainViewModelTests
     private static MainViewModel NewVm(
         FakeSettingsService? settings = null,
         IStartupNotices? startup = null,
-        Func<FlareOptions, Action<string>?, CancellationToken, FlareResult>? runFlare = null,
+        Func<FlareOptions, Action<string>?, CancellationToken, Task<FlareResult>>? runFlare = null,
         Func<(string Text, string Tooltip)>? resolveCdbStatus = null) =>
         new(settings ?? new FakeSettingsService(),
             startup ?? new StartupNotices(),
@@ -114,7 +114,7 @@ public class MainViewModelTests
         var vm = NewVm(runFlare: (options, _, _) =>
         {
             seen = options;
-            return new FlareResult { SavedPath = "report.txt" };
+            return Task.FromResult(new FlareResult { SavedPath = "report.txt" });
         });
 
         vm.DeepAnalyze = false;
@@ -133,7 +133,7 @@ public class MainViewModelTests
             runFlare: (options, _, _) =>
             {
                 seen = options;
-                return new FlareResult { SavedPath = "report.txt" };
+                return Task.FromResult(new FlareResult { SavedPath = "report.txt" });
             },
             resolveCdbStatus: () => ("cdb.exe detected", "test"));
 
@@ -206,18 +206,18 @@ public class MainViewModelTests
         var vm = NewVm(settings: settings, runFlare: (_, log, _) =>
         {
             log?.Invoke("Collecting GPU information...");
-            return new FlareResult
+            return Task.FromResult(new FlareResult
             {
                 Report = "GPU Error Analysis Report\nfull saved report body",
                 SavedPath = reportPath,
                 Health = new CollectorHealth(),
-            };
+            });
         });
 
         await vm.RunCommand.ExecuteAsync(null);
 
         Assert.Contains("Collecting GPU information...", vm.LogOutput);
-        Assert.Contains("Analysis complete.", vm.LogOutput);
+        Assert.Contains("Analysis complete in ", vm.LogOutput);
         Assert.DoesNotContain("GPU Error Analysis Report", vm.LogOutput);
         Assert.DoesNotContain("full saved report body", vm.LogOutput);
         Assert.Equal($"Report saved to: {reportPath}", vm.BottomStatusText);
@@ -229,11 +229,11 @@ public class MainViewModelTests
         var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var reportPath = Path.Combine(userProfile, "AppData", "Local", "FLARE", "Reports",
             $"flare_report_{Guid.NewGuid():N}.txt");
-        var vm = NewVm(runFlare: (_, _, _) => new FlareResult
+        var vm = NewVm(runFlare: (_, _, _) => Task.FromResult(new FlareResult
         {
             SavedPath = reportPath,
             Health = new CollectorHealth(),
-        });
+        }));
 
         await vm.RunCommand.ExecuteAsync(null);
 
@@ -334,13 +334,13 @@ public class MainViewModelTests
                 OldestRelevantEventTimestamp: oldestGpu,
                 OldestRelevantEventDescription: "nvlddmkm 13/14/153"),
         };
-        var vm = NewVm(runFlare: (_, _, _) => new FlareResult
+        var vm = NewVm(runFlare: (_, _, _) => Task.FromResult(new FlareResult
         {
             Errors = [new NvlddmkmError(DateTime.Now, 13, "m", 3, 1, 0, "Page Fault")],
             HasSmErrors = true,
             SavedPath = reportPath,
             Health = health,
-        });
+        }));
 
         await vm.RunCommand.ExecuteAsync(null);
 
@@ -350,7 +350,7 @@ public class MainViewModelTests
         Assert.Contains("mode Circular, max 256.0 MiB", vm.LogOutput);
         Assert.Contains($"oldest nvlddmkm 13/14/153 record is {oldestGpu:yyyy-MM-dd HH:mm:ss}", vm.LogOutput);
         Assert.Contains("Earlier requested days are unavailable.", vm.LogOutput);
-        Assert.Contains($"limited:{Environment.NewLine}  retained since", vm.LogOutput);
+        Assert.Matches($@"limited:{Environment.NewLine}\[\d\d:\d\d\]   retained since", vm.LogOutput);
     }
 
     [Fact]
@@ -670,12 +670,80 @@ public class MainViewModelTests
             runFlare: (opt, _, _) =>
             {
                 capturedOptions = opt;
-                return new FlareResult { SavedPath = "report.txt" };
+                return Task.FromResult(new FlareResult { SavedPath = "report.txt" });
             });
 
         await vm.RunCommand.ExecuteAsync(null);
 
         Assert.NotNull(capturedOptions);
         Assert.Equal(45, capturedOptions!.MaxDays);
+    }
+
+    [Fact]
+    public void StampLog_LeadingNewline_StampsBlankLineAndContent()
+    {
+        var stamped = MainViewModel.StampLog("\nCollecting GPU info...", TimeSpan.FromSeconds(83));
+        Assert.Equal("[01:23] \n[01:23] Collecting GPU info...", stamped);
+    }
+
+    [Fact]
+    public void StampLog_PrependsAtStartWhenNoLeadingNewline()
+    {
+        var stamped = MainViewModel.StampLog("  GPU: NVIDIA RTX 3090", TimeSpan.FromSeconds(7));
+        Assert.Equal("[00:07]   GPU: NVIDIA RTX 3090", stamped);
+    }
+
+    [Fact]
+    public void StampLog_EmptyMessage_BecomesBareStampedBlank()
+    {
+        Assert.Equal("[00:42] ", MainViewModel.StampLog("", TimeSpan.FromSeconds(42)));
+    }
+
+    [Fact]
+    public void StampLog_AllNewlineMessage_StampsEachBlankLine()
+    {
+        var stamped = MainViewModel.StampLog("\n\n", TimeSpan.FromSeconds(42));
+        Assert.Equal("[00:42] \n[00:42] \n[00:42] ", stamped);
+    }
+
+    [Fact]
+    public void StampLog_FormatsMinutesPastSixty()
+    {
+        var stamped = MainViewModel.StampLog("late", TimeSpan.FromMinutes(73));
+        Assert.Equal("[73:00] late", stamped);
+    }
+
+    [Fact]
+    public void StampLog_MultiLineMessage_StampsEveryLine()
+    {
+        var stamped = MainViewModel.StampLog(
+            "System Event Log history is limited:\n  retained since X\n  oldest Y",
+            TimeSpan.FromSeconds(1));
+        Assert.Equal(
+            "[00:01] System Event Log history is limited:\n[00:01]   retained since X\n[00:01]   oldest Y",
+            stamped);
+    }
+
+    [Fact]
+    public void StampLog_BlankLinesBetweenContent_AlsoStamped()
+    {
+        var stamped = MainViewModel.StampLog("a\n\nb", TimeSpan.FromSeconds(5));
+        Assert.Equal("[00:05] a\n[00:05] \n[00:05] b", stamped);
+    }
+
+    [Fact]
+    public void FormatRunDuration_UnderOneMinuteUsesSecondsOnly()
+    {
+        Assert.Equal("0s", MainViewModel.FormatRunDuration(TimeSpan.Zero));
+        Assert.Equal("12s", MainViewModel.FormatRunDuration(TimeSpan.FromSeconds(12)));
+        Assert.Equal("59s", MainViewModel.FormatRunDuration(TimeSpan.FromSeconds(59)));
+    }
+
+    [Fact]
+    public void FormatRunDuration_OneMinuteAndAboveUsesMinuteSecondPair()
+    {
+        Assert.Equal("1m 0s", MainViewModel.FormatRunDuration(TimeSpan.FromSeconds(60)));
+        Assert.Equal("2m 34s", MainViewModel.FormatRunDuration(TimeSpan.FromSeconds(154)));
+        Assert.Equal("60m 0s", MainViewModel.FormatRunDuration(TimeSpan.FromHours(1)));
     }
 }

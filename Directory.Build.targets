@@ -1,0 +1,21 @@
+<Project>
+
+  <!--
+    GetAssemblyAttributes is the MSBuild step that materializes
+    [AssemblyMetadata] items into source via WriteCodeFragment, so
+    injection must happen BeforeTargets that.
+
+    Microsoft.* and System.* are framework-bundled packages — they
+    aren't third-party libraries we credit in the About box. Excluded
+    here at emit time so they don't ship in assembly metadata.
+  -->
+  <Target Name="EmitPackageReferencesAsAssemblyMetadata" BeforeTargets="GetAssemblyAttributes">
+    <ItemGroup>
+      <_FlareCreditedDep Include="@(PackageReference)"
+                         Condition="'%(Identity)' != '' And !$([System.String]::Copy('%(Identity)').StartsWith('Microsoft.')) And !$([System.String]::Copy('%(Identity)').StartsWith('System.'))" />
+      <AssemblyMetadata Include="Dependency.%(_FlareCreditedDep.Identity)"
+                        Value="%(_FlareCreditedDep.Version)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

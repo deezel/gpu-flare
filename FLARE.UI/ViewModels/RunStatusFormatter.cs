@@ -45,7 +45,7 @@ internal static class RunStatusFormatter
 
         return summaries.Count == 0
             ? null
-            : string.Join(Environment.NewLine, summaries);
+            : string.Join(Environment.NewLine + Environment.NewLine, summaries);
     }
 
     private static string? GetSystemEventLogRetentionSummary(FlareResult result, DateTime? now)

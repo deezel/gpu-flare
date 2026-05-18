@@ -1,0 +1,7 @@
+Timestamp: 2026-05-08T20:52:53.915Z
+EventId: 13
+Message: Graphics Exception: ESR 0x567730=0x50009 0x567734=0x4 0x567728=0x1c813b60 0x56772c=0x1104
+ErrorType: Graphics Exception (ESR)
+Gpc: <null>
+Tpc: <null>
+Sm: <null>
