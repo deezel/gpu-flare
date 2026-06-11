@@ -706,8 +706,9 @@ public static partial class EventLogParser
     internal static bool LooksVersionBearing(string msg) =>
         Regex.IsMatch(msg, @"\b(?:Current\s+)?Version\b", RegexOptions.IgnoreCase, RegexTimeout);
 
+    // Third segment is the marketing hundreds digit (.15. -> 5xx, .16. -> 6xx); NVIDIA bumped it for the 600-series.
     internal static bool IsNvidiaWddmDriverVersion(string version) =>
-        Regex.IsMatch(version, @"^\d{2,3}\.0\.15\.\d{4}$", RegexOptions.None, RegexTimeout);
+        Regex.IsMatch(version, @"^\d{2,3}\.0\.1[0-9]\.\d{4}$", RegexOptions.None, RegexTimeout);
 
     internal static void WarnIfDriverInstallSchemeDrift(string source, int mismatches, int matched, Action<string>? log, CollectorHealth? health)
     {
@@ -815,14 +816,14 @@ public static partial class EventLogParser
             }
 
             // Any non-NVIDIA install ends the NVIDIA install block — stops a subsequent
-            // N.0.15.M version line from latching onto a stale NVIDIA install timestamp.
+            // N.0.1x.M version line from latching onto a stale NVIDIA install timestamp.
             if (Regex.IsMatch(line, @"Install Device - PCI\\VEN_", RegexOptions.None, RegexTimeout))
             {
                 ResetNvidiaContext();
                 continue;
             }
 
-            // Match any 4-part version first, then post-filter for the ".0.15." NVIDIA-WDDM
+            // Match any 4-part version first, then post-filter for the ".0.1x." NVIDIA-WDDM
             // signature. When we see a version in an NVIDIA install context that doesn't match
             // the signature, count it
             // as a scheme-mismatch canary — catches silent-empty if NVIDIA reworks the scheme.

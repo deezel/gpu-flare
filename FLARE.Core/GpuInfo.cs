@@ -26,6 +26,8 @@ public record GpuInfo(
     int NvidiaDeviceCount = 1
 )
 {
+    public static GpuInfo Empty { get; } = new("", "", "", "", "", "", 0, "", 0, 0, 0, 0, 0);
+
     // Pin to the System32 copy (installed by the NVIDIA driver): different nvidia-smi
     // versions emit subtly different -q section layouts, and we want the one that
     // matches the driver FLARE is reporting on.

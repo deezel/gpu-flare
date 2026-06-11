@@ -30,14 +30,15 @@
   </PropertyGroup>
 
   <!--
-    FlareIsRelease is true exactly when the build sits on a v* tag. MinVer
-    leaves $(MinVerPreRelease) empty in that case and populates it with
-    e.g. "alpha.0.3" off-tag, so we drive the property off that. Resolved
-    after MinVer has run; emitted as assembly metadata for BuildBanner.
+    FlareIsRelease defaults false and is only true when an explicit
+    -p:FlareIsRelease=true is passed. The CI release job (tag-gated) passes it;
+    nothing else does. Deriving it from "HEAD sits on a v* tag" (MinVer's empty
+    pre-release) was wrong: a local or dirty build parked on a release tag would
+    self-brand as the official release. Provenance = "built by CI from a tag",
+    not "happens to be on the tag commit". Emitted as assembly metadata for BuildBanner.
   -->
-  <Target Name="ComputeFlareIsRelease" AfterTargets="MinVer" BeforeTargets="GetAssemblyAttributes">
+  <Target Name="ComputeFlareIsRelease" BeforeTargets="GetAssemblyAttributes">
     <PropertyGroup>
-      <FlareIsRelease Condition="'$(MinVerPreRelease)' == ''">true</FlareIsRelease>
       <FlareIsRelease Condition="'$(FlareIsRelease)' == ''">false</FlareIsRelease>
     </PropertyGroup>
     <ItemGroup>

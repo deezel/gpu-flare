@@ -49,6 +49,51 @@ public class FlareRunnerTests : IDisposable
         GenerateLiveKernelReport: (_, _, _, _, _, _, _, _, _, _, _) => Task.FromResult(""));
 
     [Fact]
+    public async Task Run_CollectorThrows_RunCompletesAndScopeReportsFailure()
+    {
+        var callOrder = new List<string>();
+        var deps = FakeDeps(callOrder) with
+        {
+            PullGpuErrors = (_, _, _, _) => throw new InvalidOperationException("event log access died"),
+        };
+
+        var result = await FlareRunner.Run(Options(), log: null, ct: TestContext.Current.CancellationToken, deps: deps);
+
+        Assert.Contains("crashes", callOrder);
+        Assert.Contains("[failed] Event Log: nvlddmkm: collector crashed", result.Report);
+        Assert.Contains("event log access died", result.Report);
+        Assert.Contains("No nvlddmkm errors were collected because the Event Log collector failed.", result.Report);
+        Assert.True(File.Exists(result.SavedPath));
+    }
+
+    [Fact]
+    public async Task Run_GpuCollectorThrows_ReportStillGenerated()
+    {
+        var deps = FakeDeps(new List<string>()) with
+        {
+            CollectGpu = (_, _) => throw new InvalidOperationException("nvidia-smi exploded"),
+        };
+
+        var result = await FlareRunner.Run(Options(), log: null, ct: TestContext.Current.CancellationToken, deps: deps);
+
+        Assert.Null(result.Gpu);
+        Assert.Contains("[failed] gpu info: collector crashed", result.Report);
+        Assert.True(File.Exists(result.SavedPath));
+    }
+
+    [Fact]
+    public async Task Run_CollectorCancellation_Propagates()
+    {
+        var deps = FakeDeps(new List<string>()) with
+        {
+            PullGpuErrors = (_, _, _, _) => throw new OperationCanceledException(),
+        };
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            FlareRunner.Run(Options(), log: null, ct: TestContext.Current.CancellationToken, deps: deps));
+    }
+
+    [Fact]
     public async Task Run_DoesNotMutateCallerFlareOptions()
     {
         var callOrder = new List<string>();

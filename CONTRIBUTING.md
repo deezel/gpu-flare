@@ -31,7 +31,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the 60-second tour. Short version:
 The suite is large relative to the product code and deliberately so. Three categories earn it:
 
 1. **Security invariants** — the env-variable whitelist in `MinidumpLocator`, the trusted-root check for `cdb.exe`, and the reparse-point re-check in the elevated dump-copy helper all guard threats that break silently. Pinning tests are the only backstop.
-2. **Parsers for formats FLARE doesn't control** — nvlddmkm event payloads, PAGEDU64 header offsets, nvidia-smi `-q` layout, the `.0.15.` NVIDIA driver-version segment, setupapi.dev.log. A silent Windows or NVIDIA format shift would otherwise land as an empty report section with no diagnostic.
+2. **Parsers for formats FLARE doesn't control** — nvlddmkm event payloads, PAGEDU64 header offsets, nvidia-smi `-q` layout, the NVIDIA WDDM driver-version segment (`.0.1x.` — `.15.` for 5xx, `.16.` for the 6xx series), setupapi.dev.log. A silent Windows or NVIDIA format shift would otherwise land as an empty report section with no diagnostic.
 3. **Pipeline wiring via the `FlareDependencies` test seam** — lets the full collector-to-report path run without live Windows APIs, so ordering, cancellation propagation, and section-rendering regressions surface in CI rather than in the wild.
 
 A softer fourth tier — report-formatting assertions — pins exact phrasing in places. Kept because report readability is the product, but this is the category to trim first if it ever blocks a legitimate wording change. The bias overall is "a comment-plus-test over a bare invariant that future-you (or a contributor) might refactor away."

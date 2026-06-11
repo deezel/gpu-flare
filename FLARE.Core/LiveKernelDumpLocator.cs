@@ -51,7 +51,7 @@ public static class LiveKernelDumpLocator
                 var info = new FileInfo(path);
                 if (cutoff.HasValue && info.LastWriteTime < cutoff.Value) continue;
                 var parent = Path.GetFileName(Path.GetDirectoryName(path) ?? "");
-                var category = ClassifyCategory(parent);
+                var category = ClassifyCategory(parent, info.Name);
                 dumps.Add(new LiveKernelDump(
                     FullPath: path,
                     FileName: info.Name,
@@ -81,10 +81,22 @@ public static class LiveKernelDumpLocator
     private static readonly HashSet<string> KnownCategories =
         new(StringComparer.OrdinalIgnoreCase) { "WATCHDOG", "WATCHDOG4400", "WATCHDOG4401" };
 
-    private static string ClassifyCategory(string parentDirName)
+    // Longest first so WATCHDOG4401/WATCHDOG4400 win over the WATCHDOG prefix.
+    private static readonly string[] KnownCategoryPrefixes =
+        { "WATCHDOG4400", "WATCHDOG4401", "WATCHDOG" };
+
+    private static string ClassifyCategory(string parentDirName, string fileName)
     {
-        if (string.IsNullOrEmpty(parentDirName)) return "OTHER:";
-        var upper = parentDirName.ToUpperInvariant();
-        return KnownCategories.Contains(upper) ? upper : $"OTHER:{parentDirName}";
+        var upperParent = parentDirName.ToUpperInvariant();
+        if (KnownCategories.Contains(upperParent)) return upperParent;
+
+        // Windows sometimes writes a dump at the LiveKernelReports root instead of
+        // a category subdir; recover the category from the filename prefix.
+        var upperName = fileName.ToUpperInvariant();
+        foreach (var prefix in KnownCategoryPrefixes)
+            if (upperName.StartsWith(prefix, StringComparison.Ordinal))
+                return prefix;
+
+        return string.IsNullOrEmpty(parentDirName) ? "OTHER:" : $"OTHER:{parentDirName}";
     }
 }

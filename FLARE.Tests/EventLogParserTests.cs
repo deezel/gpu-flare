@@ -69,6 +69,30 @@ public class SetupApiLogTests : IDisposable
     }
 
     [Fact]
+    public void ParseSetupApiLog_600SeriesDriver_SixteenSegment_Parsed()
+    {
+        File.WriteAllLines(_tempFile, [
+            @"Boot Session: 2026/05/19 10:00:00",
+            @"Install Device - PCI\VEN_10DE&DEV_2684&SUBSYS_0000&REV_00\{4D36E968-E325-11CE-BFC1-08002BE10318} 10:05:00.000",
+            @"inf:   Driver Version = 05/19/2026,32.0.16.1047"
+        ]);
+        var result = EventLogParser.ParseSetupApiLog(_tempFile, ct: TestContext.Current.CancellationToken);
+        Assert.Single(result);
+        Assert.Equal("32.0.16.1047", result[0].DriverVersion);
+    }
+
+    [Theory]
+    [InlineData("32.0.15.9649", true)]
+    [InlineData("32.0.16.1047", true)]
+    [InlineData("31.0.15.8129", true)]
+    [InlineData("32.0.20.1234", false)]
+    [InlineData("32.0.15.96490", false)]
+    public void IsNvidiaWddmDriverVersion_MatchesFifteenAndSixteenSegments(string version, bool expected)
+    {
+        Assert.Equal(expected, EventLogParser.IsNvidiaWddmDriverVersion(version));
+    }
+
+    [Fact]
     public void ParseSetupApiLog_EmptyFile_ReturnsEmpty()
     {
         File.WriteAllText(_tempFile, "");

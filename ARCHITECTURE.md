@@ -39,7 +39,7 @@ FLARE.Tests  (xUnit v3)  - pinned parsers, pipeline integration tests,
 - **Core is pure.** No WPF references. Core is host-agnostic enough for the current WPF UI, unit tests, or a hypothetical CLI shim. All Windows-specific APIs are wrapped in a way that lets tests substitute fakes (`FlareDependencies`).
 - **Collectors return data, not strings.** `ReportGenerator` is the only thing that formats for display.
 - **Cancellation reaches every collector.** `CancellationToken` is threaded from the UI through `FlareRunner.Run` into each XPath event-log read and each cdb.exe invocation. cdb runs concurrently but `Parallel.ForEachAsync` short-circuits new starts on cancel and `ProcessRunner` kills in-flight cdb processes.
-- **Errors are logged, not thrown.** The `Action<string>? log` callback is threaded alongside the token; collectors catch their own exceptions and surface warnings so one broken data source doesn't fail the whole report.
+- **Errors are logged, not thrown.** The `Action<string>? log` callback is threaded alongside the token; collectors catch their own exceptions and surface warnings so one broken data source doesn't fail the whole report. `FlareRunner.Run` backstops this: an unanticipated exception escaping a collector becomes a `[failed]` SCOPE notice and the run continues (cancellation still propagates).
 
 ## Key seams
 
@@ -98,7 +98,9 @@ Sections are numbered dynamically via a local `section` counter (starts at 1, in
 | Dump minidump source path | `MinidumpLocator.cs` - `GetSystemDumpDir` (reads registry) |
 | LiveKernel dump source path | `LiveKernelDumpLocator.cs` (`C:\Windows\LiveKernelReports`) |
 | Correlation window and logic | `EventLogParser.cs` - `CorrelateWithAppCrashes` |
-| MinVer-derived version | `FLARE.UI.csproj` (`MinVerTagPrefix=v`); `FlareIsRelease` target |
+| MinVer-derived version | `FLARE.UI.csproj` (`MinVerTagPrefix=v`) |
+| Release-brand flag (CI-only, not git-state-derived) | `FLARE.UI.csproj` `ComputeFlareIsRelease` target; set true only by the CI release job |
+| GPU-relatedness (bugcheck code + cdb module attribution) | `BugcheckCatalog.IsGpuRelated` + `CdbRunner.IndicatesGpuModule` |
 
 ## Local storage layout
 

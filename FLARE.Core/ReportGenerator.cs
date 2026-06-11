@@ -151,7 +151,7 @@ public static class ReportGenerator
         return body.Replace(TocPlaceholder, sb.ToString().TrimEnd());
     }
 
-    static string TocSlug(string heading)
+    internal static string TocSlug(string heading)
     {
         var lower = heading.ToLowerInvariant();
         var chars = new StringBuilder(lower.Length);
@@ -588,16 +588,31 @@ public static class ReportGenerator
             sb.AppendLine();
         }
 
-        var byWeek = ctx.ByTime(
-                errors.GroupBy(e => {
-                    var d = e.Timestamp.Date;
-                    var daysSinceWeekStart = ((int)d.DayOfWeek + 6) % 7;
-                    return d.AddDays(-daysSinceWeekStart);
-                }),
-                g => g.Key)
-            .ToList();
+        static DateTime WeekStartOf(DateTime value)
+        {
+            var d = value.Date;
+            var daysSinceWeekStart = ((int)d.DayOfWeek + 6) % 7;
+            return d.AddDays(-daysSinceWeekStart);
+        }
 
-        int maxCount = byWeek.Max(g => g.Count());
+        var countByWeek = errors
+            .GroupBy(e => WeekStartOf(e.Timestamp))
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        var startWeek = ctx.RequestedWindowStart is DateTime windowStart
+            ? WeekStartOf(windowStart)
+            : countByWeek.Keys.Min();
+        var endWeek = ctx.RequestedWindowStart is DateTime
+            ? WeekStartOf(ctx.Now)
+            : countByWeek.Keys.Max();
+        if (countByWeek.Keys.Min() < startWeek) startWeek = countByWeek.Keys.Min();
+        if (countByWeek.Keys.Max() > endWeek) endWeek = countByWeek.Keys.Max();
+
+        var allWeeks = new List<DateTime>();
+        for (var w = startWeek; w <= endWeek; w = w.AddDays(7))
+            allWeeks.Add(w);
+
+        int maxCount = countByWeek.Count > 0 ? countByWeek.Values.Max() : 0;
         const int barWidth = 40;
 
         var sortedDrivers = ctx.DriverInstalls
@@ -605,18 +620,31 @@ public static class ReportGenerator
             .ToList();
 
         sb.AppendLine("```");
-        foreach (var week in byWeek)
+        var zeroRun = new List<(string Iso, string Line)>();
+        var zeroRunDriverNote = "";
+        void FlushZeroRun()
         {
-            int barLen = maxCount > 0 ? (int)Math.Ceiling((double)week.Count() / maxCount * barWidth) : 0;
+            if (zeroRun.Count >= 3)
+                sb.AppendLine($"    {zeroRun[0].Iso} .. {zeroRun[^1].Iso}: {zeroRun.Count} weeks, 0 errors{zeroRunDriverNote}");
+            else
+                foreach (var r in zeroRun)
+                    sb.AppendLine(r.Line);
+            zeroRun.Clear();
+        }
+        foreach (var weekStart in ctx.ByTime(allWeeks, w => w))
+        {
+            var count = countByWeek.GetValueOrDefault(weekStart, 0);
+            int barLen = maxCount > 0 ? (int)Math.Ceiling((double)count / maxCount * barWidth) : 0;
             var bar = new string('#', barLen);
-            var weekLabel = $"{System.Globalization.ISOWeek.GetYear(week.Key)}-W{System.Globalization.ISOWeek.GetWeekOfYear(week.Key):D2} {week.Key:yyyy-MM-dd}";
-            var countStr = week.Count().ToString().PadLeft(5);
+            var iso = $"{System.Globalization.ISOWeek.GetYear(weekStart)}-W{System.Globalization.ISOWeek.GetWeekOfYear(weekStart):D2}";
+            var weekLabel = $"{iso} {weekStart:yyyy-MM-dd}";
+            var countStr = count.ToString().PadLeft(5);
 
             string driverNote = "";
+            bool installThisWeek = false;
             if (sortedDrivers.Count > 0)
             {
-                var weekStart = week.Key;
-                var weekEnd = week.Key.AddDays(7);
+                var weekEnd = weekStart.AddDays(7);
 
                 var thisWeek = new List<string>();
                 foreach (var v in sortedDrivers
@@ -629,6 +657,7 @@ public static class ReportGenerator
 
                 if (thisWeek.Count > 0)
                 {
+                    installThisWeek = true;
                     driverNote = $"  (drv {string.Join(" > ", thisWeek)})";
                 }
                 else
@@ -639,8 +668,17 @@ public static class ReportGenerator
                 }
             }
 
-            sb.AppendLine($"    {weekLabel} {countStr} |{bar}{driverNote}");
+            var line = $"    {weekLabel} {countStr} |{bar}{driverNote}";
+            if (count == 0 && !installThisWeek)
+            {
+                if (zeroRun.Count == 0) zeroRunDriverNote = driverNote;
+                zeroRun.Add((iso, line));
+                continue;
+            }
+            FlushZeroRun();
+            sb.AppendLine(line);
         }
+        FlushZeroRun();
         sb.AppendLine("```");
 
         if (sortedDrivers.Count == 0)
@@ -1009,7 +1047,7 @@ public static class ReportGenerator
             if (!string.IsNullOrWhiteSpace(block.CdbSummary))
             {
                 sb.AppendLine();
-                sb.AppendLine($"**WinDbg Analysis** — [full stack trace](./{CdbDetailsSink.DumpsFilenamePlaceholder}#{block.Header}):");
+                sb.AppendLine($"**WinDbg Analysis** — [full stack trace](./{CdbDetailsSink.DumpsFilenamePlaceholder}#{TocSlug(block.Header)}):");
                 sb.AppendLine();
                 sb.Append(sink.EmitInlineAndArchive(DumpSection.CrashDumps, block.Header, block.CdbSummary));
             }

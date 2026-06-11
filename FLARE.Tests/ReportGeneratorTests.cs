@@ -364,6 +364,78 @@ public class ReportGeneratorTests
     }
 
     [Fact]
+    public void Generate_FrequencyChart_CollapsesZeroWeekRunsAcrossWindow()
+    {
+        var now = DateTime.Now;
+        var errors = new List<NvlddmkmError>
+        {
+            new(now, 13, "msg", null, null, null, "TDR"),
+            new(now, 153, "msg", null, null, null, "TDR"),
+        };
+        var health = new CollectorHealth { Truncation = new CollectionTruncation { RequestedMaxDays = 35 } };
+
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, Health: health)).Main;
+
+        Assert.Contains("ERROR FREQUENCY (per week)", report);
+        Assert.Matches(@"\d{4}-W\d{2} \.\. \d{4}-W\d{2}: 5 weeks, 0 errors", report);
+        var weekRows = System.Text.RegularExpressions.Regex.Matches(report, @"\d{4}-W\d{2} \d{4}-\d{2}-\d{2}\s+\d+ \|");
+        Assert.Single(weekRows);
+    }
+
+    [Fact]
+    public void Generate_FrequencyChart_ShortZeroGap_RendersIndividualRows()
+    {
+        var errors = new List<NvlddmkmError>
+        {
+            new(new DateTime(2025, 1, 6), 13, "msg", null, null, null, "TDR"),
+            new(new DateTime(2025, 1, 20), 153, "msg", null, null, null, "TDR"),
+        };
+
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
+
+        var weekRows = System.Text.RegularExpressions.Regex.Matches(report, @"\d{4}-W\d{2} \d{4}-\d{2}-\d{2}\s+\d+ \|");
+        Assert.Equal(3, weekRows.Count);
+        Assert.Matches(@"\d{4}-W\d{2} \d{4}-\d{2}-\d{2}\s+0 \|", report);
+        Assert.DoesNotContain("weeks, 0 errors", report);
+    }
+
+    [Fact]
+    public void Generate_FrequencyChart_DriverInstallWeek_NotElided()
+    {
+        var now = DateTime.Now;
+        var errors = new List<NvlddmkmError>
+        {
+            new(now, 13, "msg", null, null, null, "TDR"),
+            new(now, 153, "msg", null, null, null, "TDR"),
+        };
+        var drivers = new List<EventLogParser.DriverInstallEvent>
+        {
+            new(now.AddDays(-14), "32.0.15.8129", "setupapi: 32.0.15.8129"),
+        };
+        var health = new CollectorHealth { Truncation = new CollectionTruncation { RequestedMaxDays = 35 } };
+
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors, null, null, drivers, Health: health)).Main;
+
+        Assert.Matches(@"\d{4}-W\d{2} \.\. \d{4}-W\d{2}: 3 weeks, 0 errors", report);
+        Assert.Matches(@"\d{4}-W\d{2} \d{4}-\d{2}-\d{2}\s+0 \|\s+\(drv 581\.29\)", report);
+    }
+
+    [Fact]
+    public void Generate_FrequencyChart_NoWindow_SpansErrorWeeksOnly()
+    {
+        var errors = new List<NvlddmkmError>
+        {
+            new(new DateTime(2025, 1, 6), 13, "msg", null, null, null, "TDR"),
+            new(new DateTime(2025, 1, 7), 153, "msg", null, null, null, "TDR"),
+        };
+
+        var report = ReportGenerator.Generate(new ReportInput(TestGpu(), null, errors)).Main;
+
+        var weekRows = System.Text.RegularExpressions.Regex.Matches(report, @"\d{4}-W\d{2} \d{4}-\d{2}-\d{2}\s+\d+ \|");
+        Assert.Single(weekRows);
+    }
+
+    [Fact]
     public void Generate_CrashEvents_SectionAppearsWithData()
     {
         var errors = new List<NvlddmkmError>();
@@ -2417,7 +2489,7 @@ public class ReportGeneratorTests
         Assert.Contains("STACK_TEXT", r.Details);
         Assert.Contains("nt!KeBugCheckEx", r.Details);
 
-        Assert.Contains($"(./{CdbDetailsSink.DumpsFilenamePlaceholder}#Mini0001.dmp)", r.Main);
+        Assert.Contains($"(./{CdbDetailsSink.DumpsFilenamePlaceholder}#mini0001dmp)", r.Main);
         Assert.Contains("### Mini0001.dmp", r.Details);
     }
 

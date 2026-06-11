@@ -93,4 +93,21 @@ internal static class CdbRunner
         }
         return string.IsNullOrWhiteSpace(result) ? null : result;
     }
+
+    private static readonly string[] GpuModuleMarkers = { "nvlddmkm", "dxgkrnl", "dxgmms" };
+
+    // Attribution lines only — stack frames name-drop the GPU driver constantly and would over-match.
+    public static bool IndicatesGpuModule(string? cdbSummary)
+    {
+        if (string.IsNullOrEmpty(cdbSummary)) return false;
+        foreach (var line in cdbSummary.Split('\n'))
+        {
+            if (!line.Contains("MODULE_NAME:") && !line.Contains("IMAGE_NAME:") && !line.Contains("FAILURE_BUCKET_ID:"))
+                continue;
+            foreach (var marker in GpuModuleMarkers)
+                if (line.Contains(marker, StringComparison.OrdinalIgnoreCase))
+                    return true;
+        }
+        return false;
+    }
 }

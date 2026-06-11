@@ -82,6 +82,28 @@ public class LiveKernelDumpLocatorTests : IDisposable
     }
 
     [Fact]
+    public void Enumerate_WatchdogNamedFileAtRoot_ClassifiedByFilenamePrefix()
+    {
+        WriteDump("", "WATCHDOG-20260528-1428.dmp");
+
+        var result = LiveKernelDumpLocator.Enumerate(_tempDir, cutoff: null, maxDumps: 50, log: null, health: null);
+
+        var dump = Assert.Single(result);
+        Assert.Equal("WATCHDOG", dump.Category);
+    }
+
+    [Fact]
+    public void Enumerate_Watchdog4401NamedFileAtRoot_PrefersLongestPrefix()
+    {
+        WriteDump("", "WATCHDOG4401-20260528-1428.dmp");
+
+        var result = LiveKernelDumpLocator.Enumerate(_tempDir, cutoff: null, maxDumps: 50, log: null, health: null);
+
+        var dump = Assert.Single(result);
+        Assert.Equal("WATCHDOG4401", dump.Category);
+    }
+
+    [Fact]
     public void Enumerate_NonDumpFiles_Ignored()
     {
         WriteDump("WATCHDOG", "a.dmp");

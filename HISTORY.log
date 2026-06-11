@@ -1,3 +1,16 @@
+v0.7.3: driver-version format, cdb GPU attribution, collector backstop
+
+- NVIDIA WDDM driver-version match widened .0.15. -> .0.1x.; 600-series (.16.) installs parse.
+- cdb module attribution: generic bugchecks bucketed to nvlddmkm/dxgkrnl/dxgmms now flag GPU-RELATED (minidumps, LiveKernel, orphan transcripts).
+- Release brand is CI provenance only: -p:FlareIsRelease=true passed by the tag-gated job; a local build on the tag commit no longer reads clean.
+- LiveKernel dumps written at the LiveKernelReports root classified by WATCHDOG* filename prefix.
+- Frequency chart spans the requested window; runs of 3+ zero-error weeks collapse to one line, driver-install weeks always render.
+- FlareRunner backstop: a crashed collector degrades to a [failed] SCOPE notice instead of killing the run; cancellation still propagates.
+- _dumps.md anchors slug-normalized to match rendered heading slugs.
+- Docs: README download/attribution claims corrected; ARCHITECTURE/CONTRIBUTING refreshed.
+
+----
+
 v0.7.2: parallel cdb, xunit v3, CI restructure
 
 - Parallel cdb: pre-warm + size-weighted semaphore, ~3x faster on real batches.

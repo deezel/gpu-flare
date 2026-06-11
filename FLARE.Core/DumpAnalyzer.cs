@@ -268,7 +268,20 @@ public static class DumpAnalyzer
                 continue;
             }
 
-            if (info.IsGpuRelated)
+            string? cdbSummary = null;
+            var cdbAttempted = deepAnalysis && cdbPath != null;
+            var cdbOutputMissing = false;
+            if (cdbAttempted)
+            {
+                transcripts.TryGetValue(dmp, out var cdbOutput);
+                if (cdbOutput == null)
+                    cdbOutputMissing = true;
+                else
+                    cdbSummary = CdbRunner.ExtractCdbSummary(cdbOutput, log, health);
+            }
+
+            var gpuRelated = info.IsGpuRelated || CdbRunner.IndicatesGpuModule(cdbSummary);
+            if (gpuRelated)
             {
                 gpuCrashes++;
                 if (info.IsHeuristicMatch)
@@ -294,31 +307,26 @@ public static class DumpAnalyzer
                 sb.AppendLine("    Parameters: (omitted — bugcheck located by heuristic scan, parameter offsets speculative)");
             else
                 sb.AppendLine($"    Parameters: 0x{info.Param1:X} 0x{info.Param2:X} 0x{info.Param3:X} 0x{info.Param4:X}");
-            if (info.IsGpuRelated)
+            if (gpuRelated)
                 sb.AppendLine($"    >>> GPU-RELATED CRASH <<<");
 
-            if (deepAnalysis && cdbPath != null)
+            if (cdbAttempted)
             {
-                transcripts.TryGetValue(dmp, out var cdbOutput);
-                if (cdbOutput == null)
+                if (cdbOutputMissing)
                 {
                     sb.AppendLine("    WinDbg Analysis: unavailable (cdb produced no usable output or timed out).");
                     health?.Failure($"cdb analysis: {info.FileName}", "cdb produced no usable output or timed out");
                 }
+                else if (cdbSummary != null)
+                {
+                    sb.AppendLine($"    {WindbgSectionStartMarker}");
+                    sb.Append(cdbSummary);
+                    sb.AppendLine($"    {WindbgSectionEndMarker}");
+                }
                 else
                 {
-                    var summary = CdbRunner.ExtractCdbSummary(cdbOutput, log, health);
-                    if (summary != null)
-                    {
-                        sb.AppendLine($"    {WindbgSectionStartMarker}");
-                        sb.Append(summary);
-                        sb.AppendLine($"    {WindbgSectionEndMarker}");
-                    }
-                    else
-                    {
-                        sb.AppendLine("    WinDbg Analysis: no reportable summary could be extracted from cdb output.");
-                        health?.Failure($"cdb summary: {info.FileName}", "cdb ran but FLARE could not extract a reportable summary");
-                    }
+                    sb.AppendLine("    WinDbg Analysis: no reportable summary could be extracted from cdb output.");
+                    health?.Failure($"cdb summary: {info.FileName}", "cdb ran but FLARE could not extract a reportable summary");
                 }
             }
 

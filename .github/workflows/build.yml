@@ -66,6 +66,9 @@ jobs:
             echo "FLARE_PACKAGE_VERSION=$hash" >> $env:GITHUB_ENV
           }
 
+      # FlareIsRelease=true is set ONLY here. This job is tag-gated, so the
+      # release brand is reachable only via CI from a v* tag — not from any
+      # local build, even one parked on the tag commit.
       - name: Publish
         run: |
           dotnet msbuild FLARE.UI/FLARE.UI.csproj -restore -t:BundleAppOnlyForFrameworkDependent `
@@ -75,6 +78,7 @@ jobs:
             -p:SelfContained=false `
             -p:DebugSymbols=false `
             -p:DebugType=None `
+            -p:FlareIsRelease=true `
             -p:SourceRevisionId=$env:SOURCE_REVISION_ID
 
       - name: Smoke test packaged app startup
@@ -164,12 +168,14 @@ jobs:
         # GitHub Release body should be JUST the top entry, otherwise every
         # release page would re-include all prior versions' prose. Anchors
         # on the `vX.Y.Z:` header rather than the `----` separator so the
-        # separator can change without breaking extraction.
+        # separator can change without breaking extraction; the separator
+        # itself is filtered out so it stays in HISTORY.log without leaking
+        # into the release body.
         shell: bash
         run: |
           awk '
             /^v[0-9]+\.[0-9]+\.[0-9]+:/ { count++ }
-            count == 1 { print }
+            count == 1 && !/^----/ { print }
             count == 2 { exit }
           ' HISTORY.log > RELEASE_NOTES.md
 

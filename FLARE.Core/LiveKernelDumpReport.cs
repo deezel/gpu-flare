@@ -111,42 +111,49 @@ public static class LiveKernelDumpReport
                 sb.AppendLine("- **Parameters:** _(omitted — bugcheck located by heuristic scan, parameter offsets speculative)_");
             else
                 sb.AppendLine($"- **Parameters:** `0x{info.Param1:X} 0x{info.Param2:X} 0x{info.Param3:X} 0x{info.Param4:X}`");
-            if (info.IsGpuRelated)
+            string? summary = null;
+            var cdbAttempted = deepAnalysis && cdbPath != null;
+            var cdbOutputMissing = false;
+            if (cdbAttempted)
+            {
+                transcripts.TryGetValue(d.FullPath, out var transcript);
+                if (transcript == null)
+                    cdbOutputMissing = true;
+                else
+                    summary = CdbRunner.ExtractCdbSummary(transcript, log, health);
+            }
+
+            if (info.IsGpuRelated || CdbRunner.IndicatesGpuModule(summary))
             {
                 sb.AppendLine();
                 sb.AppendLine("> ⚠️ **GPU-RELATED**");
             }
             sb.AppendLine();
 
-            if (deepAnalysis && cdbPath != null)
+            if (cdbAttempted)
             {
-                transcripts.TryGetValue(d.FullPath, out var transcript);
-                if (transcript != null)
-                {
-                    var summary = CdbRunner.ExtractCdbSummary(transcript, log, health);
-                    if (summary != null)
-                    {
-                        sb.AppendLine($"**WinDbg Analysis** — [full stack trace](./{CdbDetailsSink.DumpsFilenamePlaceholder}#{d.FileName}):");
-                        sb.AppendLine();
-                        sb.Append(sink.EmitInlineAndArchive(DumpSection.LiveKernel, d.FileName, summary));
-                        if (System.Text.RegularExpressions.Regex.IsMatch(summary, @"PROCESS_NAME:\s+System\b"))
-                        {
-                            sb.AppendLine();
-                            sb.AppendLine("> **Note:** `PROCESS_NAME = System` is normal for scheduler worker-thread crashes — rely on `MODULE_NAME` / `IMAGE_NAME` / `FAILURE_BUCKET_ID` for attribution.");
-                        }
-                        sb.AppendLine();
-                    }
-                    else
-                    {
-                        sb.AppendLine("_WinDbg Analysis: no reportable summary could be extracted from cdb output._");
-                        health?.Failure($"livekernel cdb: {d.FileName}", "cdb ran but FLARE could not extract a reportable summary");
-                        sb.AppendLine();
-                    }
-                }
-                else
+                if (cdbOutputMissing)
                 {
                     sb.AppendLine("_WinDbg Analysis: unavailable (cdb produced no usable output or timed out)._");
                     health?.Failure($"livekernel cdb: {d.FileName}", "cdb produced no usable output or timed out");
+                    sb.AppendLine();
+                }
+                else if (summary != null)
+                {
+                    sb.AppendLine($"**WinDbg Analysis** — [full stack trace](./{CdbDetailsSink.DumpsFilenamePlaceholder}#{ReportGenerator.TocSlug(d.FileName)}):");
+                    sb.AppendLine();
+                    sb.Append(sink.EmitInlineAndArchive(DumpSection.LiveKernel, d.FileName, summary));
+                    if (System.Text.RegularExpressions.Regex.IsMatch(summary, @"PROCESS_NAME:\s+System\b"))
+                    {
+                        sb.AppendLine();
+                        sb.AppendLine("> **Note:** `PROCESS_NAME = System` is normal for scheduler worker-thread crashes — rely on `MODULE_NAME` / `IMAGE_NAME` / `FAILURE_BUCKET_ID` for attribution.");
+                    }
+                    sb.AppendLine();
+                }
+                else
+                {
+                    sb.AppendLine("_WinDbg Analysis: no reportable summary could be extracted from cdb output._");
+                    health?.Failure($"livekernel cdb: {d.FileName}", "cdb ran but FLARE could not extract a reportable summary");
                     sb.AppendLine();
                 }
             }
@@ -219,9 +226,14 @@ public static class LiveKernelDumpReport
             sb.AppendLine();
 
             var summary = CdbRunner.ExtractCdbSummary(o.Transcript, log, health);
+            if (CdbRunner.IndicatesGpuModule(summary))
+            {
+                sb.AppendLine("> ⚠️ **GPU-RELATED**");
+                sb.AppendLine();
+            }
             if (summary != null)
             {
-                sb.AppendLine($"**WinDbg Analysis** — from cached transcript, [full stack trace](./{CdbDetailsSink.DumpsFilenamePlaceholder}#{o.DumpFileName}):");
+                sb.AppendLine($"**WinDbg Analysis** — from cached transcript, [full stack trace](./{CdbDetailsSink.DumpsFilenamePlaceholder}#{ReportGenerator.TocSlug(o.DumpFileName)}):");
                 sb.AppendLine();
                 sb.Append(sink.EmitInlineAndArchive(DumpSection.LiveKernel, o.DumpFileName, summary));
                 sb.AppendLine();

@@ -103,43 +103,77 @@ public static class FlareRunner
         var result = new FlareResult();
         void Log(string msg) => log?.Invoke(RedactLogMessage(msg, options.RedactIdentifiers));
 
+        // Collectors catch their own anticipated failures; this is the backstop for
+        // unanticipated ones, so one crashed collector degrades to a SCOPE notice
+        // instead of costing the user the entire report.
+        T Guarded<T>(string source, Func<T> collect, T fallback)
+        {
+            try { return collect(); }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                health.Failure(source, $"collector crashed: {ex.GetType().Name}: {ex.Message}");
+                Log($"  {source} failed: {ex.Message}");
+                return fallback;
+            }
+        }
+
+        async Task<T> GuardedAsync<T>(string source, Func<Task<T>> collect, T fallback)
+        {
+            try { return await collect().ConfigureAwait(false); }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                health.Failure(source, $"collector crashed: {ex.GetType().Name}: {ex.Message}");
+                Log($"  {source} failed: {ex.Message}");
+                return fallback;
+            }
+        }
+
         Log("FLARE - Fault Log Analysis & Reboot Examination");
         Log("================================================");
 
         Log("\nCollecting GPU information...");
         ct.ThrowIfCancellationRequested();
-        result.Gpu = deps.CollectGpu(Log, ct);
-        Log($"  GPU:    {result.Gpu.Name}");
-        Log($"  Driver: {result.Gpu.DriverVersion}");
-        Log($"  UUID:   {result.Gpu.Uuid}");
-        Log($"  SMs:    {result.Gpu.SmCount}");
+        result.Gpu = Guarded<GpuInfo?>("gpu info", () => deps.CollectGpu(Log, ct), null);
+        if (result.Gpu != null)
+        {
+            Log($"  GPU:    {result.Gpu.Name}");
+            Log($"  Driver: {result.Gpu.DriverVersion}");
+            Log($"  UUID:   {result.Gpu.Uuid}");
+            Log($"  SMs:    {result.Gpu.SmCount}");
+        }
 
         Log("\nCollecting system information...");
         ct.ThrowIfCancellationRequested();
-        result.System = deps.CollectSystem(Log, ct);
-        Log($"  Board:  {result.System.BoardManufacturer} {result.System.BoardProduct}");
-        Log($"  BIOS:   {result.System.BiosVendor} {result.System.BiosVersion} ({result.System.BiosReleaseDate})");
-        Log($"  CPU:    {result.System.ProcessorName}");
-        Log($"  RAM:    {result.System.TotalMemoryFormatted}");
+        result.System = Guarded<SystemInfo?>("system info", () => deps.CollectSystem(Log, ct), null);
+        if (result.System != null)
+        {
+            Log($"  Board:  {result.System.BoardManufacturer} {result.System.BoardProduct}");
+            Log($"  BIOS:   {result.System.BiosVendor} {result.System.BiosVersion} ({result.System.BiosReleaseDate})");
+            Log($"  CPU:    {result.System.ProcessorName}");
+            Log($"  RAM:    {result.System.TotalMemoryFormatted}");
+        }
 
         Log($"\nPulling nvlddmkm errors (last {effectiveMaxDays} days, max {effectiveMaxEvents})...");
         ct.ThrowIfCancellationRequested();
-        result.Errors = deps.PullGpuErrors(effectiveMaxDays, effectiveMaxEvents, Log, ct);
+        // Source must stay "Event Log: nvlddmkm" — the empty-summary wording keys on it.
+        result.Errors = Guarded("Event Log: nvlddmkm", () => deps.PullGpuErrors(effectiveMaxDays, effectiveMaxEvents, Log, ct), []);
         Log($"  Found {result.Errors.Count} entries");
 
         Log("\nPulling system crash events...");
         ct.ThrowIfCancellationRequested();
-        result.Crashes = deps.PullCrashEvents(effectiveMaxDays, Log, ct);
+        result.Crashes = Guarded("crash events", () => deps.PullCrashEvents(effectiveMaxDays, Log, ct), []);
         Log($"  Found {result.Crashes.Count} entries");
 
         Log("\nPulling Application log crash/hang events...");
         ct.ThrowIfCancellationRequested();
-        result.AppCrashes = deps.PullAppCrashEvents(effectiveMaxDays, Log, ct);
+        result.AppCrashes = Guarded("app crashes", () => deps.PullAppCrashEvents(effectiveMaxDays, Log, ct), []);
         Log($"  Found {result.AppCrashes.Count} Application log entries");
 
         Log("\nPulling driver install history...");
         ct.ThrowIfCancellationRequested();
-        result.DriverInstalls = deps.PullDriverInstalls(effectiveMaxDays, Log, ct);
+        result.DriverInstalls = Guarded("driver installs", () => deps.PullDriverInstalls(effectiveMaxDays, Log, ct), []);
         Log($"  Found {result.DriverInstalls.Count} entries");
 
         var dumpDir = options.MinidumpsDir ?? FlareStorage.MinidumpsDir();
@@ -156,7 +190,8 @@ public static class FlareRunner
             Directory.CreateDirectory(liveKernelDir);
             Log("\nCopying crash dump files (minidumps + LiveKernel)...");
             ct.ThrowIfCancellationRequested();
-            var staged = deps.CopyDumps(dumpDir, liveKernelDir, dumpCutoff, Log, ct);
+            var staged = Guarded("minidump copy", () => deps.CopyDumps(dumpDir, liveKernelDir, dumpCutoff, Log, ct),
+                new ElevatedDumpCopy.StagedDumps([], []));
             copiedDumps = staged.Minidumps;
             copiedLiveKernel = staged.LiveKernelDumps;
             if (copiedDumps.Count > 0)
@@ -185,7 +220,9 @@ public static class FlareRunner
 
             Log("\nAnalyzing crash dumps...");
             ct.ThrowIfCancellationRequested();
-            result.DumpAnalysis = await deps.GenerateDumpReport(dumpDir, options.DeepAnalyze, dumpCutoff, Log, ct).ConfigureAwait(false);
+            result.DumpAnalysis = await GuardedAsync<string?>("minidump analysis",
+                async () => await deps.GenerateDumpReport(dumpDir, options.DeepAnalyze, dumpCutoff, Log, ct).ConfigureAwait(false),
+                null).ConfigureAwait(false);
         }
 
         if (options.DeepAnalyze)
@@ -195,24 +232,26 @@ public static class FlareRunner
             ct.ThrowIfCancellationRequested();
             var cdbPath = CdbLocator.FindCdb(Log);
             cdbSink = new CdbDetailsSink();
-            result.LiveKernelAnalysis = await deps.GenerateLiveKernelReport(
-                result.LiveKernelDumps,
-                result.Errors,
-                result.AppCrashes,
-                result.DriverInstalls,
-                effectiveMaxDays,
-                options.SortDescending,
-                options.DeepAnalyze,
-                cdbPath,
-                cdbSink,
-                Log,
-                ct).ConfigureAwait(false);
+            result.LiveKernelAnalysis = await GuardedAsync<string?>("livekernel analysis",
+                async () => await deps.GenerateLiveKernelReport(
+                    result.LiveKernelDumps,
+                    result.Errors,
+                    result.AppCrashes,
+                    result.DriverInstalls,
+                    effectiveMaxDays,
+                    options.SortDescending,
+                    options.DeepAnalyze,
+                    cdbPath,
+                    cdbSink,
+                    Log,
+                    ct).ConfigureAwait(false),
+                null).ConfigureAwait(false);
         }
 
         Log("\nGenerating report...");
         ct.ThrowIfCancellationRequested();
         var generated = ReportGenerator.Generate(new ReportInput(
-            Gpu: result.Gpu,
+            Gpu: result.Gpu ?? GpuInfo.Empty,
             System: result.System,
             Errors: result.Errors,
             Crashes: result.Crashes,

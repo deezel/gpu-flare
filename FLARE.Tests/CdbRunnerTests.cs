@@ -52,6 +52,51 @@ OSPLATFORM_TYPE:  x64
         Assert.Contains("FAILURE_BUCKET_ID:  0x116_IMAGE_nvlddmkm.sys", result);
     }
 
+    [Theory]
+    [InlineData("MODULE_NAME: nvlddmkm")]
+    [InlineData("IMAGE_NAME:  nvlddmkm.sys")]
+    [InlineData("FAILURE_BUCKET_ID:  0x7f_8_nvlddmkm!unknown_function")]
+    [InlineData("MODULE_NAME: dxgkrnl")]
+    [InlineData("MODULE_NAME: dxgmms2")]
+    [InlineData("MODULE_NAME: NVLDDMKM")]
+    public void IndicatesGpuModule_GpuAttributionLine_True(string line)
+    {
+        Assert.True(CdbRunner.IndicatesGpuModule(line));
+    }
+
+    [Theory]
+    [InlineData("MODULE_NAME: ntoskrnl")]
+    [InlineData("IMAGE_NAME:  ntoskrnl.exe")]
+    [InlineData("FAILURE_BUCKET_ID:  0x7f_8_ntoskrnl!KiBugCheck")]
+    [InlineData("")]
+    public void IndicatesGpuModule_NonGpuAttribution_False(string summary)
+    {
+        Assert.False(CdbRunner.IndicatesGpuModule(summary));
+    }
+
+    [Fact]
+    public void IndicatesGpuModule_Null_False()
+    {
+        Assert.False(CdbRunner.IndicatesGpuModule(null));
+    }
+
+    [Fact]
+    public void IndicatesGpuModule_GpuOnlyInStackFrame_False()
+    {
+        var summary =
+            "    MODULE_NAME: ntoskrnl\n" +
+            "    STACK_TEXT (top frames):\n" +
+            "      fffffe85`00abc003 fffff807`0789ab12 : nvlddmkm+0x1234\n";
+        Assert.False(CdbRunner.IndicatesGpuModule(summary));
+    }
+
+    [Fact]
+    public void IndicatesGpuModule_RealExtractedSummary_True()
+    {
+        var summary = CdbRunner.ExtractCdbSummary(SampleAnalyzeOutput);
+        Assert.True(CdbRunner.IndicatesGpuModule(summary));
+    }
+
     [Fact]
     public void ExtractCdbSummary_StackSection_HeaderEmittedAndFramesIndented()
     {

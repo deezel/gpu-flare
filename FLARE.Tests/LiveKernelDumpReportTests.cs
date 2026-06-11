@@ -153,7 +153,7 @@ public class LiveKernelDumpReportTests : IDisposable
         Assert.Contains("**MODULE_NAME:**", body);
         Assert.Contains("`nvlddmkm`", body);
         Assert.Contains("PROCESS_NAME = System` is normal for scheduler worker-thread crashes", body);
-        Assert.Contains($"(./{CdbDetailsSink.DumpsFilenamePlaceholder}#WATCHDOG-x.dmp)", body);
+        Assert.Contains($"(./{CdbDetailsSink.DumpsFilenamePlaceholder}#watchdog-xdmp)", body);
     }
 
     [Fact]
@@ -379,6 +379,62 @@ nvlddmkm+0x12345
         Assert.Contains("_(source removed)_", body);
         Assert.Contains("**FAILURE_BUCKET_ID:**", body);
     }
+
+    [Fact]
+    public async Task Generate_OrphanWithGpuAttributedTranscript_ShowsGpuRelatedBanner()
+    {
+        var dumpPath = Path.Combine(_tempDir, "WATCHDOG-20260513-0930.dmp");
+        File.WriteAllBytes(dumpPath, new byte[1024]);
+        Directory.CreateDirectory(_cdbCacheRoot);
+        CdbAnalysisCache.Store(dumpPath, CDB_PROCESS_NAME_SYSTEM_SAMPLE, log: null, cacheRoot: _cdbCacheRoot);
+        File.Delete(dumpPath);
+
+        var body = await LiveKernelDumpReport.Generate(
+            new List<LiveKernelDump>(),
+            new(), new(), new(),
+            maxDays: 365, sortDescending: true,
+            deepAnalysis: true, cdbPath: SyntheticCdbPath(),
+            sink: new CdbDetailsSink(),
+            log: null, ct: TestContext.Current.CancellationToken, health: null,
+            cdbCacheRoot: _cdbCacheRoot);
+
+        Assert.Contains("⚠️ **GPU-RELATED**", body);
+    }
+
+    [Fact]
+    public async Task Generate_OrphanWithNonGpuTranscript_OmitsGpuRelatedBanner()
+    {
+        var dumpPath = Path.Combine(_tempDir, "WATCHDOG-20260513-0930.dmp");
+        File.WriteAllBytes(dumpPath, new byte[1024]);
+        Directory.CreateDirectory(_cdbCacheRoot);
+        CdbAnalysisCache.Store(dumpPath, CDB_NON_GPU_SAMPLE, log: null, cacheRoot: _cdbCacheRoot);
+        File.Delete(dumpPath);
+
+        var body = await LiveKernelDumpReport.Generate(
+            new List<LiveKernelDump>(),
+            new(), new(), new(),
+            maxDays: 365, sortDescending: true,
+            deepAnalysis: true, cdbPath: SyntheticCdbPath(),
+            sink: new CdbDetailsSink(),
+            log: null, ct: TestContext.Current.CancellationToken, health: null,
+            cdbCacheRoot: _cdbCacheRoot);
+
+        Assert.Contains("_(source removed)_", body);
+        Assert.DoesNotContain("⚠️ **GPU-RELATED**", body);
+    }
+
+    private const string CDB_NON_GPU_SAMPLE = @"
+*                        Bugcheck Analysis                                    *
+BUGCHECK_STR:  0x1ca
+PROCESS_NAME:  System
+MODULE_NAME:  ntoskrnl
+IMAGE_NAME:  ntoskrnl.exe
+FAILURE_BUCKET_ID:  LKD_0x1ca_ntoskrnl!KeAccumulateTicks
+STACK_TEXT:
+nt!KeBugCheckEx
+nt!KeAccumulateTicks
+
+";
 
     [Fact]
     public async Task Generate_OrphanCount_Above_MaxLiveKernelDumpsCap_TrimsToCapAndFlagsTruncation()
